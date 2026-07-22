@@ -430,6 +430,8 @@
         flex-direction: column;
         gap: 12px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        max-height: 94vh;
+        overflow-y: auto;
       }
 
       /* PRE-GAME SCREEN */
@@ -541,7 +543,7 @@
       .wizard-step-panel {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 10px;
         animation: fadeInStep 0.3s ease forwards;
       }
       @keyframes fadeInStep {
@@ -572,7 +574,7 @@
       .court-map-wrapper {
         position: relative;
         width: 100%;
-        height: 190px;
+        height: 150px;
         background: radial-gradient(circle at 50% 70%, #1e293b 0%, #0f172a 100%);
         border: 2px solid rgba(255, 255, 255, 0.15);
         border-radius: 16px;
@@ -1157,6 +1159,13 @@
           box-shadow: 0 0 18px rgba(244, 63, 94, 0.75);
         }
       }
+      @keyframes coinSpinAnim {
+        0% { transform: perspective(400px) rotateY(0deg); }
+        100% { transform: perspective(400px) rotateY(1440deg); }
+      }
+      .coin-spin-active {
+        animation: coinSpinAnim 1.5s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+      }
       #ai-overlay-text {
         font-family: 'Montserrat', sans-serif;
         font-size: 11px;
@@ -1202,6 +1211,19 @@
       @keyframes splashFadeIn {
         to { opacity: 1; }
       }
+    
+      @keyframes coldShake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px) rotate(-1deg); }
+        50% { transform: translateX(5px) rotate(1deg); }
+        75% { transform: translateX(-5px) rotate(-1deg); }
+        100% { transform: translateX(0); }
+      }
+      .cold-shake {
+        animation: coldShake 0.4s infinite;
+        filter: hue-rotate(180deg) brightness(1.2);
+      }
+
     </style>
   </head>
   <body>
@@ -1327,7 +1349,7 @@
         <div class="modal-card" style="text-align: center; gap: 14px; max-height: 88vh; overflow-y: auto; max-width: 600px; width: 92%;">
           <div class="winner-banner" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.4); padding: 10px 16px;">
             <div class="trophy-icon" style="font-size: 32px;">🏀</div>
-            <h2 style="color: #38bdf8; font-size: 28px;">PLAYER ROUND COMPLETE</h2>
+            <h2 id="player-summary-title" style="color: #38bdf8; font-size: 28px;">PLAYER ROUND COMPLETE</h2>
           </div>
 
           <div class="score-summary-box" style="justify-content: center; background: rgba(15, 23, 42, 0.6); padding: 10px 20px;">
@@ -1389,7 +1411,7 @@
           </div>
 
           <!-- MISS RELEASE TIMING SUMMARY BARS -->
-          <div style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.06);">
+          <div id="miss-analysis-section" style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.06);">
             <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;">MISS ANALYSIS BY RELEASE TIMING</div>
             <div id="miss-timing-bars" style="display: flex; flex-direction: column; gap: 10px;">
               <!-- Dynamically populated -->
@@ -1490,7 +1512,7 @@
                 <!-- SUB-STEP B: JERSEY NUMBER -->
                 <div id="cust-substep-b" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 8px; align-items: center;">
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">2. Enter Jersey Number (Max 2 digits)</label>
-                  <input type="text" id="cust-jersey-number" placeholder="Add Number" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
+                  <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
                   <div style="display: flex; gap: 8px; width: 80%; margin-top: 4px; justify-content: center;">
                     <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">⬅ BACK</button>
                     <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE ➔</button>
@@ -1500,10 +1522,12 @@
                 <!-- SUB-STEP C: JERSEY COLOR -->
                 <div id="cust-substep-c" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 10px; align-items: center;">
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">3. Pick Jersey Color</label>
-                  <div style="display: flex; gap: 12px; width: 90%; justify-content: center; margin-bottom: 4px;">
+                  <div style="display: flex; gap: 12px; width: 90%; justify-content: center; margin-bottom: 4px; flex-wrap: wrap;">
                     <button class="color-picker-btn" data-color="blue" style="width: 44px; height: 44px; border-radius: 50%; background: #1d4ed8; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Blue"></button>
-                    <button class="color-picker-btn selected" data-color="purple" style="width: 44px; height: 44px; border-radius: 50%; background: #6d28d9; border: 3px solid #fbbf24; cursor: pointer; transform: scale(1.15); transition: all 0.2s; position: relative; box-shadow: 0 4px 10px rgba(109,40,217,0.5);" title="Purple"></button>
-                    <button class="color-picker-btn" data-color="black" style="width: 44px; height: 44px; border-radius: 50%; background: #18181b; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Black"></button>
+                    <button class="color-picker-btn" data-color="purple" style="width: 44px; height: 44px; border-radius: 50%; background: #6d28d9; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Purple"></button>
+                    <button class="color-picker-btn selected" data-color="black" style="width: 44px; height: 44px; border-radius: 50%; background: #18181b; border: 3px solid #fbbf24; cursor: pointer; transform: scale(1.15); transition: all 0.2s; position: relative; box-shadow: 0 4px 10px rgba(24,24,27,0.5);" title="Black"></button>
+                    <button class="color-picker-btn" data-color="pink" style="width: 44px; height: 44px; border-radius: 50%; background: #ec4899; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Pink"></button>
+                    <button class="color-picker-btn" data-color="lightRed" style="width: 44px; height: 44px; border-radius: 50%; background: #f87171; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Light Red"></button>
                   </div>
                   <div style="display: flex; gap: 8px; width: 80%; justify-content: center;">
                     <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">⬅ BACK</button>
@@ -1816,6 +1840,29 @@
         </div>
       </div>
 
+      <!-- COIN TOSS SCREEN -->
+      <div id="coin-toss-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px);">
+        <div style="background: rgba(30, 41, 59, 0.9); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; text-align: center; max-width: 400px; width: 90%; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+          <h2 style="font-family: 'Teko', sans-serif; font-size: 52px; color: #facc15; margin: 0; line-height: 1; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.8);">COIN TOSS</h2>
+          <p style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 14px; margin: 10px 0 30px 0; font-weight: 700; text-align: center; text-transform: uppercase;">PLAYER STARTS FIRST IF HEADS</p>
+          
+          <div id="coin-toss-choices" style="display: flex; gap: 20px; width: 100%; justify-content: center;">
+            <button id="btn-toss-flip" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">FLIP COIN</button>
+          </div>
+
+          <div id="coin-toss-animation" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+            <div id="coin-3d-canvas-container" style="width: 200px; height: 200px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);"></div>
+            <div style="color: #38bdf8; font-family: 'Teko', sans-serif; font-size: 28px; animation: pulse 1s infinite;">FLIPPING...</div>
+          </div>
+
+          <div id="coin-toss-result" style="display: none; flex-direction: column; align-items: center; margin-top: 20px; width: 100%;">
+            <div id="coin-toss-result-text" style="font-family: 'Teko', sans-serif; font-size: 42px; color: #fff; margin-bottom: 5px;">IT'S HEADS!</div>
+            <div id="coin-toss-winner-text" style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #4ade80; margin-bottom: 30px; text-transform: uppercase;">YOU WON THE TOSS! YOU SHOOT FIRST.</div>
+            <button id="btn-toss-continue" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">CONTINUE ➔</button>
+          </div>
+        </div>
+      </div>
+
       <!-- POST-GAME SCREEN -->
       <div id="postgame-screen" class="modal-screen pointer-enabled" style="display: none;">
         <div class="modal-card">
@@ -1854,8 +1901,13 @@
               <div id="stat-perfects" class="stat-val">12</div>
             </div>
           </div>
+          
+          <!-- SINGLE BUTTON TO VIEW ADVANCED ANALYTICS FROM POSTGAME -->
+          <button id="view-postgame-analytics-btn" class="cta-button" style="width: 100%; margin: 8px 0; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; color: #38bdf8; font-size: 26px; min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: normal; height: auto; padding: 12px; text-align: center; line-height: 1.2;">
+            <span>📊</span> VIEW ADVANCED ANALYTICS
+          </button>
 
-          <button id="rematch-btn" class="cta-button" style="min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">PLAY AGAIN</button>
+          <button id="rematch-btn" class="cta-button" style="min-height: 64px; font-size: 30px; letter-spacing: 1.5px; width: 100%;">PLAY AGAIN</button>
 
           <div style="font-size: 13px; color: #94a3b8; font-weight: 700; text-align: center; margin-top: 14px; letter-spacing: 0.5px; opacity: 0.8;">
             Follow <span style="color: #38bdf8;">@ralphfrialde</span> on Instagram!
@@ -2090,6 +2142,79 @@
           });
 
           noise.start(now);
+        }
+
+        playCoinFlip() {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          
+          // Shimmering spinning sound
+          const osc1 = this.ctx.createOscillator();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(1200, now);
+          
+          const osc2 = this.ctx.createOscillator();
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(1220, now);
+          
+          const lfo = this.ctx.createOscillator();
+          lfo.type = 'sine';
+          lfo.frequency.setValueAtTime(15, now); // 15 Hz modulation
+          
+          const lfoGain = this.ctx.createGain();
+          lfoGain.gain.setValueAtTime(0.8, now);
+          
+          const mainGain = this.ctx.createGain();
+          mainGain.gain.setValueAtTime(0, now);
+          mainGain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+          mainGain.gain.linearRampToValueAtTime(0.1, now + 0.8);
+          mainGain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+          
+          lfo.connect(lfoGain.gain);
+          osc1.connect(lfoGain);
+          osc2.connect(lfoGain);
+          lfoGain.connect(mainGain);
+          mainGain.connect(this.ctx.destination);
+          
+          osc1.start(now);
+          osc2.start(now);
+          lfo.start(now);
+          
+          osc1.stop(now + 1.2);
+          osc2.stop(now + 1.2);
+          lfo.stop(now + 1.2);
+        }
+
+        playCoinBounce(vol = 0.5) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          
+          // Metallic ring
+          const osc1 = this.ctx.createOscillator();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(3200, now);
+          osc1.frequency.exponentialRampToValueAtTime(3000, now + 0.3);
+          
+          const osc2 = this.ctx.createOscillator();
+          osc2.type = 'square';
+          osc2.frequency.setValueAtTime(4500, now);
+          
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(vol * 0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.3);
+          osc2.stop(now + 0.3);
+        }
+
+        playScore() {
+          this.playSwish();
         }
 
         playGroan() {
@@ -2639,6 +2764,11 @@
           this.runTargetPos = new THREE.Vector3();
           this.runProgress = 0;
           this.runDuration = 0.75;
+          this.playerStreak = 0;
+          this.isCold = false;
+          this.makesWhileCold = 0;
+          this.setRimFire(false);
+          this.setRimCold(false);
           this.turnEnding = false;
 
           // Net swish animation state
@@ -2749,7 +2879,7 @@
           // Pre-compiles all materials, lighting, shadowmaps, ball textures, and mesh geometries
           // to completely eliminate runtime compilation lag on the 1st shot/round.
           try {
-            this.moneyRackIdx = 0;
+            this.moneyRackIdx = 4;
             this.aiDiff = 'medium';
             this.setupShots();
             
@@ -3439,16 +3569,16 @@
           this.hoopGroup.add(basePad);
 
           // Heavy-duty Horizontal Perpendicular Arm connecting pole to backboard (forming an L-shape)
-          const stanchionArmGeo = new THREE.BoxGeometry(0.16, 0.16, 2.45); // Extended from 1.95 to 2.45 to bridge the new distance
+          const stanchionArmGeo = new THREE.BoxGeometry(0.16, 0.16, 2.31);
           const stanchionArm = new THREE.Mesh(stanchionArmGeo, stanchionMat);
-          stanchionArm.position.set(0, 3.35, -1.48); // Re-centered to connect pole at -2.7 and bracket at -0.26
+          stanchionArm.position.set(0, 3.35, -1.545);
           stanchionArm.castShadow = true;
           this.hoopGroup.add(stanchionArm);
 
           // Mounting Bracket Plates at the backboard end of the stanchion arm
           const bracketGeo = new THREE.BoxGeometry(0.24, 0.24, 0.02);
           const bracket = new THREE.Mesh(bracketGeo, stanchionMat);
-          bracket.position.set(0, 3.35, -0.26);
+          bracket.position.set(0, 3.35, -0.39);
           this.hoopGroup.add(bracket);
 
           // Slightly more opaque, frosted white translucent backboard
@@ -3463,20 +3593,20 @@
             clearcoatRoughness: 0.1
           });
           const backboard = new THREE.Mesh(bbGeo, bbMat);
-          backboard.position.set(0, 3.35, -0.25);
+          backboard.position.set(0, 3.35, -0.38);
           this.hoopGroup.add(backboard);
 
           // Backboard Goal Flash PointLight
           this.backboardFlashLight = new THREE.PointLight(0xff2200, 0, 15);
-          this.backboardFlashLight.position.set(0, 3.35, -0.3);
+          this.backboardFlashLight.position.set(0, 3.35, -0.43);
           this.hoopGroup.add(this.backboardFlashLight);
 
           // Backboard Red Square Target Box
           const boxGeo = new THREE.BoxGeometry(0.6, 0.45, 0.04);
           const edges = new THREE.EdgesGeometry(boxGeo);
-          const lineMat = new THREE.LineBasicMaterial({ color: 0xef4444 });
+          const lineMat = new THREE.LineBasicMaterial({ color: 0xef4444 }); this.bbBoxMat = lineMat;
           const bbBox = new THREE.LineSegments(edges, lineMat);
-          bbBox.position.set(0, 3.2, -0.24);
+          bbBox.position.set(0, 3.2, -0.37);
           this.hoopGroup.add(bbBox);
 
           // --- REALISTIC BASKETBALL RIM & MOUNT ASSEMBLY ---
@@ -3489,7 +3619,7 @@
             roughness: 0.25
           });
           const flange = new THREE.Mesh(flangeGeo, flangeMat);
-          flange.position.set(0, 3.08, -0.22);
+          flange.position.set(0, 3.08, -0.35);
           this.hoopGroup.add(flange);
 
           // Mounting Bolts
@@ -3500,7 +3630,7 @@
           ].forEach(([bx, by]) => {
             const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.025, 12), boltMat);
             bolt.rotation.x = Math.PI / 2;
-            bolt.position.set(bx, by, -0.21);
+            bolt.position.set(bx, by, -0.34);
             this.hoopGroup.add(bolt);
           });
 
@@ -3518,7 +3648,83 @@
           this.springyRimGroup.position.set(0, 3.05, 0); // world center of the rim
           this.hoopGroup.add(this.springyRimGroup);
 
-          this.rimMesh = new THREE.Mesh(rimGeo, rimMat);
+          // Fire Particle System
+          this.fireParticles = new THREE.Group();
+          this.fireParticles.position.set(0, 3.05, 0); // At rim height
+          this.fireGeo = new THREE.BufferGeometry();
+          const fireCount = 150;
+          const posArray = new Float32Array(fireCount * 3);
+          const velArray = [];
+          for (let i = 0; i < fireCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const r = 0.22 + Math.random() * 0.04;
+            posArray[i * 3] = Math.cos(theta) * r;
+            posArray[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+            posArray[i * 3 + 2] = Math.sin(theta) * r;
+            velArray.push({
+              y: 0.5 + Math.random() * 0.8,
+              life: Math.random() * 0.5
+            });
+          }
+          this.fireGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+          this.fireMat = new THREE.PointsMaterial({
+            size: 0.08,
+            color: 0xffaa00,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          this.firePoints = new THREE.Points(this.fireGeo, this.fireMat);
+          this.firePoints.visible = false;
+          this.fireParticles.add(this.firePoints);
+          this.fireVelocities = velArray;
+          this.hoopGroup.add(this.fireParticles);
+          
+          this.coldParticles = new THREE.Group();
+          this.coldParticles.position.set(0, 3.05, 0);
+          this.coldGeo = new THREE.BufferGeometry();
+          const coldCount = 100;
+          const coldPosArray = new Float32Array(coldCount * 3);
+          const coldVelArray = [];
+          for (let i = 0; i < coldCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const r = 0.22 + Math.random() * 0.04;
+            coldPosArray[i * 3] = Math.cos(theta) * r;
+            coldPosArray[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+            coldPosArray[i * 3 + 2] = Math.sin(theta) * r;
+            coldVelArray.push({
+              y: -(0.2 + Math.random() * 0.4),
+              life: Math.random() * 0.5
+            });
+          }
+          this.coldGeo.setAttribute('position', new THREE.BufferAttribute(coldPosArray, 3));
+          this.coldMat = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0x38bdf8,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          this.coldPoints = new THREE.Points(this.coldGeo, this.coldMat);
+          this.coldPoints.visible = false;
+          this.coldParticles.add(this.coldPoints);
+          this.coldVelocities = coldVelArray;
+          this.hoopGroup.add(this.coldParticles);
+          
+          // Rim Neck/Throat (Connecting flange to rim)
+          const neckGeo = new THREE.BoxGeometry(0.12, 0.04, 0.35);
+          const neckMat = new THREE.MeshStandardMaterial({
+            color: 0xff3b00,
+            metalness: 0.45,
+            roughness: 0.25
+          });
+          const neck = new THREE.Mesh(neckGeo, neckMat);
+          neck.position.set(0, 0, -0.175);
+          this.springyRimGroup.add(neck);
+
+          this.rimMat = rimMat; this.rimMesh = new THREE.Mesh(rimGeo, rimMat);
           this.rimMesh.rotation.x = Math.PI / 2;
           this.rimMesh.position.set(0, 0, 0); // centered inside springyRimGroup
           this.rimMesh.castShadow = true;
@@ -3812,7 +4018,7 @@
           this.currentWizardStep = 1;
           this.userJerseyName = '';
           this.userJerseyNumber = '';
-          this.userJerseyColor = 'purple';
+          this.userJerseyColor = 'black';
 
           const aiNameMap = { easy: 'ROOKIE REX', medium: 'PRO DAME', hard: 'LEGEND STEPH' };
           const meterSpeedLabelMap = { easy: 'ROOKIE CASUAL (1.2x)', normal: 'PRO CONTEST (1.5x)', hard: 'ALL-STAR SNIPER (1.85x)' };
@@ -3909,7 +4115,9 @@
           const colorMap = {
             blue: '#1d4ed8',
             black: '#18181b',
-            purple: '#6d28d9'
+            purple: '#6d28d9',
+            pink: '#ec4899',
+            lightRed: '#f87171'
           };
           document.querySelectorAll('.color-picker-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -3927,7 +4135,7 @@
               if (previewCard) {
                 previewCard.style.background = colorMap[color] || '#6d28d9';
               }
-              if (audio && audio.playSwish) audio.playSwish();
+              if (audio && audio.playCoinFlip) audio.playCoinFlip();
             });
           });
 
@@ -4020,7 +4228,13 @@
           const step4Next = document.getElementById('step-4-next');
           if (step4Next) step4Next.addEventListener('click', () => this.setWizardStep(5));
 
+          
+          // Force black jersey selection initially
+          const blackBtn = document.querySelector('.color-picker-btn[data-color="black"]');
+          if (blackBtn) blackBtn.click();
+          
           const step5Back = document.getElementById('step-5-back');
+
           if (step5Back) step5Back.addEventListener('click', () => this.setWizardStep(4));
 
           // Pause button & screen CTA handlers
@@ -4084,20 +4298,26 @@
             });
           }
 
-          // Start AI Turn CTA (From Player Summary Modal)
+          // Start Next Turn CTA (From Summary Modal)
           document.getElementById('start-ai-turn-btn').addEventListener('click', () => {
             audio.init();
-            this.startAITurnFromSummary();
+            this.startNextTurnFromSummary();
           });
 
           // Advanced Analytics Modal Toggle Handlers
           const viewAnalyticsBtn = document.getElementById('view-analytics-btn');
+          const viewPostgameAnalyticsBtn = document.getElementById('view-postgame-analytics-btn');
           const closeAnalyticsBtn = document.getElementById('close-analytics-btn');
           const closeAnalyticsBottomBtn = document.getElementById('close-analytics-bottom-btn');
           const analyticsModal = document.getElementById('analytics-modal');
 
           if (viewAnalyticsBtn && analyticsModal) {
             viewAnalyticsBtn.addEventListener('click', () => {
+              analyticsModal.style.display = 'flex';
+            });
+          }
+          if (viewPostgameAnalyticsBtn && analyticsModal) {
+            viewPostgameAnalyticsBtn.addEventListener('click', () => {
               analyticsModal.style.display = 'flex';
             });
           }
@@ -4223,13 +4443,196 @@
           const simBtn = document.getElementById('ai-simulate-btn');
           if (simBtn) simBtn.style.display = 'none';
 
-          if (this.setWizardStep) this.setWizardStep(1);
+          if (this.setWizardStep) this.setWizardStep(3);
           if (this.emojiManager) this.emojiManager.init();
         }
 
         startShootout() {
           if (this.emojiManager) this.emojiManager.stop();
+          document.getElementById('pregame-screen').style.display = 'none';
+          document.getElementById('coin-toss-screen').style.display = 'flex';
+          
+          const tossChoices = document.getElementById('coin-toss-choices');
+          const tossAnim = document.getElementById('coin-toss-animation');
+          const tossResult = document.getElementById('coin-toss-result');
+          const resultText = document.getElementById('coin-toss-result-text');
+          const winnerText = document.getElementById('coin-toss-winner-text');
 
+          tossChoices.style.display = 'flex';
+          tossAnim.style.display = 'none';
+          tossResult.style.display = 'none';
+
+          const handleToss = () => {
+            tossChoices.style.display = 'none';
+            tossAnim.style.display = 'flex';
+            if (audio && audio.playSwish) audio.playSwish();
+
+            const container = document.getElementById('coin-3d-canvas-container');
+            container.innerHTML = '';
+            
+            const w = 200, h = 200;
+            const coinScene = new THREE.Scene();
+            const coinCamera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+            coinCamera.position.set(0, 6, 10);
+            coinCamera.lookAt(0, 0, 0);
+
+            const coinRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            coinRenderer.setSize(w, h);
+            coinRenderer.shadowMap.enabled = true;
+            container.appendChild(coinRenderer.domElement);
+
+            const light = new THREE.DirectionalLight(0xffffff, 2.0);
+            light.position.set(5, 10, 5);
+            light.castShadow = true;
+            light.shadow.camera.near = 0.5;
+            light.shadow.camera.far = 25;
+            coinScene.add(light);
+            coinScene.add(new THREE.AmbientLight(0xffffff, 0.4));
+
+            const floorGeo = new THREE.PlaneGeometry(30, 30);
+            const floorMat = new THREE.ShadowMaterial({ opacity: 0.4 });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -2.2;
+            floor.receiveShadow = true;
+            coinScene.add(floor);
+
+            const createCoinFace = (text, bgColor, textColor) => {
+              const canvas = document.createElement('canvas');
+              canvas.width = 256;
+              canvas.height = 256;
+              const ctx = canvas.getContext('2d');
+              ctx.fillStyle = bgColor;
+              ctx.fillRect(0, 0, 256, 256);
+              ctx.fillStyle = textColor;
+              ctx.font = '900 48px Montserrat';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(text, 128, 128);
+              
+              // Add a nice inner ring
+              ctx.strokeStyle = textColor;
+              ctx.lineWidth = 10;
+              ctx.beginPath();
+              ctx.arc(128, 128, 110, 0, Math.PI * 2);
+              ctx.stroke();
+
+              const tex = new THREE.CanvasTexture(canvas);
+              tex.anisotropy = coinRenderer.capabilities.getMaxAnisotropy();
+              return tex;
+            };
+
+            const headTex = createCoinFace('HEADS', '#fef08a', '#854d0e');
+            const tailTex = createCoinFace('TAILS', '#854d0e', '#fef08a');
+
+            const geometry = new THREE.CylinderGeometry(2.5, 2.5, 0.4, 32);
+            const sideMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.8, roughness: 0.2 });
+            const headMat = new THREE.MeshStandardMaterial({ map: headTex, metalness: 0.6, roughness: 0.3 });
+            const tailMat = new THREE.MeshStandardMaterial({ map: tailTex, metalness: 0.6, roughness: 0.3 });
+            const coin = new THREE.Mesh(geometry, [sideMat, headMat, tailMat]);
+            coin.castShadow = true;
+            coinScene.add(coin);
+
+            let coinY = -2.2;
+            let coinVy = 16;
+            let coinRotX = 0;
+            let coinRotY = 0;
+            let coinRotZ = 0;
+            let coinRotSpeedX = Math.PI * 6 + (Math.random() - 0.5) * Math.PI * 4;
+            let coinRotSpeedY = Math.PI * 2 + (Math.random() - 0.5) * Math.PI * 4;
+            let coinRotSpeedZ = Math.PI * 2 + (Math.random() - 0.5) * Math.PI * 4;
+            const gravity = -35;
+            
+            const isHeads = Math.random() >= 0.5;
+            const resultStr = isHeads ? 'heads' : 'tails';
+
+            let animationId;
+            let clock = new THREE.Clock();
+            let phase = 'up';
+
+            const animateCoin = () => {
+              const dt = Math.min(clock.getDelta(), 0.1);
+              coinVy += gravity * dt;
+              coinY += coinVy * dt;
+              
+              if (phase !== 'settle') {
+                coinRotX += coinRotSpeedX * dt;
+                coinRotY += coinRotSpeedY * dt;
+                coinRotZ += coinRotSpeedZ * dt;
+                coin.rotation.set(coinRotX, coinRotY, coinRotZ);
+              }
+
+              if (coinVy < 0 && phase === 'up') phase = 'down';
+
+              if (coinY <= -2.2 && phase === 'down') {
+                coinY = -2.2;
+                coinVy = Math.abs(coinVy) * 0.45;
+                if (audio && audio.playCoinBounce) audio.playCoinBounce(0.4);
+                if (coinVy > 2.5) {
+                  coinRotSpeedX *= 0.6;
+                  coinRotSpeedY *= 0.5;
+                  coinRotSpeedZ *= 0.5;
+                  // Add ragdoll physics variance to rotation on bounce
+                  coinRotSpeedX += (Math.random() - 0.5) * Math.PI * 4;
+                  coinRotSpeedZ += (Math.random() - 0.5) * Math.PI * 4;
+                  coinRotSpeedY += (Math.random() - 0.5) * Math.PI * 2;
+                } else {
+                  phase = 'settle';
+                  coinVy = 0;
+                  // Lie flat on the floor. Heads points up (Y), Tails points down (-Y)
+                  coin.rotation.set(isHeads ? 0 : Math.PI, 0, 0);
+                  coinY = -2.2;
+                  
+                  setTimeout(() => {
+                    cancelAnimationFrame(animationId);
+                    coinRenderer.dispose();
+                    tossAnim.style.display = 'none';
+                    tossResult.style.display = 'flex';
+                    
+                    resultText.innerText = `IT'S ${resultStr.toUpperCase()}!`;
+                    
+                    this.playerGoesFirst = (resultStr === 'heads');
+                    if (this.playerGoesFirst) {
+                      winnerText.innerText = "IT'S HEADS! YOU SHOOT FIRST.";
+                      winnerText.style.color = "#4ade80";
+                    } else {
+                      winnerText.innerText = "IT'S TAILS! AI SHOOTS FIRST.";
+                      winnerText.style.color = "#f87171";
+                    }
+                    if (audio && audio.playScore) audio.playScore();
+                  }, 1200);
+                  
+                  coin.position.y = coinY;
+                  coinRenderer.render(coinScene, coinCamera);
+                  return;
+                }
+              }
+
+              coin.position.y = coinY;
+              coinRenderer.render(coinScene, coinCamera);
+              animationId = requestAnimationFrame(animateCoin);
+            };
+
+            animateCoin();
+          };
+
+          const btnFlip = document.getElementById('btn-toss-flip');
+          const btnContinue = document.getElementById('btn-toss-continue');
+
+          // Clean up old listeners
+          const newFlip = btnFlip.cloneNode(true);
+          const newCont = btnContinue.cloneNode(true);
+          btnFlip.replaceWith(newFlip);
+          btnContinue.replaceWith(newCont);
+
+          document.getElementById('btn-toss-flip').addEventListener('click', () => handleToss());
+          document.getElementById('btn-toss-continue').addEventListener('click', () => {
+            document.getElementById('coin-toss-screen').style.display = 'none';
+            this.initGameLogic();
+          });
+        }
+
+        initGameLogic() {
           if (this.backgroundBalls) {
             this.backgroundBalls.forEach(b => this.scene.remove(b.mesh));
             this.backgroundBalls = [];
@@ -4243,35 +4646,29 @@
           document.getElementById('pregame-screen').style.display = 'none';
           document.getElementById('postgame-screen').style.display = 'none';
           document.getElementById('player-summary-screen').style.display = 'none';
-          document.getElementById('ai-overlay').style.display = 'none';
           document.getElementById('pause-screen').style.display = 'none';
-          document.getElementById('hud-overlay').style.display = 'flex';
-          const mWrap = document.getElementById('meter-wrapper');
-          if (mWrap) mWrap.style.display = 'flex';
-          document.getElementById('shoot-btn').style.display = 'flex';
           document.getElementById('ai-hud-label').innerText = 'AI';
           document.getElementById('ai-score-val').innerText = '0';
 
-          this.state = 'PLAYER_TURN';
           this.isPaused = false;
           this.playerScore = 0;
           this.aiScore = 0;
-          this.shotClock = 70;
-          this.playerShotLog = [];
+          this.playerStats = null;
           this.turnEnding = false;
           this.isRunningToRack = false;
 
-          document.getElementById('shot-clock-val').innerText = '70';
-
-          this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
+          this.hasPlayerPlayed = false;
+          this.hasAIPlayed = false;
 
           // Apply player jersey customization
           const jerseyColorsMap = {
             blue: { jersey: 0x1d4ed8, shorts: 0x111827 },
             black: { jersey: 0x18181b, shorts: 0x09090b },
-            purple: { jersey: 0x6d28d9, shorts: 0x4c1d95 }
+            purple: { jersey: 0x6d28d9, shorts: 0x4c1d95 },
+            pink: { jersey: 0xec4899, shorts: 0x831843 },
+            lightRed: { jersey: 0xf87171, shorts: 0x7f1d1d }
           };
-          const pColor = jerseyColorsMap[this.userJerseyColor || 'purple'] || jerseyColorsMap.purple;
+          const pColor = jerseyColorsMap[this.userJerseyColor || 'black'] || jerseyColorsMap.black;
           this.updateMeshJersey(
             this.playerMesh,
             pColor.jersey,
@@ -4290,26 +4687,8 @@
           }
 
           this.updateMeterUIForDifficulty();
-          this.updateHUD();
-          this.setupShots();
-          this.updateCameraForShot();
-          this.update3DShotClock();
-
-          // Shot Clock Interval
-          if (this.clockInterval) clearInterval(this.clockInterval);
-          this.clockInterval = setInterval(() => {
-            if (this.isPaused) return;
-            if (this.state === 'PLAYER_TURN') {
-              this.shotClock--;
-              document.getElementById('shot-clock-val').innerText = this.shotClock;
-              this.update3DShotClock();
-              if (this.shotClock <= 0) {
-                clearInterval(this.clockInterval);
-                audio.playBuzzer();
-                this.endPlayerTurn();
-              }
-            }
-          }, 1000);
+          
+          this.startNextTurnFromSummary();
         }
 
         updateMeterUIForDifficulty() {
@@ -4608,10 +4987,8 @@
             scored: false
           };
 
-          if (this.state === 'PLAYER_TURN') {
-            if (!this.playerShotLog) this.playerShotLog = [];
-            this.playerShotLog.push(shotRecord);
-          }
+          if (!this.currentShotLog) this.currentShotLog = [];
+          this.currentShotLog.push(shotRecord);
 
           const info = { shot, timingQuality, guaranteedMake, startPos, scored: false, bounced: false, isAI: false, shotRecord };
 
@@ -4629,7 +5006,122 @@
           this.advanceShot();
         }
 
+        
+        
+        setRimFire(active) {
+          if (!this.rimMat || !this.bbBoxMat) return;
+          if (this.firePoints) this.firePoints.visible = active;
+          if (active) {
+            this.rimMat.emissive.setHex(0xff3b00); // Stronger emissive
+            this.rimMat.color.setHex(0xffaa00);
+            this.bbBoxMat.color.setHex(0xff0000);
+            if (this.backboardFlashLight) {
+              this.backboardFlashLight.color.setHex(0xff0000);
+              this.backboardFlashLight.intensity = 100;
+            }
+          } else {
+            this.rimMat.emissive.setHex(0x220500);
+            this.rimMat.color.setHex(0xff3b00);
+            this.bbBoxMat.color.setHex(0xef4444);
+            if (this.backboardFlashLight) {
+              this.backboardFlashLight.color.setHex(0xff2200);
+              this.backboardFlashLight.intensity = 0;
+            }
+          }
+        }
+
+        setRimCold(active) {
+          if (!this.rimMat || !this.bbBoxMat) return;
+          if (this.coldPoints) this.coldPoints.visible = active;
+          const meterWrapper = document.getElementById('meter-wrapper');
+          if (active) {
+            this.rimMat.emissive.setHex(0x0055ff);
+            this.rimMat.color.setHex(0x38bdf8);
+            this.bbBoxMat.color.setHex(0x38bdf8);
+            if (this.backboardFlashLight) {
+              this.backboardFlashLight.color.setHex(0x0088ff);
+              this.backboardFlashLight.intensity = 50;
+            }
+            if (meterWrapper) meterWrapper.classList.add('cold-shake');
+          } else {
+            this.rimMat.emissive.setHex(0x220500);
+            this.rimMat.color.setHex(0xff3b00);
+            this.bbBoxMat.color.setHex(0xef4444);
+            if (this.backboardFlashLight) {
+              this.backboardFlashLight.color.setHex(0xff2200);
+              this.backboardFlashLight.intensity = 0;
+            }
+            if (meterWrapper) meterWrapper.classList.remove('cold-shake');
+          }
+        }
+
+
+                handlePlayerScore(info) {
+          this.playerStreak = Math.max(0, this.playerStreak || 0) + 1;
+          
+          if (this.isCold) {
+            this.makesWhileCold = (this.makesWhileCold || 0) + 1;
+            const diff = this.meterDiff || 'normal';
+            const recoveryGoal = diff === 'hard' ? 2 : 1;
+            if (this.makesWhileCold >= recoveryGoal) {
+              this.isCold = false;
+              this.makesWhileCold = 0;
+              this.setRimCold(false);
+            }
+          }
+          
+          if (this.playerStreak >= 5) {
+            this.setRimFire(true);
+          }
+        }
+
+        handlePlayerMiss(info) {
+          this.playerStreak = Math.min(0, this.playerStreak || 0) - 1;
+          this.setRimFire(false);
+          this.makesWhileCold = 0;
+          
+          if (this.playerStreak <= -3) {
+            this.isCold = true;
+            this.setRimCold(true);
+          }
+        }
+
         updatePhysics(dt) {
+          
+          // Update Particles
+          if (this.firePoints && this.firePoints.visible) {
+            const pos = this.fireGeo.attributes.position.array;
+            for (let i = 0; i < this.fireVelocities.length; i++) {
+              pos[i * 3 + 1] += this.fireVelocities[i].y * dt;
+              this.fireVelocities[i].life -= dt;
+              if (this.fireVelocities[i].life <= 0) {
+                const theta = Math.random() * Math.PI * 2;
+                const r = 0.22 + Math.random() * 0.04;
+                pos[i * 3] = Math.cos(theta) * r;
+                pos[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+                pos[i * 3 + 2] = Math.sin(theta) * r;
+                this.fireVelocities[i].life = Math.random() * 0.5;
+              }
+            }
+            this.fireGeo.attributes.position.needsUpdate = true;
+          }
+          if (this.coldPoints && this.coldPoints.visible) {
+            const pos = this.coldGeo.attributes.position.array;
+            for (let i = 0; i < this.coldVelocities.length; i++) {
+              pos[i * 3 + 1] += this.coldVelocities[i].y * dt;
+              this.coldVelocities[i].life -= dt;
+              if (this.coldVelocities[i].life <= 0) {
+                const theta = Math.random() * Math.PI * 2;
+                const r = 0.22 + Math.random() * 0.04;
+                pos[i * 3] = Math.cos(theta) * r;
+                pos[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+                pos[i * 3 + 2] = Math.sin(theta) * r;
+                this.coldVelocities[i].life = Math.random() * 0.5;
+              }
+            }
+            this.coldGeo.attributes.position.needsUpdate = true;
+          }
+
           // 1. Update background bouncing/rolling balls on court
           for (let i = this.backgroundBalls.length - 1; i >= 0; i--) {
             const bg = this.backgroundBalls[i];
@@ -4699,6 +5191,7 @@
                   if (info.shot.ballType === 'money') this.stats.moneyMakes++;
                   if (info.shot.ballType === 'starry') this.stats.starryMakes++;
                   this.showFeedback(info.shot.pts === 3 ? 'STARRY SHOT!<br>+3' : (info.shot.pts === 2 ? 'MONEY BALL!<br>+2' : 'SWISH!<br>+1'), '#38bdf8');
+                  this.handlePlayerScore(info);
                 }
 
                 audio.playSwish();
@@ -4761,6 +5254,9 @@
                 info.shot.result = 'miss';
                 audio.playGroan();
                 this.triggerCrowdGroan();
+                if (!info.isAI) {
+                  this.handlePlayerMiss(info);
+                }
               }
 
               if (ballPos.y <= 0.12) {
@@ -4783,16 +5279,28 @@
 
           // Check if round finishes after all 27 shots are taken & all in-flight balls landed
           if (this.currentShotIdx >= this.shots.length && this.inFlightBalls.length === 0 && !this.turnEnding) {
+            this.turnEnding = true;
             if (this.state === 'PLAYER_TURN') {
-              this.turnEnding = true;
-              setTimeout(() => { this.endPlayerTurn(); }, 500);
+              this.hasPlayerPlayed = true;
+              setTimeout(() => {
+                if (this.hasAIPlayed) {
+                  this.showPostGame();
+                } else {
+                  this.endPlayerTurn();
+                }
+              }, 500);
             } else if (this.state === 'AI_TURN') {
-              this.turnEnding = true;
+              this.hasAIPlayed = true;
               if (this.clockInterval) clearInterval(this.clockInterval);
               if (this.aiTimeout) clearTimeout(this.aiTimeout);
               setTimeout(() => {
                 document.getElementById('ai-overlay').style.display = 'none';
-                this.showPostGame();
+                if (!this.hasPlayerPlayed) {
+                  // AI went first, now show player summary (as AI summary)
+                  this.endPlayerTurn();
+                } else {
+                  this.showPostGame();
+                }
               }, 500);
             }
           }
@@ -4805,12 +5313,16 @@
             this.updateHUD();
             if (this.inFlightBalls.length === 0) {
               if (this.state === 'PLAYER_TURN') {
-                this.endPlayerTurn();
+                this.hasPlayerPlayed = true;
+                if (!this.hasAIPlayed) this.endPlayerTurn();
+                else this.showPostGame();
               } else if (this.state === 'AI_TURN') {
+                this.hasAIPlayed = true;
                 if (this.clockInterval) clearInterval(this.clockInterval);
                 if (this.aiTimeout) clearTimeout(this.aiTimeout);
                 document.getElementById('ai-overlay').style.display = 'none';
-                this.showPostGame();
+                if (!this.hasPlayerPlayed) this.endPlayerTurn();
+                else this.showPostGame();
               }
             }
           } else {
@@ -4825,6 +5337,11 @@
         }
 
         endPlayerTurn() {
+          const isAITurn = (this.state === 'AI_TURN');
+          
+          const missSec = document.getElementById('miss-analysis-section');
+          if (missSec) missSec.style.display = isAITurn ? 'none' : 'block';
+
           if (this.clockInterval) clearInterval(this.clockInterval);
           this.state = 'PLAYER_SUMMARY';
           this.turnEnding = false;
@@ -4834,9 +5351,24 @@
           if (mWrap) mWrap.style.display = 'none';
           document.getElementById('shoot-btn').style.display = 'none';
           document.getElementById('ai-overlay').style.display = 'none';
+          
+          if (!isAITurn) {
+            this.playerStats = { ...this.stats };
+          }
+
+          const titleEl = document.getElementById('player-summary-title');
+          const nextBtn = document.getElementById('start-ai-turn-btn');
+          
+          if (isAITurn) {
+            if (titleEl) titleEl.innerText = 'AI SCORE TO BEAT';
+            if (nextBtn) nextBtn.innerText = 'START YOUR TURN ➔';
+          } else {
+            if (titleEl) titleEl.innerText = 'YOUR ROUND SUMMARY';
+            if (nextBtn) nextBtn.innerText = 'NEXT: AI RIVAL ➔';
+          }
 
           // Populate Player Round Summary Modal analytics
-          document.getElementById('player-round-score-val').innerText = this.playerScore;
+          document.getElementById('player-round-score-val').innerText = isAITurn ? this.aiScore : this.playerScore;
 
           const fgPct = this.stats.attempts > 0 ? Math.round((this.stats.makes / this.stats.attempts) * 100) : 0;
           document.getElementById('player-round-fg').innerText = `${this.stats.makes} / ${this.stats.attempts} (${fgPct}%)`;
@@ -4849,8 +5381,15 @@
 
           document.getElementById('player-round-perfects').innerText = this.stats.perfects;
 
-          // Populate Advanced Analytics Shot Chart & Miss Breakdown
-          const logs = this.playerShotLog || [];
+          this.populateAnalyticsModal(this.currentShotLog || []);
+
+          // Show intermediate player summary screen
+          document.getElementById('player-summary-screen').style.display = 'flex';
+        }
+
+        populateAnalyticsModal(logs) {
+// Populate Advanced Analytics Shot Chart & Miss Breakdown
+          
           const misses = logs.filter(s => !s.scored);
           
           const totalBadge = document.getElementById('player-miss-total-badge');
@@ -4956,31 +5495,87 @@
             });
           }
 
-          // Show intermediate player summary screen
-          document.getElementById('player-summary-screen').style.display = 'flex';
+          
         }
 
-        startAITurnFromSummary() {
+        startNextTurnFromSummary() {
           document.getElementById('player-summary-screen').style.display = 'none';
           const aModal = document.getElementById('analytics-modal');
           if (aModal) aModal.style.display = 'none';
-          this.state = 'AI_TURN';
+
           this.turnEnding = false;
           this.inFlightBalls = [];
+          
+          this.playerStreak = 0;
+          this.isCold = false;
+          this.makesWhileCold = 0;
+          this.setRimFire(false);
+          this.setRimCold(false);
+          
+          let nextState = '';
+          if (!this.hasPlayerPlayed && !this.hasAIPlayed) {
+            nextState = this.playerGoesFirst ? 'PLAYER_TURN' : 'AI_TURN';
+          } else if (this.hasPlayerPlayed && !this.hasAIPlayed) {
+            nextState = 'AI_TURN';
+          } else if (!this.hasPlayerPlayed && this.hasAIPlayed) {
+            nextState = 'PLAYER_TURN';
+          }
 
-          const mWrap = document.getElementById('meter-wrapper');
-          if (mWrap) mWrap.style.display = 'none';
-          document.getElementById('shoot-btn').style.display = 'none';
-          document.getElementById('hud-overlay').style.display = 'flex';
-          document.getElementById('ai-overlay').style.display = 'block';
+          if (nextState === 'PLAYER_TURN') {
+            // Player's turn
+            this.state = 'PLAYER_TURN';
+            document.getElementById('hud-overlay').style.display = 'flex';
+            const mWrap = document.getElementById('meter-wrapper');
+            if (mWrap) mWrap.style.display = 'flex';
+            document.getElementById('shoot-btn').style.display = 'flex';
+            document.getElementById('ai-overlay').style.display = 'none';
+            const simBtn = document.getElementById('ai-simulate-btn');
+            if (simBtn) simBtn.style.display = 'none';
 
-          // Show the simulate button during AI turn
-          const simBtn = document.getElementById('ai-simulate-btn');
-          if (simBtn) simBtn.style.display = 'block';
+            this.playerScore = 0;
+            this.shotClock = 70;
+            document.getElementById('shot-clock-val').innerText = '70';
+            this.currentShotIdx = 0;
+            this.isPaused = false;
+            this.currentShotLog = [];
+            this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
+            
+            this.setupShots();
+            this.updateCameraForShot();
+            this.update3DShotClock();
+            this.updateHUD();
 
-          // Reset shots/racks for AI round
-          this.setupShots();
-          this.runAITurn();
+            if (this.clockInterval) clearInterval(this.clockInterval);
+            this.clockInterval = setInterval(() => {
+              if (this.isPaused) return;
+              if (this.state === 'PLAYER_TURN') {
+                this.shotClock--;
+                document.getElementById('shot-clock-val').innerText = this.shotClock;
+                this.update3DShotClock();
+                if (this.shotClock <= 0) {
+                  clearInterval(this.clockInterval);
+                  audio.playBuzzer();
+                  this.endPlayerTurn();
+                }
+              }
+            }, 1000);
+          } else {
+            // AI's turn
+            this.state = 'AI_TURN';
+            const mWrap = document.getElementById('meter-wrapper');
+            if (mWrap) mWrap.style.display = 'none';
+            document.getElementById('shoot-btn').style.display = 'none';
+            document.getElementById('hud-overlay').style.display = 'flex';
+            document.getElementById('ai-overlay').style.display = 'block';
+
+            // Show the simulate button during AI turn
+            const simBtn = document.getElementById('ai-simulate-btn');
+            if (simBtn) simBtn.style.display = 'block';
+
+            // Reset shots/racks for AI round
+            this.setupShots();
+            this.runAITurn();
+          }
         }
 
         runAITurn() {
@@ -4991,6 +5586,8 @@
           this.currentShotIdx = 0;
           this.isPaused = false;
           this.turnEnding = false;
+          this.currentShotLog = [];
+          this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
 
           const aiNames = { easy: 'REX', medium: 'DAME', hard: 'STEPH' };
           const aiName = aiNames[this.aiDiff] || 'DAME';
@@ -5016,7 +5613,12 @@
               if (this.aiTimeout) clearTimeout(this.aiTimeout);
               audio.playBuzzer();
               document.getElementById('ai-overlay').style.display = 'none';
-              this.showPostGame();
+              this.hasAIPlayed = true;
+              if (!this.hasPlayerPlayed) {
+                this.endPlayerTurn();
+              } else {
+                this.showPostGame();
+              }
             }
           }, 1000);
 
@@ -5103,7 +5705,23 @@
 
             if (isMake) {
               this.aiScore += shot.pts;
+              this.stats.makes++;
+              if (shot.ballType === 'money') this.stats.moneyMakes++;
+              if (shot.ballType === 'starry') this.stats.starryMakes++;
             }
+            this.stats.attempts++;
+            if (shot.ballType === 'money') this.stats.moneyAtts++;
+            if (shot.ballType === 'starry') this.stats.starryAtts++;
+
+            if (!this.currentShotLog) this.currentShotLog = [];
+            this.currentShotLog.push({
+              shotNum: this.currentShotIdx,
+              spotName: shot.spotName,
+              ballType: shot.ballType,
+              timingQuality: isMake ? 'green' : 'slightly_late',
+              meterVal: 50,
+              scored: isMake
+            });
 
             shot.result = isMake ? 'hit' : 'miss';
 
@@ -5124,7 +5742,12 @@
           this.updateHUD();
 
           document.getElementById('ai-overlay').style.display = 'none';
-          this.showPostGame();
+          this.hasAIPlayed = true;
+          if (!this.hasPlayerPlayed) {
+            this.endPlayerTurn();
+          } else {
+            this.showPostGame();
+          }
         }
 
         updatePlayerAnimation(dt) {
@@ -5297,6 +5920,8 @@
           document.getElementById('player-summary-screen').style.display = 'none';
           document.getElementById('postgame-screen').style.display = 'flex';
 
+          this.populateAnalyticsModal(this.currentShotLog || []);
+
           // Hide simulate button
           const simBtn = document.getElementById('ai-simulate-btn');
           if (simBtn) simBtn.style.display = 'none';
@@ -5322,16 +5947,18 @@
           document.getElementById('final-player-score').innerText = this.playerScore;
           document.getElementById('final-ai-score').innerText = this.aiScore;
 
-          const fgPct = this.stats.attempts > 0 ? Math.round((this.stats.makes / this.stats.attempts) * 100) : 0;
-          document.getElementById('stat-fg').innerText = `${this.stats.makes} / ${this.stats.attempts} (${fgPct}%)`;
+          const pStats = this.playerStats || this.stats;
 
-          const mPct = this.stats.moneyAtts > 0 ? Math.round((this.stats.moneyMakes / this.stats.moneyAtts) * 100) : 0;
-          document.getElementById('stat-money').innerText = `${this.stats.moneyMakes} / ${this.stats.moneyAtts} (${mPct}%)`;
+          const fgPct = pStats.attempts > 0 ? Math.round((pStats.makes / pStats.attempts) * 100) : 0;
+          document.getElementById('stat-fg').innerText = `${pStats.makes} / ${pStats.attempts} (${fgPct}%)`;
 
-          const sPct = this.stats.starryAtts > 0 ? Math.round((this.stats.starryMakes / this.stats.starryAtts) * 100) : 0;
-          document.getElementById('stat-starry').innerText = `${this.stats.starryMakes} / ${this.stats.starryAtts} (${sPct}%)`;
+          const mPct = pStats.moneyAtts > 0 ? Math.round((pStats.moneyMakes / pStats.moneyAtts) * 100) : 0;
+          document.getElementById('stat-money').innerText = `${pStats.moneyMakes} / ${pStats.moneyAtts} (${mPct}%)`;
 
-          document.getElementById('stat-perfects').innerText = this.stats.perfects;
+          const sPct = pStats.starryAtts > 0 ? Math.round((pStats.starryMakes / pStats.starryAtts) * 100) : 0;
+          document.getElementById('stat-starry').innerText = `${pStats.starryMakes} / ${pStats.starryAtts} (${sPct}%)`;
+
+          document.getElementById('stat-perfects').innerText = pStats.perfects;
         }
 
         triggerConfetti() {
@@ -5448,6 +6075,9 @@
             const currentShot = (this.shots && this.currentShotIdx < this.shots.length) ? this.shots[this.currentShotIdx] : null;
             if (currentShot && (currentShot.ballType === 'starry' || (currentShot.spot && currentShot.spot.name && currentShot.spot.name.includes('STARRY')))) {
               speedMult = 1.75; // Starry shot meter moves significantly faster!
+            }
+            if (this.isCold) {
+              speedMult *= 1.35; // Meter moves 35% faster when cold
             }
             this.meterVal += this.meterSpeed * speedMult * this.meterDir * 60 * dt;
             if (this.meterVal >= 100) {
