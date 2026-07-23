@@ -51,9 +51,7 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        overflow: hidden;
         z-index: 10;
       }
       .pointer-enabled {
@@ -62,20 +60,25 @@
 
       /* HUD TOP BAR */
       #hud-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         padding: 12px 16px;
         background: linear-gradient(180deg, rgba(8,10,15,0.4) 0%, rgba(8,10,15,0) 100%);
-        width: 100%;
         box-sizing: border-box;
+        z-index: 15;
       }
                   .score-card {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 84px;
+        width: 88px;
+        height: 56px;
         background: rgba(15, 23, 42, 0.4);
         backdrop-filter: blur(24px) saturate(180%);
         -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -112,10 +115,11 @@
         font-weight: 700;
         color: #f8fafc;
         text-align: center;
+        font-variant-numeric: tabular-nums;
       }
 
       /* SHOT CLOCK */
-            #shot-clock-container {
+      #shot-clock-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -126,6 +130,8 @@
         border-radius: 12px;
         padding: 4px 16px;
         box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        min-width: 88px;
+        box-sizing: border-box;
       }
       #shot-clock-label {
         font-size: 9px;
@@ -139,6 +145,7 @@
         line-height: 1;
         font-weight: 700;
         color: #ef4444;
+        font-variant-numeric: tabular-nums;
       }
 
       /* PAUSE BUTTON */
@@ -167,13 +174,19 @@
       }
 
       /* HUD BOTTOM RACK BAR */
-                  #hud-bottom {
+      #hud-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 10px;
         padding: 12px 16px 20px 16px;
         background: transparent;
+        box-sizing: border-box;
+        z-index: 15;
       }
       #rack-title-badge {
         font-family: 'Teko', sans-serif;
@@ -549,7 +562,10 @@
       .wizard-step-panel {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        justify-content: flex-start;
+        align-items: stretch;
+        width: 100%;
+        gap: 12px;
         animation: fadeInStep 0.3s ease forwards;
       }
       @keyframes fadeInStep {
@@ -1232,17 +1248,45 @@
     
       @keyframes coldShake {
         0% { transform: translateX(0); }
-        25% { transform: translateX(-5px) rotate(-1deg); }
-        50% { transform: translateX(5px) rotate(1deg); }
-        75% { transform: translateX(-5px) rotate(-1deg); }
+        25% { transform: translateX(-3px) rotate(-0.6deg); }
+        50% { transform: translateX(3px) rotate(0.6deg); }
+        75% { transform: translateX(-3px) rotate(-0.6deg); }
         100% { transform: translateX(0); }
       }
       .cold-shake {
-        animation: coldShake 0.4s infinite;
+        animation: coldShake 0.45s infinite ease-in-out;
         filter: hue-rotate(180deg) brightness(1.2);
       }
 
-    </style>
+    
+      @media (max-width: 600px) {
+        #meter-wrapper {
+          right: 18px;
+        }
+        #meter-feedback {
+          font-size: 18px;
+          right: -2px;
+        }
+      }
+    
+      @keyframes simGlowPulse {
+        0% {
+          transform: translateX(-50%) scale(1);
+          box-shadow: 0 0 10px rgba(244, 63, 94, 0.6), inset 0 0 6px rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+        50% {
+          transform: translateX(-50%) scale(1.08);
+          box-shadow: 0 0 22px rgba(244, 63, 94, 1), 0 0 35px rgba(244, 63, 94, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.6);
+          border-color: rgba(255, 255, 255, 0.9);
+        }
+        100% {
+          transform: translateX(-50%) scale(1);
+          box-shadow: 0 0 10px rgba(244, 63, 94, 0.6), inset 0 0 6px rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+  </style>
   </head>
   <body>
     <div id="game-container">
@@ -1258,9 +1302,6 @@
           <h1 style="font-family: 'Teko', sans-serif; font-size: 64px; font-weight: 800; color: #ffffff; letter-spacing: 2px; margin: 0; line-height: 1.0; text-transform: uppercase; opacity: 0; transform: translateY(20px); animation: splashFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;">
             3-POINT SHOOTOUT
           </h1>
-          
-          <!-- Decorative Split Line -->
-          <div style="width: 80px; height: 3px; background: #38bdf8; border-radius: 2px; margin: 8px 0; opacity: 0; transform: scaleX(0); animation: splashScaleX 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;"></div>
           
           <!-- Loading Bar Container -->
           <div style="width: 240px; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.05); opacity: 0; animation: splashFadeIn 0.5s ease-out forwards 0.7s;">
@@ -1293,7 +1334,7 @@
             </div>
             <button id="pause-btn" class="pointer-enabled" title="Pause Game">PAUSE</button>
             <!-- AI SHOOTING OVERLAY BELOW PAUSE BUTTON -->
-            <div id="ai-overlay" style="display: none;">
+            <div id="ai-overlay" style="display: none; position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 20;">
               <div id="ai-overlay-text">AI SHOOTING</div>
             </div>
           </div>
@@ -1303,7 +1344,7 @@
               <div id="ai-hud-label" class="player-label">AI</div>
               <div id="ai-score-val" class="player-val">0</div>
             </div>
-            <button id="ai-simulate-btn" class="pointer-enabled" style="display: none; position: absolute; top: calc(100% + 6px); right: 0; padding: 3px 10px; background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); color: white; border: 1.5px solid rgba(255,255,255,0.25); border-radius: 6px; font-family: 'Teko', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 6px rgba(244,63,94,0.4); text-transform: uppercase; line-height: 1.2; white-space: nowrap; z-index: 20;">SIMULATE</button>
+            <button id="ai-simulate-btn" class="pointer-enabled" style="display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); padding: 3px 10px; background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); color: white; border: 1.2px solid rgba(255,255,255,0.6); border-radius: 6px; font-family: 'Teko', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: filter 0.2s ease; animation: simGlowPulse 1.2s infinite ease-in-out; text-transform: uppercase; line-height: 1.1; white-space: nowrap; z-index: 20;">SIMULATE</button>
           </div>
         </div>
 
@@ -1398,7 +1439,7 @@
 
           <!-- SINGLE BUTTON TO VIEW ADVANCED ANALYTICS -->
           <button id="view-analytics-btn" class="nav-secondary-btn" style="width: fit-content; margin: 8px auto; border: 1px solid rgba(56, 189, 248, 0.5); color: #38bdf8; font-size: 11px; font-family: 'Montserrat', sans-serif; min-height: 28px; padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;">
-            <span>📊</span> VIEW ADVANCED ANALYTICS
+            <span>📊</span> VIEW PLAYER ADVANCED ANALYTICS
           </button>
 
           <button id="start-ai-turn-btn" class="cta-button" style="width: 100%; margin-top: 8px; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">
@@ -1408,55 +1449,312 @@
       </div>
 
       <!-- ADVANCED SHOT CHART & MISS ANALYTICS MODAL OVERLAY -->
-      <div id="analytics-modal" class="modal-screen pointer-enabled" style="display: none; z-index: 200;">
-        <div class="modal-card" style="max-height: 88vh; overflow-y: auto; max-width: 620px; width: 95%; padding: 20px; text-align: left; gap: 16px;">
-          <div style="display: flex; justify-content: center; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px; text-align: center; width: 100%;">
-            <span style="font-family: 'Teko', sans-serif; font-size: 28px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; white-space: nowrap; width: 100%; display: block; text-align: center;">ADVANCED ANALYTICS</span>
+      <div id="analytics-modal" class="modal-screen pointer-enabled" style="display: none; z-index: 200; touch-action: pan-y;">
+        <div class="modal-card" style="max-height: 90vh; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; max-width: 660px; width: 95%; padding: 20px 18px; text-align: left; gap: 12px; background: rgba(15, 23, 42, 0.96); border: 2px solid rgba(56, 189, 248, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.15); border-radius: 20px;">
+
+          <!-- MODAL HEADER (Smaller text size: 18px) -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 8px; width: 100%;">
+            <span id="analytics-header-title" style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #38bdf8; letter-spacing: 0.5px; line-height: 1.1; text-transform: uppercase; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">PLAYER ADVANCED ANALYTICS</span>
           </div>
 
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span id="player-miss-total-badge" style="background: rgba(239, 68, 68, 0.2); border: 1.5px solid #ef4444; color: #f87171; font-size: 14px; font-weight: 800; padding: 4px 12px; border-radius: 14px;">0 MISSES</span>
-          </div>
-
-          <!-- HOT & COLD SPOTS BANNER -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; font-weight: 700;">
-            <div id="hot-spot-badge" style="background: rgba(34, 197, 94, 0.12); border: 1.5px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 6px; line-height: 1.2;">
-              🔥 Hottest Spot: -
+          <!-- DYNAMIC ANALYTICS NAVIGATION TABS -->
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 6px;">
+            <div id="analytics-nav-tabs" style="display: flex; gap: 8px; width: 100%; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; touch-action: pan-x; -webkit-overflow-scrolling: touch; box-sizing: border-box;">
+              <button class="analytics-tab-btn active" data-tab="0" style="flex: 1; min-width: 100px; padding: 8px 14px; border-radius: 10px; background: rgba(56, 189, 248, 0.25); border: 1.5px solid #38bdf8; color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; flex-shrink: 0;">OVERVIEW</button>
+              <button class="analytics-tab-btn" data-tab="1" style="flex: 1; min-width: 100px; padding: 8px 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; flex-shrink: 0;">HEATMAP</button>
+              <button class="analytics-tab-btn" data-tab="2" style="flex: 1; min-width: 100px; padding: 8px 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; flex-shrink: 0;">MOMENTUM</button>
+              <button class="analytics-tab-btn" data-tab="3" style="flex: 1; min-width: 100px; padding: 8px 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; white-space: nowrap; text-align: center; flex-shrink: 0;">TIMING</button>
             </div>
-            <div id="cold-spot-badge" style="background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 6px; line-height: 1.2;">
-              🧊 Coldest Spot: -
+            
+            <!-- MINIMAL DOTS INDICATOR -->
+            <div style="display: flex; justify-content: center; align-items: center; padding: 2px 0;">
+              <div id="analytics-tab-dots" style="display: flex; gap: 6px; align-items: center;">
+                <span class="tab-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; transition: all 0.2s;"></span>
+                <span class="tab-dot" style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.2s;"></span>
+                <span class="tab-dot" style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.2s;"></span>
+                <span class="tab-dot" style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.2s;"></span>
+              </div>
             </div>
           </div>
 
-          <!-- MISS RELEASE TIMING SUMMARY BARS -->
-          <div id="miss-analysis-section" style="background: rgba(0,0,0,0.4); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.06);">
-            <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;">MISS ANALYSIS BY RELEASE TIMING</div>
-            <div id="miss-timing-bars" style="display: flex; flex-direction: column; gap: 10px;">
-              <!-- Dynamically populated -->
+          <!-- SUMMARY QUICK STATS STRIP (Always visible top bar) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%;">
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; text-align: center;">
+              <div style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">FIELD GOALS</div>
+              <div id="analytics-quick-fg" style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: #38bdf8; line-height: 1.1;">0/0 (0%)</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; text-align: center;">
+              <div style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">MONEY RACK</div>
+              <div id="analytics-quick-money" style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: #fbbf24; line-height: 1.1;">0/0 (0%)</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; text-align: center;">
+              <div style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">STARRY SHOTS</div>
+              <div id="analytics-quick-starry" style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: #a855f7; line-height: 1.1;">0/0 (0%)</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; text-align: center;">
+              <div style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">PERFECTS</div>
+              <div id="analytics-quick-perfects" style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: #4ade80; line-height: 1.1;">0</div>
             </div>
           </div>
 
-          <!-- SHOT LOCATION SPOT CARDS GRID -->
-          <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; margin-bottom: 2px; text-transform: uppercase;">SHOT LOCATION BREAKDOWN (BY RACK)</div>
-          <div id="shot-location-grid" style="display: flex; flex-direction: column; gap: 10px;">
-            <!-- Dynamically populated rack shot cards -->
+          <!-- TAB PANE 0: OVERVIEW & RACKS (Only Hot/Cold spots + Detailed Rack Log) -->
+          <div id="analytics-pane-overview" style="display: flex; flex-direction: column; gap: 12px; width: 100%; transition: opacity 0.25s ease;">
+            <!-- HOT & COLD SPOTS BANNER -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; font-weight: 700; width: 100%; box-sizing: border-box;">
+              <div id="hot-spot-badge" style="background: rgba(34, 197, 94, 0.12); border: 1.5px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 6px; line-height: 1.2;">
+                🔥 Hottest Spot: -
+              </div>
+              <div id="cold-spot-badge" style="background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 10px 12px; border-radius: 10px; display: flex; align-items: center; gap: 6px; line-height: 1.2;">
+                🧊 Coldest Spot: -
+              </div>
+            </div>
+
+            <!-- SHOT LOCATION SPOT CARDS GRID (By Rack) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; width: 100%; box-sizing: border-box;">
+              <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">DETAILED RACK SHOT LOG</div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 700;">SHOWING ALL RACKS</span>
+            </div>
+            <div id="shot-location-grid" style="display: flex; flex-direction: column; gap: 10px; width: 100%; box-sizing: border-box;">
+              <!-- Dynamically populated rack shot cards -->
+            </div>
           </div>
 
-          <button id="close-analytics-bottom-btn" class="cta-button" style="width: 100%; margin-top: 8px; background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; font-size: 26px; min-height: 64px;">
+          <!-- TAB PANE 1: STATIC 2D COURT HEATMAP -->
+          <div id="analytics-pane-heatmap" style="display: none; flex-direction: column; gap: 12px; width: 100%; transition: opacity 0.25s ease;">
+            <div style="background: rgba(0,0,0,0.45); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.08); position: relative; width: 100%; box-sizing: border-box;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">
+                  COURT HEATMAP
+                </div>
+              </div>
+              
+              <div id="analytics-court-diagram-container" style="width: 100%; height: 210px; position: relative; background: #070d1e; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <!-- Dynamically populated static SVG half court diagram -->
+              </div>
+
+              <!-- LEGEND STRIP -->
+              <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px; font-size: 11px; font-weight: 700; color: #94a3b8; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e; display: inline-block;"></span> Hot (≥70%)</div>
+                <div style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #eab308; display: inline-block;"></span> Average (40–69%)</div>
+                <div style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444; display: inline-block;"></span> Cold (&lt;40%)</div>
+                <div style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #475569; display: inline-block;"></span> No Shots</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB PANE 2: MOMENTUM & SCORING TRAJECTORY GRAPH (INCLUDES FILTER PILLS & ACTIVE FILTER BANNER) -->
+          <div id="analytics-pane-momentum" style="display: none; flex-direction: column; gap: 12px; width: 100%; transition: opacity 0.25s ease;">
+            <!-- INTERACTIVE FILTER PILLS BAR (MOVED TO MOMENTUM TAB) -->
+            <div id="analytics-filter-pills" style="display: flex; gap: 6px; flex-wrap: wrap; width: 100%;">
+              <button class="analytics-filter-btn active" data-filter="ALL" style="flex: 1; min-width: 80px; padding: 6px 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.25); border: 1.5px solid #38bdf8; color: #ffffff; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">ALL SHOTS</button>
+              <button class="analytics-filter-btn" data-filter="MAKES" style="flex: 1; min-width: 80px; padding: 6px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">MAKES ONLY</button>
+              <button class="analytics-filter-btn" data-filter="MISSES" style="flex: 1; min-width: 80px; padding: 6px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">MISSES ONLY</button>
+              <button class="analytics-filter-btn" data-filter="PERFECTS" style="flex: 1; min-width: 80px; padding: 6px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">PERFECTS</button>
+            </div>
+
+            <!-- ACTIVE FILTER INDICATOR BANNER WITH RESET BUTTON (MOVED TO MOMENTUM TAB) -->
+            <div id="active-filter-indicator" style="display: none; justify-content: space-between; align-items: center; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; color: #7dd3fc; width: 100%; box-sizing: border-box;">
+              <span id="active-filter-label">ACTIVE FILTERS: NONE</span>
+              <button id="clear-spot-filter-btn" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 800; cursor: pointer;">RESET FILTERS ✕</button>
+            </div>
+
+            <div id="momentum-graph-section" style="background: rgba(0,0,0,0.45); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.08); position: relative; width: 100%; box-sizing: border-box;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">SCORING TRAJECTORY & MOMENTUM</div>
+                <div id="momentum-peak-badge" style="font-size: 11px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 2px 8px; border-radius: 6px;">TOTAL: 0 PTS</div>
+              </div>
+              <div id="momentum-graph-container" style="width: 100%; height: 160px; position: relative; background: rgba(15, 23, 42, 0.3); border-radius: 8px; padding: 6px; box-sizing: border-box;">
+                <!-- Dynamically populated SVG graph -->
+              </div>
+              <!-- DYNAMIC GRAPH POINT TOOLTIP OVERLAY -->
+              <div id="graph-tooltip" style="display: none; position: absolute; top: 12px; right: 14px; background: rgba(15, 23, 42, 0.95); border: 1px solid #38bdf8; border-radius: 8px; padding: 8px 12px; font-size: 11px; color: #f8fafc; box-shadow: 0 8px 20px rgba(0,0,0,0.6); pointer-events: none; z-index: 10; line-height: 1.3;">
+                <!-- Updated on hover/tap -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB PANE 3: SHOT RELEASE TIMING BREAKDOWN & COACHING ADVICE -->
+          <div id="analytics-pane-timing" style="display: none; flex-direction: column; gap: 12px; width: 100%; transition: opacity 0.25s ease;">
+            
+            <!-- COACHING ADVICE & QUICK TIMING METRICS CARD -->
+            <div id="timing-advice-card" style="background: rgba(0,0,0,0.45); border-radius: 14px; padding: 14px; border: 1px solid rgba(56, 189, 248, 0.25); width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 12px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase;">
+                  SHOT RELEASE TIMING & COACHING ADVICE
+                </div>
+                <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #7dd3fc; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px;">LIVE COACHING FEEDBACK</span>
+              </div>
+              <div id="timing-advice-text" style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: #fef08a; line-height: 1.4; background: rgba(250, 204, 21, 0.08); border: 1px dashed rgba(250, 204, 21, 0.3); border-radius: 8px; padding: 10px 12px;">
+                <!-- Dynamically populated coaching advice -->
+              </div>
+              <div id="timing-stats-strip" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center;">
+                <!-- Dynamically populated quick metrics -->
+              </div>
+            </div>
+
+            <!-- DETAILED RELEASE TIMING BREAKDOWN BARS -->
+            <div id="miss-analysis-section" style="background: rgba(0,0,0,0.45); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.08); width: 100%; box-sizing: border-box;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div style="font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">RELEASE TIMING BREAKDOWN</div>
+                <span id="player-miss-total-badge" style="background: rgba(56, 189, 248, 0.2); border: 1.5px solid #38bdf8; color: #38bdf8; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 10px;">0 SHOTS RECORDED</span>
+              </div>
+              <div id="miss-timing-bars" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CLOSE BUTTON AT BOTTOM -->
+          <button id="close-analytics-bottom-btn" class="cta-button" style="width: 100%; margin-top: 4px; background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; font-size: 24px; min-height: 52px;">
             CLOSE ANALYTICS ✕
           </button>
+
         </div>
       </div>
 
-      <!-- PRE-GAME SCREEN -->
-      <div id="pregame-screen" class="modal-screen pointer-enabled">
+      <!-- INITIAL JERSEY CREATION SCREEN -->
+      <div id="jersey-creation-screen" class="modal-screen pointer-enabled" style="display: flex; overflow-y: hidden; justify-content: center; padding: 10px;">
+        <div id="jersey-bouncing-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1;"></div>
+        <div class="modal-card" style="position: relative; z-index: 2; max-width: 360px; width: 100%; min-height: unset; height: auto; padding: 20px 18px; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; box-sizing: border-box; gap: 12px;">
+          <div class="title-header" style="margin-bottom: 10px;">
+            <h1>CREATE YOUR JERSEY</h1>
+            <p style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 13px; margin: 4px 0 0 0; font-weight: 700; text-transform: uppercase;">Design your custom player uniform</p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; align-items: center; box-sizing: border-box;">
+            <!-- JERSEY VISUAL PREVIEW CARD -->
+            <div id="custom-jersey-preview-card" style="width: 175px; height: 175px; background: #18181b; border-radius: 18px; border: 3px solid rgba(255,255,255,0.25); box-shadow: 0 12px 32px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: all 0.3s ease; margin-bottom: 8px;">
+              <!-- Collar V-neck -->
+              <div style="position: absolute; top: 0; width: 48px; height: 18px; background: #0f172a; border-radius: 0 0 24px 24px; border: 2px solid rgba(255,255,255,0.3); border-top: none; z-index: 5;"></div>
+              
+              <!-- Sleeves cutouts -->
+              <div style="position: absolute; top: 14px; left: -10px; width: 22px; height: 40px; background: #0f172a; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); z-index: 5;"></div>
+              <div style="position: absolute; top: 14px; right: -10px; width: 22px; height: 40px; background: #0f172a; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); z-index: 5;"></div>
+
+              <!-- Jersey Name -->
+              <div id="prev-jersey-name" style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; position: absolute; top: 24px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); text-align: center; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PLAYER</div>
+              
+              <!-- Jersey Number -->
+              <div id="prev-jersey-number" style="font-family: 'Teko', sans-serif; font-size: 72px; font-weight: 800; color: #ffffff; line-height: 1; position: absolute; top: 46px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8);">1</div>
+              
+              <!-- Jersey Bottom Stripe -->
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 8px; background: rgba(255,255,255,0.25);"></div>
+            </div>
+
+            <!-- INNER SUB-STEPS FOR JERSEYS -->
+            <div id="cust-substep-container" style="width: 100%; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+              
+              <!-- SUB-STEP A: JERSEY NAME -->
+              <div id="cust-substep-a" class="substep-panel" style="width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">1. Enter Jersey Name (Max 8 letters)</label>
+                <input type="text" id="cust-jersey-name" placeholder="Enter name" value="" maxlength="8" style="width: 80%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px; outline: none; box-sizing: border-box; transition: all 0.2s;" />
+                <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE</button>
+              </div>
+
+              <!-- SUB-STEP B: JERSEY NUMBER -->
+              <div id="cust-substep-b" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 8px; align-items: center;">
+                <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">2. Enter Jersey Number (Max 2 digits)</label>
+                <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
+                <div style="display: flex; gap: 8px; width: 80%; margin-top: 4px; justify-content: center;">
+                  <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
+                  <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE</button>
+                </div>
+              </div>
+
+              <!-- SUB-STEP C: JERSEY COLOR -->
+              <div id="cust-substep-c" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 12px; align-items: center; justify-content: space-between; flex: 1;">
+                <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">3. Pick Jersey Color</label>
+                <div style="display: flex; gap: 12px; width: 90%; justify-content: center; margin-bottom: 4px; flex-wrap: wrap;">
+                  <button class="color-picker-btn" data-color="blue" style="width: 44px; height: 44px; border-radius: 50%; background: #1d4ed8; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Blue"></button>
+                  <button class="color-picker-btn" data-color="purple" style="width: 44px; height: 44px; border-radius: 50%; background: #6d28d9; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Purple"></button>
+                  <button class="color-picker-btn selected" data-color="black" style="width: 44px; height: 44px; border-radius: 50%; background: #18181b; border: 3px solid #fbbf24; cursor: pointer; transform: scale(1.15); transition: all 0.2s; position: relative; box-shadow: 0 4px 10px rgba(24,24,27,0.5);" title="Black"></button>
+                  <button class="color-picker-btn" data-color="pink" style="width: 44px; height: 44px; border-radius: 50%; background: #ec4899; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Pink"></button>
+                  <div style="position: relative; width: 44px; height: 44px;">
+                    <button id="btn-custom-color" class="color-picker-btn" data-color="custom" style="width: 44px; height: 44px; border-radius: 50%; background: conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; padding: 0;" title="Custom Color">
+                      <span style="font-size: 16px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); pointer-events: none;">🎨</span>
+                    </button>
+                    <input type="color" id="cust-color-picker-input" value="#f87171" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border-radius: 50%;" />
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; width: 80%; justify-content: center;">
+                  <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
+                  <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">SAVE &amp; CONTINUE</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 8px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
+          Made by Ralph Frialde
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.4</div>
+        </div>
+      </div>
+
+      <!-- TITLE / GAME MODE SELECTION SCREEN -->
+      <div id="title-gamemode-screen" class="modal-screen pointer-enabled" style="display: none; overflow-y: hidden; justify-content: center; padding: 10px;">
+        <div class="modal-card" style="position: relative; z-index: 2; max-width: 360px; width: 100%; max-height: 85vh; padding: 18px 16px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; box-sizing: border-box; gap: 8px;">
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div class="title-header" style="margin-bottom: 16px; text-align: center;">
+              <h1 style="font-family: 'Teko', sans-serif; font-size: 42px; line-height: 0.95; letter-spacing: 1.5px; color: #facc15; margin: 0; text-shadow: 0 4px 14px rgba(250, 204, 21, 0.35);">GAME MODE</h1>
+              <p style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 10px; margin: 5px 0 0 0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Select a mode to enter the arena</p>
+            </div>
+
+            <!-- PLAYER BADGE OVERVIEW -->
+            <div id="title-player-badge" style="width: 100%; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 14px; padding: 12px 14px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-sizing: border-box; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">
+              <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+                <div id="badge-jersey-icon" style="width: 40px; height: 40px; min-width: 40px; background: #18181b; border-radius: 10px; border: 2px solid #ffffff; display: flex; align-items: center; justify-content: center; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 800; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">1</div>
+                <div style="text-align: left; flex: 1; min-width: 0; overflow: hidden;">
+                  <div style="font-size: 9px; color: #38bdf8; font-weight: 800; letter-spacing: 1px; font-family: 'Montserrat', sans-serif;">ACTIVE SHOOTER</div>
+                  <div id="badge-player-name" style="font-family: 'Teko', sans-serif; font-size: 24px; font-weight: 700; color: #ffffff; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PLAYER</div>
+                </div>
+              </div>
+              <button id="btn-edit-jersey" class="nav-secondary-btn" style="min-height: 34px; padding: 6px 12px; font-size: 11px; font-weight: 800; border-radius: 8px; flex-shrink: 0; white-space: nowrap;">EDIT JERSEY 👕</button>
+            </div>
+
+            <!-- GAME MODES GRID -->
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
+              <button id="btn-mode-shootout" class="nav-primary-btn" style="width: 100%; padding: 20px 14px; border-radius: 16px; min-height: 94px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(234, 179, 8, 0.35); border: 2px solid rgba(255, 255, 255, 0.4); box-sizing: border-box;">
+                <div style="font-family: 'Teko', sans-serif; font-size: 32px; line-height: 1; letter-spacing: 1px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; white-space: nowrap;">
+                  🏀 <span>3-POINT SHOOTOUT</span>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: rgba(255, 255, 255, 0.95); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;">
+                  5-RACK CONTEST VS AI RIVAL
+                </div>
+              </button>
+
+              <!-- ARCADE MODE (COMING SOON) -->
+              <div id="btn-mode-arcade" style="width: 100%; padding: 20px 14px; border-radius: 16px; min-height: 94px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; background: rgba(30, 41, 59, 0.45); border: 1.5px dashed rgba(255, 255, 255, 0.25); box-sizing: border-box; cursor: not-allowed;">
+                <div style="position: absolute; top: 6px; right: 10px; background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: #f87171; font-family: 'Montserrat', sans-serif; font-size: 8.5px; font-weight: 800; padding: 2px 7px; border-radius: 10px; letter-spacing: 1px;">COMING SOON</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 32px; line-height: 1; letter-spacing: 1px; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; white-space: nowrap;">
+                  👾 <span>ARCADE MODE</span>
+                </div>
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: #64748b; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">
+                  POWER-UPS &amp; MULTIPLIERS
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+        <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
+          Made by Ralph Frialde
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.4</div>
+        </div>
+      </div>
+
+      <!-- PRE-GAME SCREEN (SHOOTOUT SETUP) -->
+      <div id="pregame-screen" class="modal-screen pointer-enabled" style="display: none;">
         <div id="emoji-bouncing-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1;"></div>
-        <div class="modal-card" style="position: relative; z-index: 2;">
+        <div class="modal-card" style="position: relative; z-index: 2; max-width: 360px; width: 100%; max-height: 85vh; padding: 18px 16px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; box-sizing: border-box; gap: 8px;">
           <div class="title-header">
             <h1>3-POINT SHOOTOUT</h1>
           </div>
 
-          <!-- WIZARD STEP NAVIGATION BAR -->
+          <!-- WIZARD STEP NAVIGATION BAR (4 STEPS) -->
           <div class="wizard-steps-bar">
             <div class="wizard-progress-track">
               <div id="wizard-progress-fill" class="wizard-progress-fill"></div>
@@ -1464,167 +1762,106 @@
 
             <div class="wizard-step-item active" data-step="1">
               <div class="wizard-step-badge">1</div>
-              <div class="wizard-step-label">Jersey</div>
+              <div class="wizard-step-label">How To Play</div>
             </div>
 
             <div class="wizard-step-item" data-step="2">
               <div class="wizard-step-badge">2</div>
-              <div class="wizard-step-label">How To Play</div>
+              <div class="wizard-step-label">Money Rack</div>
             </div>
 
             <div class="wizard-step-item" data-step="3">
               <div class="wizard-step-badge">3</div>
-              <div class="wizard-step-label">Money Rack</div>
+              <div class="wizard-step-label">Meter</div>
             </div>
 
             <div class="wizard-step-item" data-step="4">
               <div class="wizard-step-badge">4</div>
-              <div class="wizard-step-label">Meter</div>
-            </div>
-
-            <div class="wizard-step-item" data-step="5">
-              <div class="wizard-step-badge">5</div>
               <div class="wizard-step-label">AI Rival</div>
             </div>
           </div>
 
-          <!-- STEP 1: CHARACTER CUSTOMIZATION (JERSEY) -->
+          <!-- STEP 1: HOW TO PLAY & CONTEST FORMAT TUTORIAL -->
           <div id="wizard-step-1" class="wizard-step-panel">
-            <div class="step-header-box" style="margin-bottom: 12px;">
-              <h2 class="step-title">CREATE YOUR PLAYER</h2>
-              <p class="step-desc">Design your official jersey before entering the 3-point contest.</p>
-            </div>
-
-            <!-- DYNAMIC STEP SLIDER FOR CUSTOMIZATION -->
-            <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; align-items: center; box-sizing: border-box;">
-              
-              <!-- JERSEY VISUAL PREVIEW CARD -->
-              <div id="custom-jersey-preview-card" style="width: 110px; height: 110px; background: #6d28d9; border-radius: 12px; border: 3px solid rgba(255,255,255,0.25); box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: all 0.3s ease;">
-                <!-- Collar V-neck -->
-                <div style="position: absolute; top: 0; width: 32px; height: 12px; background: #0f172a; border-radius: 0 0 20px 20px; border: 2px solid rgba(255,255,255,0.3); border-top: none; z-index: 5;"></div>
-                
-                <!-- Sleeves cutouts -->
-                <div style="position: absolute; top: 10px; left: -8px; width: 16px; height: 28px; background: #0f172a; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); z-index: 5;"></div>
-                <div style="position: absolute; top: 10px; right: -8px; width: 16px; height: 28px; background: #0f172a; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); z-index: 5;"></div>
-
-                <!-- Jersey Name -->
-                <div id="prev-jersey-name" style="font-family: 'Teko', sans-serif; font-size: 13px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; position: absolute; top: 16px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); text-align: center; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
-                
-                <!-- Jersey Number -->
-                <div id="prev-jersey-number" style="font-family: 'Teko', sans-serif; font-size: 48px; font-weight: 800; color: #ffffff; line-height: 1; position: absolute; top: 32px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8);"></div>
-                
-                <!-- Jersey Bottom Stripe -->
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: rgba(255,255,255,0.25);"></div>
-              </div>
-
-              <!-- INNER SUB-STEPS FOR JERSEYS -->
-              <div id="cust-substep-container" style="width: 100%; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-                
-                <!-- SUB-STEP A: JERSEY NAME -->
-                <div id="cust-substep-a" class="substep-panel" style="width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center;">
-                  <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">1. Enter Jersey Name (Max 8 letters)</label>
-                  <input type="text" id="cust-jersey-name" placeholder="Enter name" value="" maxlength="8" style="width: 80%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px; outline: none; box-sizing: border-box; transition: all 0.2s;" />
-                  <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE</button>
-                </div>
-
-                <!-- SUB-STEP B: JERSEY NUMBER -->
-                <div id="cust-substep-b" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 8px; align-items: center;">
-                  <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">2. Enter Jersey Number (Max 2 digits)</label>
-                  <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
-                  <div style="display: flex; gap: 8px; width: 80%; margin-top: 4px; justify-content: center;">
-                    <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
-                    <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE</button>
-                  </div>
-                </div>
-
-                <!-- SUB-STEP C: JERSEY COLOR -->
-                <div id="cust-substep-c" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 10px; align-items: center;">
-                  <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">3. Pick Jersey Color</label>
-                  <div style="display: flex; gap: 12px; width: 90%; justify-content: center; margin-bottom: 4px; flex-wrap: wrap;">
-                    <button class="color-picker-btn" data-color="blue" style="width: 44px; height: 44px; border-radius: 50%; background: #1d4ed8; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Blue"></button>
-                    <button class="color-picker-btn" data-color="purple" style="width: 44px; height: 44px; border-radius: 50%; background: #6d28d9; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Purple"></button>
-                    <button class="color-picker-btn selected" data-color="black" style="width: 44px; height: 44px; border-radius: 50%; background: #18181b; border: 3px solid #fbbf24; cursor: pointer; transform: scale(1.15); transition: all 0.2s; position: relative; box-shadow: 0 4px 10px rgba(24,24,27,0.5);" title="Black"></button>
-                    <button class="color-picker-btn" data-color="pink" style="width: 44px; height: 44px; border-radius: 50%; background: #ec4899; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Pink"></button>
-                    <button class="color-picker-btn" data-color="lightRed" style="width: 44px; height: 44px; border-radius: 50%; background: #f87171; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Light Red"></button>
-                  </div>
-                  <div style="display: flex; gap: 8px; width: 80%; justify-content: center;">
-                    <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
-                    <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CHOOSE HOW TO PLAY</button>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- STEP 2: HOW TO PLAY & CONTEST FORMAT TUTORIAL -->
-          <div id="wizard-step-2" class="wizard-step-panel" style="display: none;">
             <div class="step-header-box">
-              <h2 class="step-title">WELCOME TO 3-POINT SHOOTOUT</h2>
-              <p class="step-desc">Learn the rules and contest format before setting up your matchup.</p>
+              <h2 class="step-title">HOW TO PLAY &amp; CONTEST RULES</h2>
+              <p class="step-desc">Master controls, ball point values, and contest timing strategy.</p>
             </div>
 
-            <!-- HOW TO PLAY RULES CARD -->
-            <div class="rules-card" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 8px 12px; text-align: left; width: 100%; box-sizing: border-box;">
-              <div style="font-family: 'Teko', sans-serif; font-size: 16px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                CONTEST RULES &amp; FORMAT
+            <!-- SHOOTING CONTROLS CARD -->
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 10px 12px; width: 100%; box-sizing: border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+              <div style="font-family: 'Teko', sans-serif; font-size: 16px; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span>🎯</span> SHOOTING METER MECHANICS
               </div>
-
-              <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #e2e8f0; font-weight: 600;">
-                <div style="background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px;">⏱️</span>
-                  <div style="flex: 1;">
-                    <div style="color: #f87171; font-weight: 800; font-size: 11px; line-height: 1.1;">70s SHOT CLOCK</div>
-                    <div style="color: #94a3b8; font-size: 9.5px; margin-top: 1px; line-height: 1.1;">Fire all 27 shots across 5 court locations before time expires.</div>
-                  </div>
+              <div style="display: flex; flex-direction: column; gap: 4px; font-family: 'Montserrat', sans-serif; font-size: 9.5px; color: #cbd5e1;">
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 6px;">
+                  <span style="font-weight: 700; color: #4ade80;">🟢 PERFECT GREEN</span>
+                  <span style="color: #94a3b8;">100% Swish Accuracy</span>
                 </div>
-
-                <div style="background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px;">🤖</span>
-                  <div style="flex: 1;">
-                    <div style="color: #38bdf8; font-weight: 800; font-size: 11px; line-height: 1.1;">HEAD-TO-HEAD VS. AI RIVAL</div>
-                    <div style="color: #94a3b8; font-size: 9.5px; margin-top: 1px; line-height: 1.1;">Compete in a shootout against your chosen AI shooter.</div>
-                  </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 6px;">
+                  <span style="font-weight: 700; color: #facc15;">🟡 YELLOW ZONE</span>
+                  <span style="color: #94a3b8;">Rim Roll / Bank Shot</span>
                 </div>
-
-                <div style="background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px;">🏀</span>
-                  <div style="flex: 1;">
-                    <div style="color: #fb923c; font-weight: 800; font-size: 11px; line-height: 1.1;">5 BALLS PER RACK</div>
-                    <div style="color: #94a3b8; font-size: 9.5px; margin-top: 1px; line-height: 1.1;">Standard racks have 4 regular balls (1 PT) + 1 Money Ball (2 PTS).</div>
-                  </div>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px;">💰</span>
-                  <div style="flex: 1;">
-                    <div style="color: #facc15; font-weight: 800; font-size: 11px; line-height: 1.1;">MONEY BALL RACK</div>
-                    <div style="color: #94a3b8; font-size: 9.5px; margin-top: 1px; line-height: 1.1;">Choose 1 rack location where ALL 5 balls are Gold Money Balls (2 PTS).</div>
-                  </div>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px;">★</span>
-                  <div style="flex: 1;">
-                    <div style="color: #38bdf8; font-weight: 800; font-size: 11px; line-height: 1.1;">STARRY RANGE SHOTS (+3 PTS)</div>
-                    <div style="color: #94a3b8; font-size: 9.5px; margin-top: 1px; line-height: 1.1;">2 deep pedestals behind the arc worth 3 PTS each.</div>
-                  </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 6px;">
+                  <span style="font-weight: 700; color: #f87171;">🔴 RED ZONE</span>
+                  <span style="color: #94a3b8;">Airball / Off-target Miss</span>
                 </div>
               </div>
             </div>
 
-            <div class="wizard-footer-nav">
-              <button id="step-2-back" class="nav-secondary-btn">BACK</button>
-              <button id="step-2-next" class="nav-primary-btn" style="flex: 1.5;">
+            <!-- SCORING FORMAT GRID -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; box-sizing: border-box;">
+              <div style="background: rgba(15, 23, 42, 0.7); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">⏱️</span>
+                <div>
+                  <div style="color: #f87171; font-weight: 800; font-size: 11px; font-family: 'Montserrat', sans-serif;">70s CLOCK</div>
+                  <div style="color: #94a3b8; font-size: 8.5px; font-family: 'Montserrat', sans-serif;">27 Total Shots</div>
+                </div>
+              </div>
+
+              <div style="background: rgba(15, 23, 42, 0.7); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">🏀</span>
+                <div>
+                  <div style="color: #fb923c; font-weight: 800; font-size: 11px; font-family: 'Montserrat', sans-serif;">5 RACKS</div>
+                  <div style="color: #94a3b8; font-size: 8.5px; font-family: 'Montserrat', sans-serif;">1 PT &amp; 2 PTS</div>
+                </div>
+              </div>
+
+              <div style="background: rgba(15, 23, 42, 0.7); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">💰</span>
+                <div>
+                  <div style="color: #facc15; font-weight: 800; font-size: 11px; font-family: 'Montserrat', sans-serif;">MONEY RACK</div>
+                  <div style="color: #94a3b8; font-size: 8.5px; font-family: 'Montserrat', sans-serif;">5 Gold Balls (10 PTS)</div>
+                </div>
+              </div>
+
+              <div style="background: rgba(15, 23, 42, 0.7); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">⭐</span>
+                <div>
+                  <div style="color: #38bdf8; font-weight: 800; font-size: 11px; font-family: 'Montserrat', sans-serif;">STARRY RANGE</div>
+                  <div style="color: #94a3b8; font-size: 8.5px; font-family: 'Montserrat', sans-serif;">2 Deep Shots (3 PTS)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PRO STRATEGY TIP BOX -->
+            <div style="background: rgba(250, 204, 21, 0.08); border: 1px dashed rgba(250, 204, 21, 0.35); border-radius: 10px; padding: 8px 12px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">💡</span>
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 9px; color: #fef08a; line-height: 1.3;">
+                Pick your favorite court location for the Money Ball Rack in Step 2 to maximize high-scoring opportunities!
+              </div>
+            </div>
+
+            <div class="wizard-footer-nav" style="margin-top: 4px;">
+              <button id="step-1-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-1-next" class="nav-primary-btn" style="flex: 1.5;">
                 LET'S GO!
               </button>
             </div>
           </div>
 
-          <!-- STEP 3: MONEY BALL RACK SELECTION -->
-          <div id="wizard-step-3" class="wizard-step-panel" style="display: none;">
+          <!-- STEP 2: MONEY BALL RACK SELECTION -->
+          <div id="wizard-step-2" class="wizard-step-panel" style="display: none;">
             <div class="step-header-box">
               <h2 class="step-title">SELECT MONEY BALL RACK</h2>
               <p class="step-desc">Tap a rack location on the 2D Court Map below (5 Gold Balls = 10 Max PTS).</p>
@@ -1633,39 +1870,25 @@
             <!-- 2D TOP VIEW BASKETBALL COURT MAP -->
             <div class="court-map-wrapper">
               <svg class="court-map-svg" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid meet">
-                <!-- Court Floor Outer & Inner Border -->
                 <rect x="0" y="0" width="500" height="320" rx="14" fill="#0f172a" />
                 <rect x="10" y="10" width="480" height="300" rx="10" fill="#1e293b" stroke="rgba(255,255,255,0.18)" stroke-width="2" />
-
-                <!-- Center Court Half Circle & Line -->
                 <line x1="10" y1="10" x2="490" y2="10" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" />
                 <path d="M 200,10 A 50,50 0 0,0 300,10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
-
-                <!-- Key / Paint Box -->
                 <rect x="180" y="150" width="140" height="140" fill="rgba(56, 189, 248, 0.1)" stroke="#38bdf8" stroke-width="2" />
-                <!-- Free Throw Circle -->
                 <path d="M 200,150 A 50,50 0 0,0 300,150" fill="none" stroke="#38bdf8" stroke-width="2" />
                 <path d="M 200,150 A 50,50 0 0,1 300,150" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5,4" />
-
-                <!-- Baseline at y=290 -->
                 <line x1="10" y1="290" x2="490" y2="290" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" />
-                <!-- Backboard & Hoop -->
                 <line x1="220" y1="275" x2="280" y2="275" stroke="#ffffff" stroke-width="3.5" />
                 <circle cx="250" cy="264" r="10" fill="none" stroke="#f97316" stroke-width="3" />
-
-                <!-- 3-POINT ARC -->
                 <line x1="50" y1="290" x2="50" y2="200" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3" />
                 <line x1="450" y1="290" x2="450" y2="200" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3" />
                 <path d="M 50,200 A 211,211 0 0,1 450,200" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3" />
-
-                <!-- STARRY RANGE DEEP 3 CIRCLES -->
                 <circle cx="150" cy="45" r="9" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="1.5" />
                 <circle cx="350" cy="45" r="9" fill="rgba(56, 189, 248, 0.2)" stroke="#38bdf8" stroke-width="1.5" />
                 <text x="150" y="48" font-size="8" fill="#38bdf8" font-weight="900" text-anchor="middle">★ 3PT</text>
                 <text x="350" y="48" font-size="8" fill="#38bdf8" font-weight="900" text-anchor="middle">★ 3PT</text>
               </svg>
 
-              <!-- INTERACTIVE COURT RACK HOTSPOTS -->
               <div class="court-rack-pin" data-rack="0" style="left: 79%; top: 76%;">
                 <div class="pin-pulse"></div>
                 <div class="pin-badge">MONEY RACK</div>
@@ -1723,13 +1946,13 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-3-back" class="nav-secondary-btn">BACK</button>
-              <button id="step-3-next" class="nav-primary-btn">NEXT: METER</button>
+              <button id="step-2-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-2-next" class="nav-primary-btn">NEXT: METER</button>
             </div>
           </div>
 
-          <!-- STEP 4: SHOOTING METER DIFFICULTY -->
-          <div id="wizard-step-4" class="wizard-step-panel" style="display: none;">
+          <!-- STEP 3: SHOOTING METER DIFFICULTY -->
+          <div id="wizard-step-3" class="wizard-step-panel" style="display: none;">
             <div class="step-header-box">
               <h2 class="step-title">SHOOTING METER DIFFICULTY</h2>
               <p class="step-desc">Choose release meter needle speed and green swish zone window size.</p>
@@ -1771,14 +1994,22 @@
               </div>
             </div>
 
+            <!-- PRO METER TIP BOX -->
+            <div style="background: rgba(56, 189, 248, 0.08); border: 1px dashed rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 8px 12px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">💡</span>
+              <div style="font-family: 'Montserrat', sans-serif; font-size: 9px; color: #bae6fd; line-height: 1.3;">
+                <strong style="color: #38bdf8;">RELEASE TIMING:</strong> Press and hold the shoot button, then release right when the needle reaches the green center for a 100% perfect swish!
+              </div>
+            </div>
+
             <div class="wizard-footer-nav">
-              <button id="step-4-back" class="nav-secondary-btn">BACK</button>
-              <button id="step-4-next" class="nav-primary-btn">NEXT: AI RIVAL</button>
+              <button id="step-3-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-3-next" class="nav-primary-btn">NEXT: AI RIVAL</button>
             </div>
           </div>
 
-          <!-- STEP 5: CHOOSE AI OPPONENT -->
-          <div id="wizard-step-5" class="wizard-step-panel" style="display: none;">
+          <!-- STEP 4: CHOOSE AI OPPONENT -->
+          <div id="wizard-step-4" class="wizard-step-panel" style="display: none;">
             <div class="step-header-box">
               <h2 class="step-title">CHOOSE YOUR AI OPPONENT</h2>
               <p class="step-desc">Select who you will compete against on the 3-point contest floor.</p>
@@ -1845,7 +2076,7 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-5-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-4-back" class="nav-secondary-btn">BACK</button>
               <button id="start-game-btn" class="nav-primary-btn">
                 START SHOOTOUT 🏀
               </button>
@@ -1855,7 +2086,7 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.3</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.4</div>
         </div>
       </div>
 
@@ -1923,10 +2154,11 @@
           
           <!-- SINGLE BUTTON TO VIEW ADVANCED ANALYTICS FROM POSTGAME -->
           <button id="view-postgame-analytics-btn" class="nav-secondary-btn" style="width: fit-content; margin: 8px auto; border: 1px solid rgba(56, 189, 248, 0.5); color: #38bdf8; font-size: 11px; font-family: 'Montserrat', sans-serif; min-height: 28px; padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;">
-            <span>📊</span> VIEW ADVANCED ANALYTICS
+            <span>📊</span> VIEW PLAYER ADVANCED ANALYTICS
           </button>
 
           <button id="rematch-btn" class="cta-button" style="min-height: 64px; font-size: 30px; letter-spacing: 1.5px; width: 100%;">PLAY AGAIN</button>
+          <button id="postgame-menu-btn" class="nav-secondary-btn" style="min-height: 52px; font-size: 22px; font-family: 'Teko', sans-serif; font-weight: 700; letter-spacing: 1.5px; width: 100%; margin-top: 10px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.2); color: #cbd5e1; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">BACK TO MENU</button>
 
           <div style="font-size: 13px; color: #94a3b8; font-weight: 700; text-align: center; margin-top: 14px; letter-spacing: 0.5px; opacity: 0.8;">
             Follow <span style="color: #38bdf8;">@ralphfrialde</span> on Instagram!
@@ -2291,6 +2523,24 @@
           noise.start(now);
           osc.start(now);
           osc.stop(now + 1.1);
+        }
+
+        playVictoryFanfare() {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5 triumphant arpeggio
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.10);
+            gain.gain.setValueAtTime(0.35, now + i * 0.10);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.10 + 0.45);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.10);
+            osc.stop(now + i * 0.10 + 0.45);
+          });
         }
       }
 
@@ -4220,8 +4470,8 @@
 
         initUI() {
           this.currentWizardStep = 1;
-          this.userJerseyName = '';
-          this.userJerseyNumber = '';
+          this.userJerseyName = 'PLAYER';
+          this.userJerseyNumber = '1';
           this.userJerseyColor = 'black';
 
           const aiNameMap = { easy: 'ROOKIE REX', medium: 'PRO DAME', hard: 'LEGEND STEPH' };
@@ -4266,15 +4516,30 @@
               }
             });
 
-            // Update progress bar width for 5 steps (divided by 4 segments)
+            // Update progress bar width for 4 steps (divided by 3 segments)
             const fill = document.getElementById('wizard-progress-fill');
             if (fill) {
-              const pct = ((step - 1) / 4) * 100;
+              const pct = Math.min(100, Math.max(0, ((step - 1) / 3) * 100));
               fill.style.width = `${pct}%`;
             }
 
-            if (step === 4) updateMeterPreviewDisplay();
-            if (step === 5) updateSummary();
+            document.querySelectorAll('.wizard-step-item').forEach(item => {
+              const s = parseInt(item.getAttribute('data-step'));
+              const badge = item.querySelector('.wizard-step-badge');
+              item.classList.remove('active', 'completed');
+              if (s === step) {
+                item.classList.add('active');
+                if (badge) badge.innerHTML = s;
+              } else if (s < step) {
+                item.classList.add('completed');
+                if (badge) badge.innerHTML = '✓';
+              } else {
+                if (badge) badge.innerHTML = s;
+              }
+            });
+
+            if (step === 3) updateMeterPreviewDisplay();
+            if (step === 4) updateSummary();
 
             if (audio && audio.playSwish) {
               audio.init();
@@ -4299,10 +4564,11 @@
 
           if (custNameInput) {
             custNameInput.addEventListener('input', () => {
-              let val = custNameInput.value.toUpperCase();
+              let val = custNameInput.value.toUpperCase().replace(/[^A-Z]/g, '');
               if (val.length > 8) val = val.substring(0, 8);
+              custNameInput.value = val;
               this.userJerseyName = val;
-              if (prevName) prevName.innerText = this.userJerseyName;
+              if (prevName) prevName.innerText = val || 'PLAYER';
             });
           }
 
@@ -4312,7 +4578,7 @@
               if (val.length > 2) val = val.substring(0, 2);
               custNumInput.value = val;
               this.userJerseyNumber = val;
-              if (prevNum) prevNum.innerText = this.userJerseyNumber;
+              if (prevNum) prevNum.innerText = val || '1';
             });
           }
 
@@ -4321,27 +4587,52 @@
             black: '#18181b',
             purple: '#6d28d9',
             pink: '#ec4899',
-            lightRed: '#f87171'
+            custom: this.customJerseyHex || '#f87171'
           };
+
+          const handleColorSelect = (btn, hexColor) => {
+            document.querySelectorAll('.color-picker-btn').forEach(b => {
+              b.classList.remove('selected');
+              b.style.border = '3px solid #ffffff';
+              b.style.transform = 'scale(1.0)';
+            });
+            btn.classList.add('selected');
+            btn.style.border = '3px solid #fbbf24';
+            btn.style.transform = 'scale(1.15)';
+
+            const colorKey = btn.getAttribute('data-color');
+            this.userJerseyColor = colorKey;
+            if (hexColor) {
+              this.customJerseyHex = hexColor;
+              btn.style.background = hexColor;
+            }
+            const finalColor = (colorKey === 'custom' && this.customJerseyHex) ? this.customJerseyHex : (colorMap[colorKey] || '#18181b');
+            if (previewCard) previewCard.style.background = finalColor;
+            if (audio && audio.playCoinFlip) audio.playCoinFlip();
+          };
+
           document.querySelectorAll('.color-picker-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-              document.querySelectorAll('.color-picker-btn').forEach(b => {
-                b.classList.remove('selected');
-                b.style.border = '3px solid #ffffff';
-                b.style.transform = 'scale(1.0)';
-              });
-              btn.classList.add('selected');
-              btn.style.border = '3px solid #fbbf24';
-              btn.style.transform = 'scale(1.15)';
-              
-              const color = btn.getAttribute('data-color');
-              this.userJerseyColor = color;
-              if (previewCard) {
-                previewCard.style.background = colorMap[color] || '#6d28d9';
+              if (btn.getAttribute('data-color') === 'custom') {
+                const colorInput = document.getElementById('cust-color-picker-input');
+                if (colorInput) colorInput.click();
+              } else {
+                handleColorSelect(btn);
               }
-              if (audio && audio.playCoinFlip) audio.playCoinFlip();
             });
           });
+
+          const custColorInput = document.getElementById('cust-color-picker-input');
+          if (custColorInput) {
+            const onCustomColorChange = (e) => {
+              const customBtn = document.getElementById('btn-custom-color');
+              if (customBtn) {
+                handleColorSelect(customBtn, e.target.value);
+              }
+            };
+            custColorInput.addEventListener('input', onCustomColorChange);
+            custColorInput.addEventListener('change', onCustomColorChange);
+          }
 
           // Sub-step navigation inside Step 1
           const subA = document.getElementById('cust-substep-a');
@@ -4351,12 +4642,6 @@
           const btnNextToB = document.getElementById('cust-next-to-b');
           if (subA && subB && btnNextToB) {
             btnNextToB.addEventListener('click', () => {
-              const nameEl = document.getElementById('cust-jersey-name');
-              let nameInput = nameEl.value.trim();
-              if (!nameInput) {
-                nameEl.value = "PLAYER";
-                nameEl.dispatchEvent(new Event('input'));
-              }
               subA.style.display = 'none';
               subB.style.display = 'flex';
               if (audio && audio.playSwish) audio.playSwish();
@@ -4375,12 +4660,6 @@
           const btnNextToC = document.getElementById('cust-next-to-c');
           if (subB && subC && btnNextToC) {
             btnNextToC.addEventListener('click', () => {
-              const numEl = document.getElementById('cust-jersey-number');
-              let numInput = numEl.value.trim();
-              if (!numInput) {
-                numEl.value = "1";
-                numEl.dispatchEvent(new Event('input'));
-              }
               subB.style.display = 'none';
               subC.style.display = 'flex';
               if (audio && audio.playSwish) audio.playSwish();
@@ -4396,10 +4675,51 @@
             });
           }
 
+          const updateTitlePlayerBadge = () => {
+            const badgeName = document.getElementById('badge-player-name');
+            const badgeIcon = document.getElementById('badge-jersey-icon');
+            const pName = (this.userJerseyName && this.userJerseyName.trim()) ? this.userJerseyName.trim() : 'PLAYER';
+            const pNum = (this.userJerseyNumber && this.userJerseyNumber.trim()) ? this.userJerseyNumber.trim() : '1';
+            if (badgeName) badgeName.innerText = pName;
+            if (badgeIcon) {
+              badgeIcon.innerText = pNum;
+              badgeIcon.style.background = (this.userJerseyColor === 'custom' && this.customJerseyHex) ? this.customJerseyHex : (colorMap[this.userJerseyColor] || '#18181b');
+            }
+          };
+          updateTitlePlayerBadge();
+
           const btnCustFinish = document.getElementById('cust-finish');
           if (btnCustFinish) {
             btnCustFinish.addEventListener('click', () => {
-              this.setWizardStep(2);
+              if (!this.userJerseyName || !this.userJerseyName.trim()) {
+                this.userJerseyName = 'PLAYER';
+              }
+              if (!this.userJerseyNumber || !this.userJerseyNumber.trim()) {
+                this.userJerseyNumber = '1';
+              }
+              updateTitlePlayerBadge();
+              document.getElementById('jersey-creation-screen').style.display = 'none';
+              document.getElementById('title-gamemode-screen').style.display = 'flex';
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const btnEditJersey = document.getElementById('btn-edit-jersey');
+          if (btnEditJersey) {
+            btnEditJersey.addEventListener('click', () => {
+              document.getElementById('title-gamemode-screen').style.display = 'none';
+              document.getElementById('jersey-creation-screen').style.display = 'flex';
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const btnModeShootout = document.getElementById('btn-mode-shootout');
+          if (btnModeShootout) {
+            btnModeShootout.addEventListener('click', () => {
+              document.getElementById('title-gamemode-screen').style.display = 'none';
+              document.getElementById('pregame-screen').style.display = 'flex';
+              this.setWizardStep(1);
+              if (audio && audio.playSwish) audio.playSwish();
             });
           }
 
@@ -4420,17 +4740,29 @@
           // Initialize default money rack selection (Rack 5 is index 4)
           selectRack(this.moneyRackIdx);
 
-          // Footer Navigation buttons
+          // Footer Navigation buttons for 4-Step Shootout Setup
+          const step1Back = document.getElementById('step-1-back');
+          if (step1Back) {
+            step1Back.addEventListener('click', () => {
+              document.getElementById('pregame-screen').style.display = 'none';
+              document.getElementById('title-gamemode-screen').style.display = 'flex';
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const step1Next = document.getElementById('step-1-next');
+          if (step1Next) {
+            step1Next.addEventListener('click', () => {
+              selectRack(4); // default selected rack 5
+              this.setWizardStep(2);
+            });
+          }
+
           const step2Back = document.getElementById('step-2-back');
           if (step2Back) step2Back.addEventListener('click', () => this.setWizardStep(1));
 
           const step2Next = document.getElementById('step-2-next');
-          if (step2Next) {
-            step2Next.addEventListener('click', () => {
-              selectRack(4); // make sure rack 5 is default selected when pressed next from let's go
-              this.setWizardStep(3);
-            });
-          }
+          if (step2Next) step2Next.addEventListener('click', () => this.setWizardStep(3));
 
           const step3Back = document.getElementById('step-3-back');
           if (step3Back) step3Back.addEventListener('click', () => this.setWizardStep(2));
@@ -4441,17 +4773,9 @@
           const step4Back = document.getElementById('step-4-back');
           if (step4Back) step4Back.addEventListener('click', () => this.setWizardStep(3));
 
-          const step4Next = document.getElementById('step-4-next');
-          if (step4Next) step4Next.addEventListener('click', () => this.setWizardStep(5));
-
-          
           // Force black jersey selection initially
           const blackBtn = document.querySelector('.color-picker-btn[data-color="black"]');
           if (blackBtn) blackBtn.click();
-          
-          const step5Back = document.getElementById('step-5-back');
-
-          if (step5Back) step5Back.addEventListener('click', () => this.setWizardStep(4));
 
           // Pause button & screen CTA handlers
           document.getElementById('pause-btn').addEventListener('click', () => this.togglePause());
@@ -4520,31 +4844,135 @@
             this.startNextTurnFromSummary();
           });
 
-          // Advanced Analytics Modal Toggle Handlers
+          // Postgame Menu CTA
+          const postgameMenuBtn = document.getElementById('postgame-menu-btn');
+          if (postgameMenuBtn) {
+            postgameMenuBtn.addEventListener('click', () => {
+              this.quitToMenu();
+            });
+          }
+
+          // Advanced Analytics Modal Toggle Handlers (HUMAN PLAYER ONLY)
           const viewAnalyticsBtn = document.getElementById('view-analytics-btn');
           const viewPostgameAnalyticsBtn = document.getElementById('view-postgame-analytics-btn');
           const closeAnalyticsBtn = document.getElementById('close-analytics-btn');
+          const closeAnalyticsTopBtn = document.getElementById('close-analytics-top-btn');
           const closeAnalyticsBottomBtn = document.getElementById('close-analytics-bottom-btn');
           const analyticsModal = document.getElementById('analytics-modal');
 
-          if (viewAnalyticsBtn && analyticsModal) {
-            viewAnalyticsBtn.addEventListener('click', () => {
-              analyticsModal.style.display = 'flex';
+          // Helper function to close modal and ALWAYS reset to OVERVIEW tab (tab 0)
+          const closeAnalyticsAndResetToOverview = () => {
+            if (analyticsModal) analyticsModal.style.display = 'none';
+            this.analyticsFilterCategory = 'ALL';
+            this.analyticsFilterSpot = 'ALL';
+            this.analyticsFilterTiming = 'ALL';
+            this.switchAnalyticsTab(0);
+          };
+
+          // Helper function to open modal and ALWAYS force OVERVIEW tab (tab 0)
+          const openAnalyticsModalOverview = () => {
+            this.switchAnalyticsTab(0);
+            this.populateAnalyticsModal(this.playerShotLog || []);
+            if (analyticsModal) analyticsModal.style.display = 'flex';
+          };
+
+          if (closeAnalyticsTopBtn) closeAnalyticsTopBtn.addEventListener('click', closeAnalyticsAndResetToOverview);
+          if (closeAnalyticsBtn) closeAnalyticsBtn.addEventListener('click', closeAnalyticsAndResetToOverview);
+          if (closeAnalyticsBottomBtn) closeAnalyticsBottomBtn.addEventListener('click', closeAnalyticsAndResetToOverview);
+
+          if (viewAnalyticsBtn) viewAnalyticsBtn.addEventListener('click', openAnalyticsModalOverview);
+          if (viewPostgameAnalyticsBtn) viewPostgameAnalyticsBtn.addEventListener('click', openAnalyticsModalOverview);
+
+          // Dynamic Analytics Nav Tabs Handlers & HORIZONTAL TAB SWIPE (ONLY ON NAV TABS)
+          const navTabs = document.getElementById('analytics-nav-tabs');
+          if (navTabs) {
+            navTabs.addEventListener('click', (e) => {
+              const btn = e.target.closest('.analytics-tab-btn');
+              if (!btn) return;
+              const tabIdx = parseInt(btn.getAttribute('data-tab'));
+              if (!isNaN(tabIdx)) {
+                this.switchAnalyticsTab(tabIdx);
+              }
+            });
+
+            // Touch swipe gesture handlers EXCLUSIVELY ON NAVIGATION TABS BAR
+            if (!navTabs.hasAttribute('data-swipe-bound')) {
+              navTabs.setAttribute('data-swipe-bound', 'true');
+              let tabTouchStartX = 0;
+              navTabs.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length > 0) {
+                  tabTouchStartX = e.touches[0].clientX;
+                }
+              }, { passive: true });
+
+              navTabs.addEventListener('touchend', (e) => {
+                if (!e.changedTouches || e.changedTouches.length === 0) return;
+                const tabTouchEndX = e.changedTouches[0].clientX;
+                const diffX = tabTouchEndX - tabTouchStartX;
+                if (Math.abs(diffX) > 35) {
+                  if (diffX < 0) {
+                    this.switchAnalyticsTab((this.currentAnalyticsTab || 0) + 1);
+                  } else {
+                    this.switchAnalyticsTab((this.currentAnalyticsTab || 0) - 1);
+                  }
+                }
+              }, { passive: true });
+            }
+          }
+
+          // Analytics Filter Pill Handlers (NOW IN MOMENTUM TAB)
+          const filterPillsContainer = document.getElementById('analytics-filter-pills');
+          if (filterPillsContainer) {
+            filterPillsContainer.addEventListener('click', (e) => {
+              const btn = e.target.closest('.analytics-filter-btn');
+              if (!btn) return;
+              const filterVal = btn.getAttribute('data-filter') || 'ALL';
+              this.analyticsFilterCategory = filterVal;
+              
+              // Update active button UI
+              const allBtns = filterPillsContainer.querySelectorAll('.analytics-filter-btn');
+              allBtns.forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'rgba(255, 255, 255, 0.05)';
+                b.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                b.style.color = '#94a3b8';
+              });
+              btn.classList.add('active');
+              btn.style.background = 'rgba(56, 189, 248, 0.25)';
+              btn.style.borderColor = '#38bdf8';
+              btn.style.color = '#ffffff';
+              this.populateAnalyticsModal(this.playerShotLog || []);
             });
           }
-          if (viewPostgameAnalyticsBtn && analyticsModal) {
-            viewPostgameAnalyticsBtn.addEventListener('click', () => {
-              analyticsModal.style.display = 'flex';
-            });
-          }
-          if (closeAnalyticsBtn && analyticsModal) {
-            closeAnalyticsBtn.addEventListener('click', () => {
-              analyticsModal.style.display = 'none';
-            });
-          }
-          if (closeAnalyticsBottomBtn && analyticsModal) {
-            closeAnalyticsBottomBtn.addEventListener('click', () => {
-              analyticsModal.style.display = 'none';
+
+          // Clear Spot/Category Filter Button
+          const clearFilterBtn = document.getElementById('clear-spot-filter-btn');
+          if (clearFilterBtn) {
+            clearFilterBtn.addEventListener('click', () => {
+              this.analyticsFilterCategory = 'ALL';
+              this.analyticsFilterSpot = 'ALL';
+              this.analyticsFilterTiming = 'ALL';
+              
+              // Reset filter pill buttons UI
+              if (filterPillsContainer) {
+                const allBtns = filterPillsContainer.querySelectorAll('.analytics-filter-btn');
+                allBtns.forEach(b => {
+                  const fVal = b.getAttribute('data-filter');
+                  if (fVal === 'ALL') {
+                    b.classList.add('active');
+                    b.style.background = 'rgba(56, 189, 248, 0.25)';
+                    b.style.borderColor = '#38bdf8';
+                    b.style.color = '#ffffff';
+                  } else {
+                    b.classList.remove('active');
+                    b.style.background = 'rgba(255, 255, 255, 0.05)';
+                    b.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    b.style.color = '#94a3b8';
+                  }
+                });
+              }
+              
+              this.populateAnalyticsModal(this.playerShotLog || []);
             });
           }
 
@@ -4552,7 +4980,7 @@
           const shootBtn = document.getElementById('shoot-btn');
 
           const onPressStart = (e) => {
-            if (e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#analytics-modal')) return;
+            if (e.target.closest('#jersey-creation-screen') || e.target.closest('#title-gamemode-screen') || e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#analytics-modal')) return;
             e.preventDefault();
             audio.init();
             if (this.state === 'PLAYER_TURN' && !this.isHolding && !this.isPaused && !this.isRunningToRack && this.currentShotIdx < this.shots.length) {
@@ -4638,9 +5066,10 @@
 
         restartGame() {
           this.isPaused = false;
+          if (this.clockInterval) clearInterval(this.clockInterval);
           if (this.aiTimeout) clearTimeout(this.aiTimeout);
           document.getElementById('pause-screen').style.display = 'none';
-          this.startShootout();
+          this.initGameLogic();
         }
 
         quitToMenu() {
@@ -4652,7 +5081,9 @@
           document.getElementById('ai-overlay').style.display = 'none';
           document.getElementById('player-summary-screen').style.display = 'none';
           document.getElementById('postgame-screen').style.display = 'none';
-          document.getElementById('pregame-screen').style.display = 'flex';
+          document.getElementById('pregame-screen').style.display = 'none';
+          document.getElementById('jersey-creation-screen').style.display = 'none';
+          document.getElementById('title-gamemode-screen').style.display = 'flex';
           this.state = 'PRE_GAME';
 
           // Hide simulate button
@@ -4899,6 +5330,8 @@
 
           this.hasPlayerPlayed = false;
           this.hasAIPlayed = false;
+          this.playerShotLog = [];
+          this.currentShotLog = [];
 
           // Apply player jersey customization
           const jerseyColorsMap = {
@@ -4908,13 +5341,23 @@
             pink: { jersey: 0xec4899, shorts: 0x831843 },
             lightRed: { jersey: 0xf87171, shorts: 0x7f1d1d }
           };
-          const pColor = jerseyColorsMap[this.userJerseyColor || 'black'] || jerseyColorsMap.black;
+          let pJerseyColor = 0x18181b;
+          let pShortsColor = 0x09090b;
+
+          if (this.userJerseyColor === 'custom' && this.customJerseyHex) {
+            pJerseyColor = parseInt(this.customJerseyHex.replace('#', ''), 16);
+            pShortsColor = pJerseyColor;
+          } else if (jerseyColorsMap[this.userJerseyColor]) {
+            pJerseyColor = jerseyColorsMap[this.userJerseyColor].jersey;
+            pShortsColor = jerseyColorsMap[this.userJerseyColor].shorts;
+          }
+
           this.updateMeshJersey(
             this.playerMesh,
-            pColor.jersey,
-            pColor.shorts,
-            this.userJerseyName || '',
-            this.userJerseyNumber || ''
+            pJerseyColor,
+            pShortsColor,
+            (this.userJerseyName && this.userJerseyName.trim()) ? this.userJerseyName.trim() : 'PLAYER',
+            (this.userJerseyNumber && this.userJerseyNumber.trim()) ? this.userJerseyNumber.trim() : '1'
           );
 
           // Apply AI jersey customization based on opponent
@@ -5115,6 +5558,10 @@
             mPin.style.color = 'inherit';
           }
 
+          // Hot streak boost: 5% boost on easy/normal, 15% boost on hard if player streak >= 5 for non-perfect shots
+          const isHot = (this.playerStreak >= 5);
+          const hotBoost = isHot ? (diff === 'hard' ? 0.15 : 0.05) : 0;
+
           if (val >= perfRange[0] && val <= perfRange[1]) {
             timingQuality = 'perfect';
             this.stats.perfects++;
@@ -5123,7 +5570,7 @@
             if (mPin) mPin.classList.add('perfect-release');
           } else if (val >= slEarlyRange[0] && val < slEarlyRange[1]) {
             timingQuality = 'slightly_early';
-            const makeRate = isStarry ? slStarryMake : slMake;
+            const makeRate = (isStarry ? slStarryMake : slMake) + hotBoost;
             guaranteedMake = Math.random() < makeRate;
             this.showTimingFeedback('SLIGHTLY EARLY', '#eab308');
             if (mPin) {
@@ -5133,7 +5580,7 @@
             }
           } else if (val > slLateRange[0] && val <= slLateRange[1]) {
             timingQuality = 'slightly_late';
-            const makeRate = isStarry ? slStarryMake : slMake;
+            const makeRate = (isStarry ? slStarryMake : slMake) + hotBoost;
             guaranteedMake = Math.random() < makeRate;
             this.showTimingFeedback('SLIGHTLY LATE', '#eab308');
             if (mPin) {
@@ -5143,7 +5590,7 @@
             }
           } else if (val >= earlyRange[0] && val < earlyRange[1]) {
             timingQuality = 'early';
-            const makeRate = isStarry ? Math.max(0, earlyMake - 0.08) : earlyMake;
+            const makeRate = (isStarry ? Math.max(0, earlyMake - 0.08) : earlyMake) + hotBoost;
             guaranteedMake = Math.random() < makeRate;
             this.showTimingFeedback('EARLY', '#f97316');
             if (mPin) {
@@ -5153,7 +5600,7 @@
             }
           } else if (val > lateRange[0] && val <= lateRange[1]) {
             timingQuality = 'late';
-            const makeRate = isStarry ? Math.max(0, earlyMake - 0.08) : earlyMake;
+            const makeRate = (isStarry ? Math.max(0, earlyMake - 0.08) : earlyMake) + hotBoost;
             guaranteedMake = Math.random() < makeRate;
             this.showTimingFeedback('LATE', '#f97316');
             if (mPin) {
@@ -5163,7 +5610,8 @@
             }
           } else if (val < earlyRange[0]) {
             timingQuality = 'very_early';
-            guaranteedMake = diff === 'easy' ? (Math.random() < 0.05) : false;
+            const baseRate = diff === 'easy' ? 0.05 : 0;
+            guaranteedMake = Math.random() < (baseRate + hotBoost);
             this.showTimingFeedback('VERY EARLY', '#ef4444');
             if (mPin) {
               mPin.classList.add('release-line');
@@ -5171,9 +5619,12 @@
               mPin.style.color = '#ef4444';
             }
           } else {
-            timingQuality = 'very_late';
-            guaranteedMake = diff === 'easy' ? (Math.random() < 0.05) : false;
-            this.showTimingFeedback('VERY LATE', '#ef4444');
+            const isVeryVeryLate = (val >= 98.0);
+            timingQuality = isVeryVeryLate ? 'very_very_late' : 'very_late';
+            const baseRate = diff === 'easy' ? 0.05 : 0;
+            guaranteedMake = Math.random() < (baseRate + hotBoost);
+            const feedbackText = isVeryVeryLate ? 'VERY VERY LATE' : 'VERY LATE';
+            this.showTimingFeedback(feedbackText, '#ef4444');
             if (mPin) {
               mPin.classList.add('release-line');
               mPin.style.background = '#ef4444';
@@ -5228,11 +5679,14 @@
             pts: shot.pts,
             timingQuality: timingQuality,
             meterVal: val,
-            scored: false
+            scored: false,
+            isHuman: true
           };
 
           if (!this.currentShotLog) this.currentShotLog = [];
           this.currentShotLog.push(shotRecord);
+          if (!this.playerShotLog) this.playerShotLog = [];
+          this.playerShotLog.push(shotRecord);
 
           let trailType = null; // Only emit trail when player is hot or cold!
           if (this.playerStreak >= 3) {
@@ -5759,8 +6213,10 @@
 
           const mWrap = document.getElementById('meter-wrapper');
           if (mWrap) mWrap.style.display = 'none';
-          document.getElementById('shoot-btn').style.display = 'none';
-          document.getElementById('ai-overlay').style.display = 'none';
+          const shootBtn = document.getElementById('shoot-btn');
+          if (shootBtn) shootBtn.style.display = 'none';
+          const aiOverlay = document.getElementById('ai-overlay');
+          if (aiOverlay) aiOverlay.style.display = 'none';
           
           if (!isAITurn) {
             this.playerStats = { ...this.stats };
@@ -5778,36 +6234,419 @@
           }
 
           // Populate Player Round Summary Modal analytics
-          document.getElementById('player-round-score-val').innerText = isAITurn ? this.aiScore : this.playerScore;
+          const scoreVal = document.getElementById('player-round-score-val');
+          if (scoreVal) scoreVal.innerText = isAITurn ? this.aiScore : this.playerScore;
 
           const fgPct = this.stats.attempts > 0 ? Math.round((this.stats.makes / this.stats.attempts) * 100) : 0;
-          document.getElementById('player-round-fg').innerText = `${this.stats.makes} / ${this.stats.attempts} (${fgPct}%)`;
+          const fgEl = document.getElementById('player-round-fg');
+          if (fgEl) fgEl.innerText = `${this.stats.makes} / ${this.stats.attempts} (${fgPct}%)`;
 
           const mPct = this.stats.moneyAtts > 0 ? Math.round((this.stats.moneyMakes / this.stats.moneyAtts) * 100) : 0;
-          document.getElementById('player-round-money').innerText = `${this.stats.moneyMakes} / ${this.stats.moneyAtts} (${mPct}%)`;
+          const moneyEl = document.getElementById('player-round-money');
+          if (moneyEl) moneyEl.innerText = `${this.stats.moneyMakes} / ${this.stats.moneyAtts} (${mPct}%)`;
 
           const sPct = this.stats.starryAtts > 0 ? Math.round((this.stats.starryMakes / this.stats.starryAtts) * 100) : 0;
-          document.getElementById('player-round-starry').innerText = `${this.stats.starryMakes} / ${this.stats.starryAtts} (${sPct}%)`;
+          const starryEl = document.getElementById('player-round-starry');
+          if (starryEl) starryEl.innerText = `${this.stats.starryMakes} / ${this.stats.starryAtts} (${sPct}%)`;
 
-          document.getElementById('player-round-perfects').innerText = this.stats.perfects;
+          const perfectsEl = document.getElementById('player-round-perfects');
+          if (perfectsEl) perfectsEl.innerText = this.stats.perfects;
 
-          this.populateAnalyticsModal(this.currentShotLog || []);
+          const viewAnalyticsBtn = document.getElementById('view-analytics-btn');
+          if (viewAnalyticsBtn) {
+            viewAnalyticsBtn.style.display = isAITurn ? 'none' : 'flex';
+          }
+
+          this.populateAnalyticsModal(this.playerShotLog || []);
 
           // Show intermediate player summary screen
-          document.getElementById('player-summary-screen').style.display = 'flex';
+          const summaryScreen = document.getElementById('player-summary-screen');
+          if (summaryScreen) summaryScreen.style.display = 'flex';
         }
 
-        populateAnalyticsModal(logs) {
-// Populate Advanced Analytics Shot Chart & Miss Breakdown
-          
-          const misses = logs.filter(s => !s.scored);
-          
-          const totalBadge = document.getElementById('player-miss-total-badge');
-          if (totalBadge) totalBadge.innerText = `${misses.length} MISSES (${logs.length - misses.length}/${logs.length} FG)`;
+        renderMomentumGraph(logs, isAI) {
+          const container = document.getElementById('momentum-graph-container');
+          const peakBadge = document.getElementById('momentum-peak-badge');
+          const tooltip = document.getElementById('graph-tooltip');
+          if (!container) return;
 
-          // Group stats by location spot
+          if (!logs || logs.length === 0) {
+            container.innerHTML = `<div style="color: #64748b; font-size: 12px; font-weight: 700; text-align: center; padding-top: 55px; font-family: 'Montserrat', sans-serif;">NO MATCHING SHOT DATA FOUND</div>`;
+            if (peakBadge) peakBadge.innerText = 'TOTAL: 0 PTS';
+            if (tooltip) tooltip.style.display = 'none';
+            return;
+          }
+
+          let cumulativeScore = 0;
+          const points = [];
+          logs.forEach((s, idx) => {
+            if (s.scored) cumulativeScore += (s.pts || 1);
+            points.push({
+              idx: idx + 1,
+              score: cumulativeScore,
+              scored: s.scored,
+              pts: s.pts || 1,
+              spotName: s.spotName || `Shot ${idx + 1}`,
+              ballType: s.ballType || 'regular',
+              timingQuality: s.timingQuality || 'normal',
+              meterVal: s.meterVal !== undefined ? Math.round(s.meterVal) : 50
+            });
+          });
+
+          if (peakBadge) peakBadge.innerText = `TOTAL: ${cumulativeScore} PTS`;
+
+          const width = 540;
+          const height = 140;
+          const padLeft = 34;
+          const padRight = 20;
+          const padTop = 16;
+          const padBottom = 22;
+          const graphW = width - padLeft - padRight;
+          const graphH = height - padTop - padBottom;
+
+          const maxShots = Math.max(1, points.length - 1);
+          const maxScore = Math.max(8, Math.ceil((cumulativeScore + 2) / 5) * 5);
+
+          const coords = points.map((p, i) => {
+            const x = padLeft + (maxShots === 0 ? graphW / 2 : (i / maxShots) * graphW);
+            const y = padTop + graphH - (p.score / maxScore) * graphH;
+            return { x, y, ...p };
+          });
+
+          const pathD = coords.reduce((acc, pt, i) => {
+            return i === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : `${acc} L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`;
+          }, '');
+
+          const areaD = `${pathD} L ${coords[coords.length - 1].x.toFixed(1)} ${(height - padBottom).toFixed(1)} L ${padLeft} ${(height - padBottom).toFixed(1)} Z`;
+          const color = isAI ? '#f43f5e' : '#38bdf8';
+          const gradId = isAI ? 'aiGrad' : 'playerGrad';
+
+          // Y Grid lines
+          const gridLines = [];
+          const ySteps = 3;
+          for (let i = 0; i <= ySteps; i++) {
+            const scoreVal = Math.round((maxScore / ySteps) * i);
+            const yPos = padTop + graphH - (scoreVal / maxScore) * graphH;
+            gridLines.push(`
+              <line x1="${padLeft}" y1="${yPos.toFixed(1)}" x2="${width - padRight}" y2="${yPos.toFixed(1)}" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 3" />
+              <text x="${padLeft - 6}" y="${(yPos + 3.5).toFixed(1)}" fill="#64748b" font-size="9" font-weight="700" text-anchor="end" font-family="'Montserrat', sans-serif">${scoreVal}</text>
+            `);
+          }
+
+          // X axis shot markers
+          const xLabels = [];
+          const stepSize = Math.max(1, Math.floor(points.length / 6));
+          for (let i = 0; i < points.length; i += stepSize) {
+            const pt = coords[i];
+            const spotShort = pt.spotName ? pt.spotName.replace('LEFT ', 'L-').replace('RIGHT ', 'R-').replace('CORNER', 'CRN').replace('WING', 'WNG').replace('TOP OF KEY', 'TOP').replace('STARRY RANGE', 'STR') : `S${i+1}`;
+            xLabels.push(`
+              <text x="${pt.x.toFixed(1)}" y="${height - 4}" fill="#64748b" font-size="8.5" font-weight="700" text-anchor="middle" font-family="'Montserrat', sans-serif">${spotShort}</text>
+            `);
+          }
+
+          // Interactive Dots with hover & tap event attributes
+          const dots = coords.map((pt, index) => {
+            const dotColor = pt.scored ? (isAI ? '#f43f5e' : '#4ade80') : '#f87171';
+            const strokeColor = pt.scored ? '#ffffff' : '#ef4444';
+            const r = pt.pts === 3 ? 5.5 : (pt.pts === 2 ? 4.5 : 3.8);
+
+            const ballTypeIcon = pt.ballType === 'money' ? '💰' : (pt.ballType === 'starry' ? '⭐' : '🏀');
+            const timingFormatted = pt.timingQuality.replace('_', ' ').toUpperCase();
+
+            return `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="${r}" fill="${dotColor}" stroke="${strokeColor}" stroke-width="1.5" style="cursor: pointer; transition: all 0.2s;" data-idx="${pt.idx}" data-spot="${pt.spotName}" data-pts="${pt.pts}" data-scored="${pt.scored}" data-ball="${ballTypeIcon}" data-timing="${timingFormatted}" data-meter="${pt.meterVal}" class="graph-point-circle">
+            </circle>`;
+          }).join('');
+
+          container.innerHTML = `
+            <svg viewBox="0 0 ${width} ${height}" style="width: 100%; height: 100%; overflow: visible; display: block;">
+              <defs>
+                <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="${color}" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="${color}" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              ${gridLines.join('')}
+              <path d="${areaD}" fill="url(#${gradId})" />
+              <path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              ${dots}
+              ${xLabels.join('')}
+            </svg>
+          `;
+
+          // Add interactive hover / tap listeners to graph points
+          const circles = container.querySelectorAll('.graph-point-circle');
+          circles.forEach(c => {
+            const showTip = () => {
+              const idx = c.getAttribute('data-idx');
+              const spot = c.getAttribute('data-spot');
+              const scored = c.getAttribute('data-scored') === 'true';
+              const pts = c.getAttribute('data-pts');
+              const ball = c.getAttribute('data-ball');
+              const timing = c.getAttribute('data-timing');
+              const meter = c.getAttribute('data-meter');
+
+              if (tooltip) {
+                tooltip.style.display = 'block';
+                tooltip.innerHTML = `
+                  <div style="font-weight: 800; color: ${scored ? '#4ade80' : '#f87171'}; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; margin-bottom: 4px;">
+                    ${ball} SHOT #${idx}: ${scored ? 'MADE (+' + pts + ' PTS)' : 'MISSED (0 PTS)'}
+                  </div>
+                  <div style="color: #cbd5e1; font-size: 10.5px; font-weight: 600;">
+                    📍 ${spot}<br>
+                    ⏱️ Timing: <span style="color: #38bdf8; font-weight: 700;">${timing}</span> (${meter}%)
+                  </div>
+                `;
+              }
+            };
+            c.addEventListener('mouseenter', showTip);
+            c.addEventListener('touchstart', (e) => { e.stopPropagation(); showTip(); });
+          });
+        }
+
+        renderCourtHeatmap(allPlayerLogs) {
+          const container = document.getElementById('analytics-court-diagram-container');
+          if (!container) return;
+
+          // Spot coordinates positioned BEHIND the 3-point line and Starry Range shots further back
+          const spotsMap = {
+            'LEFT CORNER 3': { x: 32, y: 42, label: 'L. CORNER', total: 0, makes: 0 },
+            'LEFT WING 3': { x: 92, y: 142, label: 'L. WING', total: 0, makes: 0 },
+            'TOP OF KEY 3': { x: 230, y: 192, label: 'TOP KEY', total: 0, makes: 0 },
+            'RIGHT WING 3': { x: 368, y: 142, label: 'R. WING', total: 0, makes: 0 },
+            'RIGHT CORNER 3': { x: 428, y: 42, label: 'R. CORNER', total: 0, makes: 0 },
+            'STARRY RANGE LEFT': { x: 155, y: 196, label: 'STARRY L', total: 0, makes: 0 },
+            'STARRY RANGE RIGHT': { x: 305, y: 196, label: 'STARRY R', total: 0, makes: 0 }
+          };
+
+          allPlayerLogs.forEach(s => {
+            if (!s) return;
+            const name = (s.spotName || '').toUpperCase();
+            let matchedKey = null;
+
+            if (s.rackIdx === 0 || name.includes('RIGHT CORNER') || name.includes('RACK 1')) matchedKey = 'RIGHT CORNER 3';
+            else if (s.rackIdx === 1 || name.includes('RIGHT WING') || name.includes('RACK 2')) matchedKey = 'RIGHT WING 3';
+            else if (s.starryIdx === 0 || name.includes('STARRY RANGE 1') || name.includes('STARRY 1') || name.includes('STARRY RANGE RIGHT')) matchedKey = 'STARRY RANGE RIGHT';
+            else if (s.rackIdx === 2 || name.includes('TOP OF KEY') || name.includes('RACK 3')) matchedKey = 'TOP OF KEY 3';
+            else if (s.starryIdx === 1 || name.includes('STARRY RANGE 2') || name.includes('STARRY 2') || name.includes('STARRY RANGE LEFT')) matchedKey = 'STARRY RANGE LEFT';
+            else if (s.rackIdx === 3 || name.includes('LEFT WING') || name.includes('RACK 4')) matchedKey = 'LEFT WING 3';
+            else if (s.rackIdx === 4 || name.includes('LEFT CORNER') || name.includes('RACK 5')) matchedKey = 'LEFT CORNER 3';
+
+            if (matchedKey && spotsMap[matchedKey]) {
+              spotsMap[matchedKey].total++;
+              if (s.scored) spotsMap[matchedKey].makes++;
+            }
+          });
+
+          const width = 460;
+          const height = 220;
+
+          // Render STATIC 2D Basketball Court SVG with 3-pt line curved accurately
+          let spotNodesSVG = '';
+          Object.keys(spotsMap).forEach(spotKey => {
+            const info = spotsMap[spotKey];
+            const pct = info.total > 0 ? Math.round((info.makes / info.total) * 100) : null;
+            let nodeColor = '#475569';
+            let textColor = '#e2e8f0';
+            let strokeColor = 'rgba(255,255,255,0.2)';
+
+            if (pct !== null) {
+              if (pct >= 70) {
+                nodeColor = '#15803d';
+                textColor = '#4ade80';
+                strokeColor = '#22c55e';
+              } else if (pct >= 40) {
+                nodeColor = '#a16207';
+                textColor = '#fde047';
+                strokeColor = '#eab308';
+              } else {
+                nodeColor = '#991b1b';
+                textColor = '#f87171';
+                strokeColor = '#ef4444';
+              }
+            }
+
+            const badgeText = pct !== null ? `${pct}%` : '0/0';
+            const isStarry = spotKey.includes('STARRY');
+            const ringRadius = isStarry ? 17 : 20;
+
+            spotNodesSVG += `
+              <g class="court-spot-static" style="pointer-events: none;">
+                <circle cx="${info.x}" cy="${info.y}" r="${ringRadius}" fill="${nodeColor}" stroke="${strokeColor}" stroke-width="2" opacity="0.95" />
+                <text x="${info.x}" y="${info.y - 4}" fill="#ffffff" font-size="8.5" font-weight="800" text-anchor="middle" font-family="'Teko', sans-serif" letter-spacing="0.5">${info.label}</text>
+                <text x="${info.x}" y="${info.y + 7}" fill="${textColor}" font-size="11" font-weight="800" text-anchor="middle" font-family="'Teko', sans-serif">${badgeText}</text>
+              </g>
+            `;
+          });
+
+          container.innerHTML = `
+            <svg viewBox="0 0 ${width} ${height}" style="width: 100%; height: 100%; display: block; pointer-events: none;">
+              <!-- Court Outer Boundary -->
+              <rect x="8" y="5" width="444" height="210" fill="#0f172a" stroke="rgba(255,255,255,0.15)" stroke-width="2" rx="8" />
+              
+              <!-- Key Area (Free Throw Lane) -->
+              <rect x="170" y="5" width="120" height="95" fill="rgba(56, 189, 248, 0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+              <!-- Key Circle -->
+              <path d="M 170 100 A 60 60 0 0 0 290 100" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="4 4" />
+              
+              <!-- Backboard & Basket Rim -->
+              <line x1="200" y1="20" x2="260" y2="20" stroke="#f8fafc" stroke-width="3" />
+              <circle cx="230" cy="28" r="9" fill="none" stroke="#f97316" stroke-width="2" />
+              
+              <!-- 3-Point Arc Line (Dashed cyan arc) -->
+              <path d="M 52 5 L 52 35 A 142 142 0 0 0 408 35 L 408 5" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 3" opacity="0.75" />
+              
+              <!-- Static Court Spot Nodes -->
+              ${spotNodesSVG}
+            </svg>
+          `;
+        }
+
+        switchAnalyticsTab(tabIdx) {
+          if (tabIdx < 0) tabIdx = 3;
+          if (tabIdx > 3) tabIdx = 0;
+          this.currentAnalyticsTab = tabIdx;
+
+          const tabBtns = document.querySelectorAll('.analytics-tab-btn');
+          tabBtns.forEach((btn) => {
+            const idx = parseInt(btn.getAttribute('data-tab'));
+            if (idx === tabIdx) {
+              btn.classList.add('active');
+              btn.style.background = 'rgba(56, 189, 248, 0.25)';
+              btn.style.borderColor = '#38bdf8';
+              btn.style.color = '#ffffff';
+            } else {
+              btn.classList.remove('active');
+              btn.style.background = 'rgba(255, 255, 255, 0.05)';
+              btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+              btn.style.color = '#94a3b8';
+            }
+          });
+
+          const dots = document.querySelectorAll('#analytics-tab-dots .tab-dot');
+          dots.forEach((dot, idx) => {
+            if (idx === tabIdx) {
+              dot.style.background = '#38bdf8';
+              dot.style.width = '8px';
+              dot.style.height = '8px';
+            } else {
+              dot.style.background = 'rgba(255,255,255,0.2)';
+              dot.style.width = '6px';
+              dot.style.height = '6px';
+            }
+          });
+
+          const panes = [
+            document.getElementById('analytics-pane-overview'),
+            document.getElementById('analytics-pane-heatmap'),
+            document.getElementById('analytics-pane-momentum'),
+            document.getElementById('analytics-pane-timing')
+          ];
+
+          panes.forEach((pane, idx) => {
+            if (pane) {
+              if (idx === tabIdx) {
+                pane.style.display = 'flex';
+                pane.style.opacity = '1';
+              } else {
+                pane.style.display = 'none';
+                pane.style.opacity = '0';
+              }
+            }
+          });
+        }
+
+        populateAnalyticsModal(logs = []) {
+          if (this.currentAnalyticsTab === undefined) this.currentAnalyticsTab = 0;
+          this.switchAnalyticsTab(this.currentAnalyticsTab);
+          const allPlayerLogs = (this.playerShotLog && this.playerShotLog.length > 0) ? this.playerShotLog : (logs || []).filter(s => s && s.isHuman !== false && !s.isAI);
+
+          if (!this.analyticsFilterCategory) this.analyticsFilterCategory = 'ALL';
+          if (!this.analyticsFilterSpot) this.analyticsFilterSpot = 'ALL';
+          if (!this.analyticsFilterTiming) this.analyticsFilterTiming = 'ALL';
+          if (!this.expandedRackCards) this.expandedRackCards = {};
+
+          // Header title styling
+          const headerTitle = document.getElementById('analytics-header-title');
+          if (headerTitle) {
+            headerTitle.innerText = 'PLAYER ADVANCED ANALYTICS';
+            headerTitle.style.color = '#38bdf8';
+          }
+
+          // Compute Overall Quick Stats Strip
+          const totalAtts = allPlayerLogs.length;
+          const totalMakes = allPlayerLogs.filter(s => s.scored).length;
+          const totalFgPct = totalAtts > 0 ? Math.round((totalMakes / totalAtts) * 100) : 0;
+
+          const moneyAtts = allPlayerLogs.filter(s => s.ballType === 'money');
+          const moneyMakes = moneyAtts.filter(s => s.scored).length;
+          const moneyPct = moneyAtts.length > 0 ? Math.round((moneyMakes / moneyAtts.length) * 100) : 0;
+
+          const starryAtts = allPlayerLogs.filter(s => s.ballType === 'starry');
+          const starryMakes = starryAtts.filter(s => s.scored).length;
+          const starryPct = starryAtts.length > 0 ? Math.round((starryMakes / starryAtts.length) * 100) : 0;
+
+          const perfectsCount = allPlayerLogs.filter(s => s.timingQuality === 'perfect').length;
+
+          const elQuickFg = document.getElementById('analytics-quick-fg');
+          if (elQuickFg) elQuickFg.innerText = `${totalMakes}/${totalAtts} (${totalFgPct}%)`;
+
+          const elQuickMoney = document.getElementById('analytics-quick-money');
+          if (elQuickMoney) elQuickMoney.innerText = `${moneyMakes}/${moneyAtts.length} (${moneyPct}%)`;
+
+          const elQuickStarry = document.getElementById('analytics-quick-starry');
+          if (elQuickStarry) elQuickStarry.innerText = `${starryMakes}/${starryAtts.length} (${starryPct}%)`;
+
+          const elQuickPerfects = document.getElementById('analytics-quick-perfects');
+          if (elQuickPerfects) elQuickPerfects.innerText = `${perfectsCount}`;
+
+          // Filter active shot logs according to selected filters
+          let activeLogs = allPlayerLogs.filter(s => {
+            if (this.analyticsFilterCategory === 'MAKES' && !s.scored) return false;
+            if (this.analyticsFilterCategory === 'MISSES' && s.scored) return false;
+            if (this.analyticsFilterCategory === 'PERFECTS' && s.timingQuality !== 'perfect') return false;
+
+            if (this.analyticsFilterSpot !== 'ALL') {
+              const spotNameUpper = (s.spotName || '').toUpperCase();
+              const filterUpper = this.analyticsFilterSpot.toUpperCase();
+              if (!spotNameUpper.includes(filterUpper) && !filterUpper.includes(spotNameUpper)) return false;
+            }
+
+            if (this.analyticsFilterTiming !== 'ALL') {
+              if (s.timingQuality !== this.analyticsFilterTiming) return false;
+            }
+
+            return true;
+          });
+
+          // Active filter banner display
+          const filterBanner = document.getElementById('active-filter-indicator');
+          const filterLabel = document.getElementById('active-filter-label');
+          const courtHint = document.getElementById('court-filter-hint');
+
+          const hasActiveSpotOrTiming = (this.analyticsFilterSpot !== 'ALL' || this.analyticsFilterTiming !== 'ALL' || this.analyticsFilterCategory !== 'ALL');
+          if (filterBanner) {
+            filterBanner.style.display = hasActiveSpotOrTiming ? 'flex' : 'none';
+            if (filterLabel) {
+              const parts = [];
+              if (this.analyticsFilterCategory !== 'ALL') parts.push(`[Category: ${this.analyticsFilterCategory}]`);
+              if (this.analyticsFilterSpot !== 'ALL') parts.push(`[Spot: ${this.analyticsFilterSpot}]`);
+              if (this.analyticsFilterTiming !== 'ALL') parts.push(`[Timing: ${this.analyticsFilterTiming.toUpperCase()}]`);
+              filterLabel.innerText = `ACTIVE FILTERS: ${parts.join(' ') || 'NONE'}`;
+            }
+          }
+          if (courtHint) {
+            courtHint.innerText = this.analyticsFilterSpot !== 'ALL' ? `FILTERED: ${this.analyticsFilterSpot}` : 'SHOWING ALL SPOTS';
+          }
+
+          // 1. Render Interactive Court Heatmap
+          this.renderCourtHeatmap(allPlayerLogs);
+
+          // 2. Render Trajectory Graph
+          this.renderMomentumGraph(activeLogs, false);
+
+          // 3. Hot and Cold spots calculation across all player logs
           const spotStats = {};
-          logs.forEach(s => {
+          allPlayerLogs.forEach(s => {
             const name = s.spotName || 'Rack';
             if (!spotStats[name]) spotStats[name] = { total: 0, makes: 0, misses: 0 };
             spotStats[name].total++;
@@ -5815,7 +6654,6 @@
             else spotStats[name].misses++;
           });
 
-          // Hot and Cold spot calculation
           let hotSpotName = '-';
           let hotPct = -1;
           let coldSpotName = '-';
@@ -5835,65 +6673,206 @@
           const coldBadge = document.getElementById('cold-spot-badge');
           if (coldBadge) coldBadge.innerText = `🧊 Coldest Spot: ${coldSpotName}`;
 
-          // Miss Release Timing Breakdown
-          const timingCounts = { very_early: 0, early: 0, slightly_early: 0, slightly_late: 0, late: 0, very_late: 0 };
-          misses.forEach(m => {
-            if (timingCounts[m.timingQuality] !== undefined) timingCounts[m.timingQuality]++;
+          // 4. Release Timing Breakdown & Advice across all player logs
+          const allLogs = (allPlayerLogs && allPlayerLogs.length > 0) ? allPlayerLogs : (this.playerShotLog || []);
+          const totalShots = allLogs.length;
+
+          const missTotalBadge = document.getElementById('player-miss-total-badge');
+          if (missTotalBadge) {
+            missTotalBadge.innerText = `${totalShots} SHOTS RECORDED`;
+          }
+
+          const timingCounts = {
+            perfect: 0,
+            slightly_early: 0,
+            slightly_late: 0,
+            early: 0,
+            late: 0,
+            very_early: 0,
+            very_late: 0,
+            very_very_late: 0
+          };
+
+          let sumMeter = 0;
+          let meterCount = 0;
+
+          allLogs.forEach(s => {
+            if (!s) return;
+            let tq = s.timingQuality || 'slightly_early';
+            if (tq === 'green') tq = 'perfect';
+            if (tq === 'good') tq = 'slightly_early';
+            if (timingCounts[tq] !== undefined) {
+              timingCounts[tq]++;
+            } else {
+              timingCounts.slightly_early++;
+            }
+
+            if (s.meterVal !== undefined && s.meterVal !== null) {
+              sumMeter += s.meterVal;
+              meterCount++;
+            }
           });
 
           const timingLabels = {
-            very_early: { label: 'VERY EARLY 🔴', color: '#ef4444' },
-            early: { label: 'EARLY 🟠', color: '#f97316' },
-            slightly_early: { label: 'SLIGHTLY EARLY 🟡', color: '#eab308' },
-            slightly_late: { label: 'SLIGHTLY LATE 🟡', color: '#eab308' },
-            late: { label: 'LATE 🟠', color: '#f97316' },
-            very_late: { label: 'VERY LATE 🔴', color: '#ef4444' }
+            perfect: { label: 'PERFECT (GREEN 50%)', color: '#22c55e' },
+            slightly_early: { label: 'SLIGHTLY EARLY (40-49%)', color: '#eab308' },
+            slightly_late: { label: 'SLIGHTLY LATE (51-60%)', color: '#eab308' },
+            early: { label: 'EARLY (25-39%)', color: '#f97316' },
+            late: { label: 'LATE (61-75%)', color: '#f97316' },
+            very_early: { label: 'VERY EARLY (<25%)', color: '#ef4444' },
+            very_late: { label: 'VERY LATE (76-97%)', color: '#ef4444' },
+            very_very_late: { label: 'VERY VERY LATE (>97%)', color: '#dc2626' }
           };
 
           const timingBarsContainer = document.getElementById('miss-timing-bars');
           if (timingBarsContainer) {
             timingBarsContainer.innerHTML = '';
-            const totalMisses = Math.max(1, misses.length);
+
             Object.keys(timingCounts).forEach(key => {
               const cnt = timingCounts[key];
               const cfg = timingLabels[key];
-              const pct = Math.round((cnt / totalMisses) * 100);
+              const pct = totalShots > 0 ? Math.round((cnt / totalShots) * 100) : 0;
+              const isTimingActive = (this.analyticsFilterTiming === key);
 
               const row = document.createElement('div');
-              row.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 2px 0;';
+              row.className = 'timing-row-btn';
+              row.style.cssText = `display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: ${isTimingActive ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.02)'}; border: ${isTimingActive ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.06)'};`;
               row.innerHTML = `
-                <div style="width: 130px; font-weight: 800; color: ${cfg.color}; letter-spacing: 0.2px;">${cfg.label}</div>
-                <div style="flex: 1; background: rgba(255,255,255,0.12); height: 10px; border-radius: 5px; overflow: hidden;">
+                <div style="width: 145px; font-weight: 800; color: ${cfg.color}; letter-spacing: 0.2px; font-size: 10.5px; white-space: nowrap;">${cfg.label}</div>
+                <div style="flex: 1; background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; overflow: hidden;">
                   <div style="width: ${cnt > 0 ? Math.max(pct, 6) : 0}%; background: ${cfg.color}; height: 100%; transition: width 0.3s; border-radius: 5px;"></div>
                 </div>
-                <div style="width: 65px; text-align: right; font-weight: 800; color: #e2e8f0; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px;">${cnt} (${pct}%)</div>
+                <div style="width: 75px; text-align: right; font-weight: 800; color: #e2e8f0; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px;">${cnt} (${pct}%)</div>
               `;
+
+              row.addEventListener('click', () => {
+                if (this.analyticsFilterTiming === key) {
+                  this.analyticsFilterTiming = 'ALL';
+                } else {
+                  this.analyticsFilterTiming = key;
+                }
+                this.populateAnalyticsModal(allPlayerLogs);
+              });
+
               timingBarsContainer.appendChild(row);
             });
           }
 
-          // Location cards grid
+          // Timing recommendation advice box & Quick Metrics Strip in TIMING tab
+          const timingAdviceText = document.getElementById('timing-advice-text');
+          const timingStatsStrip = document.getElementById('timing-stats-strip');
+
+          const perfectCnt = timingCounts.perfect;
+          const earlyTotal = timingCounts.very_early + timingCounts.early + timingCounts.slightly_early;
+          const lateTotal = timingCounts.very_very_late + timingCounts.very_late + timingCounts.late + timingCounts.slightly_late;
+          const avgMeterVal = meterCount > 0 ? (sumMeter / meterCount).toFixed(1) : '50.0';
+          const greenPct = totalShots > 0 ? Math.round((perfectCnt / totalShots) * 100) : 0;
+
+          let titleText = 'PERFECT RHYTHM!';
+          let adviceText = '';
+          let boxColor = '#4ade80';
+          let boxBg = 'rgba(34, 197, 94, 0.08)';
+          let boxBorder = 'rgba(34, 197, 94, 0.4)';
+
+          if (totalShots === 0) {
+            titleText = 'SHOT TIMING MECHANICS';
+            adviceText = 'Release the shoot button right as the meter hits 50% (Green Window) for a guaranteed make! Take shots during the round to view live release quality metrics and personalized coaching feedback.';
+            boxColor = '#7dd3fc';
+            boxBg = 'rgba(56, 189, 248, 0.08)';
+            boxBorder = 'rgba(56, 189, 248, 0.4)';
+          } else {
+            if (perfectCnt / totalShots >= 0.5) {
+              titleText = 'EXCELLENT GREEN WINDOW ACCURACY!';
+              adviceText = `Outstanding timing! You hit the Green Window on ${perfectCnt}/${totalShots} shots (${greenPct}%). Average release meter value: ${avgMeterVal}% (Target: 50.0%).`;
+              boxColor = '#4ade80';
+              boxBg = 'rgba(34, 197, 94, 0.08)';
+              boxBorder = 'rgba(34, 197, 94, 0.4)';
+            } else if (earlyTotal > lateTotal * 1.2) {
+              titleText = 'EARLY RELEASE BIAS DETECTED';
+              adviceText = `You are releasing early on ${earlyTotal}/${totalShots} shots. Average release meter: ${avgMeterVal}% (Target: 50.0%). Hold your jump shot release slightly longer to find the green center!`;
+              boxColor = '#fef08a';
+              boxBg = 'rgba(250, 204, 21, 0.08)';
+              boxBorder = 'rgba(250, 204, 21, 0.35)';
+            } else if (lateTotal > earlyTotal * 1.2) {
+              titleText = 'LATE RELEASE BIAS DETECTED';
+              adviceText = `You are releasing late on ${lateTotal}/${totalShots} shots. Average release meter: ${avgMeterVal}% (Target: 50.0%). Release a fraction earlier before the meter passes top dead center!`;
+              boxColor = '#fef08a';
+              boxBg = 'rgba(250, 204, 21, 0.08)';
+              boxBorder = 'rgba(250, 204, 21, 0.35)';
+            } else {
+              titleText = 'BALANCED RELEASE TIMING';
+              adviceText = `Your releases are well balanced (${earlyTotal} early, ${lateTotal} late). Average release meter: ${avgMeterVal}% (Target: 50.0%). Keep practicing for 50% center releases!`;
+              boxColor = '#7dd3fc';
+              boxBg = 'rgba(56, 189, 248, 0.08)';
+              boxBorder = 'rgba(56, 189, 248, 0.4)';
+            }
+          }
+
+          // Populate Timing Tab Coaching Advice Text
+          if (timingAdviceText) {
+            timingAdviceText.style.borderColor = boxBorder;
+            timingAdviceText.style.color = boxColor;
+            timingAdviceText.style.background = boxBg;
+            timingAdviceText.innerHTML = `<strong style="color: ${boxColor}; text-transform: uppercase;">${titleText}:</strong> ${adviceText}`;
+          }
+
+          // Populate Timing Tab Quick Stats Strip
+          if (timingStatsStrip) {
+            timingStatsStrip.innerHTML = `
+              <div style="background: rgba(255,255,255,0.04); padding: 8px 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 9.5px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">GREEN WINDOW</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: #4ade80; font-weight: 700; line-height: 1; margin-top: 2px;">${perfectCnt} (${greenPct}%)</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); padding: 8px 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 9.5px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">EARLY RELEASE</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: #facc15; font-weight: 700; line-height: 1; margin-top: 2px;">${earlyTotal}</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); padding: 8px 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 9.5px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">LATE RELEASE</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: #f97316; font-weight: 700; line-height: 1; margin-top: 2px;">${lateTotal}</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); padding: 8px 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 9.5px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">AVG METER</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 20px; color: #38bdf8; font-weight: 700; line-height: 1; margin-top: 2px;">${avgMeterVal}%</div>
+              </div>
+            `;
+          }
+
+          // Timing tab advice box populated above
+
+
+          // 5. Expandable Shot Location Grid (By Rack)
           const locationGrid = document.getElementById('shot-location-grid');
           if (locationGrid) {
             locationGrid.innerHTML = '';
+            
             Object.keys(spotStats).forEach(name => {
               const st = spotStats[name];
               const pct = st.total > 0 ? Math.round((st.makes / st.total) * 100) : 0;
               const isPerfectSpot = pct >= 80;
               const isColdSpot = pct < 40;
+              const isExpanded = !!this.expandedRackCards[name];
 
-              const card = document.createElement('div');
-              card.style.cssText = `background: ${isPerfectSpot ? 'rgba(34, 197, 94, 0.08)' : (isColdSpot ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255,255,255,0.03)')}; border: 1.5px solid ${isPerfectSpot ? 'rgba(34, 197, 94, 0.3)' : (isColdSpot ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255,255,255,0.1)')}; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;`;
-              
-              const shotDots = logs.filter(s => s.spotName === name).map(s => {
+              const rackShots = allPlayerLogs.filter(s => (s.spotName || 'Rack') === name);
+
+              const containerCard = document.createElement('div');
+              containerCard.style.cssText = `background: ${isPerfectSpot ? 'rgba(34, 197, 94, 0.08)' : (isColdSpot ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255,255,255,0.03)')}; border: 1.5px solid ${isPerfectSpot ? 'rgba(34, 197, 94, 0.3)' : (isColdSpot ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255,255,255,0.1)')}; border-radius: 12px; overflow: hidden; transition: all 0.2s;`;
+
+              const headerRow = document.createElement('div');
+              headerRow.style.cssText = 'padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none;';
+
+              const shotDots = rackShots.map(s => {
                 const color = s.scored ? '#4ade80' : '#f87171';
                 const symbol = s.scored ? '✓' : '✗';
-                return `<span style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; background: ${s.scored ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}; color: ${color}; font-size: 12px; font-weight: 800; margin-right: 4px;">${symbol}</span>`;
+                return `<span style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; background: ${s.scored ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}; color: ${color}; font-size: 11px; font-weight: 800; margin-right: 4px;">${symbol}</span>`;
               }).join('');
 
-              card.innerHTML = `
+              headerRow.innerHTML = `
                 <div>
-                  <div style="font-weight: 800; font-size: 15px; color: ${isPerfectSpot ? '#4ade80' : (isColdSpot ? '#f87171' : '#f8fafc')}; letter-spacing: 0.3px;">${name}</div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-weight: 800; font-size: 15px; color: ${isPerfectSpot ? '#4ade80' : (isColdSpot ? '#f87171' : '#f8fafc')}; letter-spacing: 0.3px;">${name}</span>
+                    <span style="font-size: 11px; color: #94a3b8;">${isExpanded ? '▲ hide details' : '▼ tap details'}</span>
+                  </div>
                   <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px;">${shotDots}</div>
                 </div>
                 <div style="text-align: right; flex-shrink: 0; padding-left: 10px;">
@@ -5901,11 +6880,43 @@
                   <div style="font-size: 11.5px; color: #94a3b8; font-weight: 700; margin-top: 2px; text-transform: uppercase;">${pct}% ACCURACY</div>
                 </div>
               `;
-              locationGrid.appendChild(card);
+
+              headerRow.addEventListener('click', () => {
+                this.expandedRackCards[name] = !this.expandedRackCards[name];
+                this.populateAnalyticsModal(allPlayerLogs);
+              });
+
+              containerCard.appendChild(headerRow);
+
+              // Expanded Shot Detail Drawer
+              if (isExpanded) {
+                const drawer = document.createElement('div');
+                drawer.style.cssText = 'background: rgba(0, 0, 0, 0.4); border-top: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 12px;';
+
+                rackShots.forEach((s, idx) => {
+                  const ballIcon = s.ballType === 'money' ? '💰 MONEY BALL' : (s.ballType === 'starry' ? '⭐ STARRY SHOT (+3)' : `🏀 BALL #${idx + 1}`);
+                  const resultColor = s.scored ? '#4ade80' : '#f87171';
+                  const timingFormatted = (s.timingQuality || 'normal').replace('_', ' ').toUpperCase();
+                  const meterVal = s.meterVal !== undefined ? Math.round(s.meterVal) : 50;
+
+                  const item = document.createElement('div');
+                  item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px stroke rgba(255,255,255,0.05);';
+                  item.innerHTML = `
+                    <div style="font-weight: 700; color: #e2e8f0;">${ballIcon}</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">Meter ${meterVal}% (${timingFormatted})</span>
+                      <span style="font-weight: 800; color: ${resultColor}; font-family: 'Teko', sans-serif; font-size: 16px;">${s.scored ? 'MADE ✓' : 'MISSED ✗'}</span>
+                    </div>
+                  `;
+                  drawer.appendChild(item);
+                });
+
+                containerCard.appendChild(drawer);
+              }
+
+              locationGrid.appendChild(containerCard);
             });
           }
-
-          
         }
 
         startNextTurnFromSummary() {
@@ -5935,8 +6946,12 @@
             // Player's turn
             this.state = 'PLAYER_TURN';
             document.getElementById('hud-overlay').style.display = 'flex';
+            const hudTop = document.getElementById('hud-top');
+            if (hudTop) hudTop.style.display = 'grid';
             const mWrap = document.getElementById('meter-wrapper');
             if (mWrap) mWrap.style.display = 'flex';
+            const mContainer = document.getElementById('meter-container');
+            if (mContainer) mContainer.style.display = 'flex';
             document.getElementById('shoot-btn').style.display = 'flex';
             document.getElementById('ai-overlay').style.display = 'none';
             const simBtn = document.getElementById('ai-simulate-btn');
@@ -5972,6 +6987,8 @@
           } else {
             // AI's turn
             this.state = 'AI_TURN';
+            const hudTop = document.getElementById('hud-top');
+            if (hudTop) hudTop.style.display = 'grid';
             const mWrap = document.getElementById('meter-wrapper');
             if (mWrap) mWrap.style.display = 'none';
             document.getElementById('shoot-btn').style.display = 'none';
@@ -6086,7 +7103,19 @@
               } else if (this.isAICold || (this.aiStreak && this.aiStreak <= -2)) {
                 aiTrailType = 'ice';
               }
-              const info = { shot, timingQuality: 'good', guaranteedMake: isMake, startPos, scored: false, bounced: false, isAI: true, trailType: aiTrailType };
+              const shotRecord = {
+                shotNum: this.currentShotIdx,
+                spotName: shot.spotName || (shot.spot ? shot.spot.name : 'RACK'),
+                ballType: shot.ballType,
+                pts: shot.pts || 1,
+                timingQuality: isMake ? 'green' : (Math.random() < 0.5 ? 'slightly_early' : 'slightly_late'),
+                meterVal: 50,
+                scored: false
+              };
+              if (!this.currentShotLog) this.currentShotLog = [];
+              this.currentShotLog.push(shotRecord);
+
+              const info = { shot, timingQuality: 'good', guaranteedMake: isMake, startPos, scored: false, bounced: false, isAI: true, shotRecord, trailType: aiTrailType };
 
               this.inFlightBalls.push({ mesh: ballMesh, vel, info });
 
@@ -6330,6 +7359,164 @@
           }
         }
 
+        create3DGoldTrophy() {
+          const trophyGroup = new THREE.Group();
+
+          // Metallic gold material
+          const goldMat = new THREE.MeshStandardMaterial({
+            color: 0xfacc15,
+            metalness: 0.9,
+            roughness: 0.15,
+            envMapIntensity: 1.2
+          });
+
+          // Base: Dark polished marble octagonal pedestal
+          const baseGeo = new THREE.CylinderGeometry(0.22, 0.26, 0.18, 8);
+          const baseMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.2, metalness: 0.8 });
+          const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+          baseMesh.position.y = 0.09;
+          trophyGroup.add(baseMesh);
+
+          // Golden Stem
+          const stemGeo = new THREE.CylinderGeometry(0.08, 0.14, 0.24, 12);
+          const stemMesh = new THREE.Mesh(stemGeo, goldMat);
+          stemMesh.position.y = 0.30;
+          trophyGroup.add(stemMesh);
+
+          // Trophy Bowl Cup
+          const cupGeo = new THREE.CylinderGeometry(0.25, 0.09, 0.38, 16);
+          const cupMesh = new THREE.Mesh(cupGeo, goldMat);
+          cupMesh.position.y = 0.61;
+          trophyGroup.add(cupMesh);
+
+          // Golden Handles (Left & Right)
+          const handleGeo = new THREE.TorusGeometry(0.14, 0.025, 8, 16, Math.PI);
+          const handleL = new THREE.Mesh(handleGeo, goldMat);
+          handleL.position.set(-0.25, 0.65, 0);
+          handleL.rotation.z = Math.PI * 0.5;
+          trophyGroup.add(handleL);
+
+          const handleR = new THREE.Mesh(handleGeo, goldMat);
+          handleR.position.set(0.25, 0.65, 0);
+          handleR.rotation.z = -Math.PI * 0.5;
+          trophyGroup.add(handleR);
+
+          // Top Basketball Crown
+          const ballGeo = new THREE.SphereGeometry(0.12, 16, 16);
+          const ballMesh = new THREE.Mesh(ballGeo, goldMat);
+          ballMesh.position.y = 0.90;
+          trophyGroup.add(ballMesh);
+
+          trophyGroup.scale.set(1.3, 1.3, 1.3);
+          return trophyGroup;
+        }
+
+        startWinnerCelebrationCutscene() {
+          const isPlayerWin = this.playerScore > this.aiScore;
+          const winningMesh = isPlayerWin ? this.playerMesh : this.aiPlayerMesh;
+          const losingMesh = isPlayerWin ? this.aiPlayerMesh : this.playerMesh;
+
+          const winnerName = isPlayerWin
+            ? ((this.userJerseyName && this.userJerseyName.trim()) ? this.userJerseyName.toUpperCase() : 'YOU')
+            : 'AI SHOOTER';
+
+          const winnerScore = isPlayerWin ? this.playerScore : this.aiScore;
+          const loserScore = isPlayerWin ? this.aiScore : this.playerScore;
+
+          this.state = 'CUTSCENE';
+
+          // Hide all gameplay HUD elements
+          const hudTop = document.getElementById('hud-top');
+          if (hudTop) hudTop.style.display = 'none';
+          const hudOverlay = document.getElementById('hud-overlay');
+          if (hudOverlay) hudOverlay.style.display = 'none';
+          const shootBtn = document.getElementById('shoot-btn');
+          if (shootBtn) shootBtn.style.display = 'none';
+          const streakFire = document.getElementById('streak-fire-hud');
+          if (streakFire) streakFire.style.display = 'none';
+          const iceCold = document.getElementById('ice-cold-hud');
+          if (iceCold) iceCold.style.display = 'none';
+          const mWrapper = document.getElementById('meter-wrapper');
+          if (mWrapper) mWrapper.style.display = 'none';
+
+          // Transparent click overlay for tap-to-skip cutscene
+          let csOverlay = document.getElementById('celebration-cutscene-overlay');
+          if (!csOverlay) {
+            csOverlay = document.createElement('div');
+            csOverlay.id = 'celebration-cutscene-overlay';
+            csOverlay.style.cssText = `
+              position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+              pointer-events: auto; z-index: 150; cursor: pointer;
+              background: transparent;
+            `;
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) gameContainer.appendChild(csOverlay);
+          }
+
+          if (csOverlay) {
+            csOverlay.innerHTML = ''; // Clean scene with no text or box overlays
+            csOverlay.style.display = 'block';
+          }
+
+          // Position winner in center stage facing camera
+          if (losingMesh) losingMesh.visible = false;
+          if (winningMesh) {
+            winningMesh.visible = true;
+            winningMesh.position.set(0, 0, -8);
+            winningMesh.rotation.y = 0; // facing front camera
+          }
+
+          // Create 3D Gold Trophy and attach to winner
+          if (this.celebrationTrophy && winningMesh) {
+            winningMesh.remove(this.celebrationTrophy);
+          }
+          this.celebrationTrophy = this.create3DGoldTrophy();
+          if (winningMesh) winningMesh.add(this.celebrationTrophy);
+
+          // Position trophy in winner's hands
+          if (this.celebrationTrophy) {
+            this.celebrationTrophy.position.set(0, 1.85, 0.25);
+          }
+
+          // Trigger confetti & victory sound
+          this.triggerConfetti();
+          if (audio && audio.playVictoryFanfare) audio.playVictoryFanfare();
+
+          // Set cutscene camera target and animation parameters
+          this.cutsceneTime = 0;
+          this.isCutsceneActive = true;
+
+          // End cutscene handler (for timeout or tap-to-skip)
+          let ended = false;
+          const endCutscene = () => {
+            if (ended) return;
+            ended = true;
+            this.isCutsceneActive = false;
+            if (this.cutsceneTimeout) {
+              clearTimeout(this.cutsceneTimeout);
+              this.cutsceneTimeout = null;
+            }
+            if (csOverlay) {
+              csOverlay.style.display = 'none';
+              csOverlay.removeEventListener('click', endCutscene);
+              csOverlay.removeEventListener('touchstart', endCutscene);
+            }
+            if (this.celebrationTrophy && winningMesh) {
+              winningMesh.remove(this.celebrationTrophy);
+              this.celebrationTrophy = null;
+            }
+            this.showPostGameUI();
+          };
+
+          if (csOverlay) {
+            csOverlay.addEventListener('click', endCutscene);
+            csOverlay.addEventListener('touchstart', endCutscene, { passive: true });
+          }
+
+          // 5 seconds (5000ms) cutscene duration
+          this.cutsceneTimeout = setTimeout(endCutscene, 5000);
+        }
+
         showPostGame() {
           if (this.inFlightBalls && this.scene) {
             this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
@@ -6340,12 +7527,37 @@
           }
           this.backgroundBalls = [];
 
-          this.state = 'POST_GAME';
-          document.getElementById('ai-overlay').style.display = 'none';
-          document.getElementById('player-summary-screen').style.display = 'none';
-          document.getElementById('postgame-screen').style.display = 'flex';
+          // Hide mid-game overlays
+          const aiOverlay = document.getElementById('ai-overlay');
+          if (aiOverlay) aiOverlay.style.display = 'none';
+          const summaryScreen = document.getElementById('player-summary-screen');
+          if (summaryScreen) summaryScreen.style.display = 'none';
+          const simBtn = document.getElementById('ai-simulate-btn');
+          if (simBtn) simBtn.style.display = 'none';
 
-          this.populateAnalyticsModal(this.currentShotLog || []);
+          // If scores tie -> no cut-scene, proceed directly to postgame screen
+          if (this.playerScore === this.aiScore) {
+            this.showPostGameUI();
+          } else {
+            // Trigger 3-second winner celebration cut-scene!
+            this.startWinnerCelebrationCutscene();
+          }
+        }
+
+        showPostGameUI() {
+          this.state = 'POST_GAME';
+          const aiOverlay = document.getElementById('ai-overlay');
+          if (aiOverlay) aiOverlay.style.display = 'none';
+          const summaryScreen = document.getElementById('player-summary-screen');
+          if (summaryScreen) summaryScreen.style.display = 'none';
+          const hudOverlay = document.getElementById('hud-overlay');
+          if (hudOverlay) hudOverlay.style.display = 'none';
+          const meterWrapper = document.getElementById('meter-wrapper');
+          if (meterWrapper) meterWrapper.style.display = 'none';
+          const postgameScreen = document.getElementById('postgame-screen');
+          if (postgameScreen) postgameScreen.style.display = 'flex';
+
+          this.populateAnalyticsModal(this.playerShotLog || []);
 
           // Hide simulate button
           const simBtn = document.getElementById('ai-simulate-btn');
@@ -6354,36 +7566,43 @@
           const winnerTitle = document.getElementById('winner-title');
           const trophyEl = document.getElementById('postgame-trophy');
 
-          if (this.playerScore > this.aiScore) {
-            winnerTitle.innerText = 'VICTORY!';
-            winnerTitle.style.color = '#fbbf24';
-            if (trophyEl) trophyEl.style.display = 'block';
-            this.triggerConfetti();
-          } else if (this.playerScore < this.aiScore) {
-            winnerTitle.innerText = 'DEFEAT';
-            winnerTitle.style.color = '#ef4444';
-            if (trophyEl) trophyEl.style.display = 'none';
-          } else {
-            winnerTitle.innerText = 'TIE GAME!';
-            winnerTitle.style.color = '#38bdf8';
-            if (trophyEl) trophyEl.style.display = 'none';
+          if (winnerTitle) {
+            if (this.playerScore > this.aiScore) {
+              winnerTitle.innerText = 'VICTORY!';
+              winnerTitle.style.color = '#fbbf24';
+              if (trophyEl) trophyEl.style.display = 'block';
+              this.triggerConfetti();
+            } else if (this.playerScore < this.aiScore) {
+              winnerTitle.innerText = 'DEFEAT';
+              winnerTitle.style.color = '#ef4444';
+              if (trophyEl) trophyEl.style.display = 'none';
+            } else {
+              winnerTitle.innerText = 'TIE GAME!';
+              winnerTitle.style.color = '#38bdf8';
+              if (trophyEl) trophyEl.style.display = 'none';
+            }
           }
 
-          document.getElementById('final-player-score').innerText = this.playerScore;
-          document.getElementById('final-ai-score').innerText = this.aiScore;
+          const fpScore = document.getElementById('final-player-score');
+          if (fpScore) fpScore.innerText = this.playerScore;
+          const faScore = document.getElementById('final-ai-score');
+          if (faScore) faScore.innerText = this.aiScore;
 
           const pStats = this.playerStats || this.stats;
-
           const fgPct = pStats.attempts > 0 ? Math.round((pStats.makes / pStats.attempts) * 100) : 0;
-          document.getElementById('stat-fg').innerText = `${pStats.makes} / ${pStats.attempts} (${fgPct}%)`;
+          const statFg = document.getElementById('stat-fg');
+          if (statFg) statFg.innerText = `${pStats.makes} / ${pStats.attempts} (${fgPct}%)`;
 
           const mPct = pStats.moneyAtts > 0 ? Math.round((pStats.moneyMakes / pStats.moneyAtts) * 100) : 0;
-          document.getElementById('stat-money').innerText = `${pStats.moneyMakes} / ${pStats.moneyAtts} (${mPct}%)`;
+          const statMoney = document.getElementById('stat-money');
+          if (statMoney) statMoney.innerText = `${pStats.moneyMakes} / ${pStats.moneyAtts} (${mPct}%)`;
 
           const sPct = pStats.starryAtts > 0 ? Math.round((pStats.starryMakes / pStats.starryAtts) * 100) : 0;
-          document.getElementById('stat-starry').innerText = `${pStats.starryMakes} / ${pStats.starryAtts} (${sPct}%)`;
+          const statStarry = document.getElementById('stat-starry');
+          if (statStarry) statStarry.innerText = `${pStats.starryMakes} / ${pStats.starryAtts} (${sPct}%)`;
 
-          document.getElementById('stat-perfects').innerText = pStats.perfects;
+          const statPerf = document.getElementById('stat-perfects');
+          if (statPerf) statPerf.innerText = pStats.perfects;
         }
 
         triggerConfetti() {
@@ -6507,7 +7726,10 @@
             this.meterVal += this.meterSpeed * speedMult * this.meterDir * 60 * dt;
             if (this.meterVal >= 100) {
               this.meterVal = 100;
-              this.meterDir = -1;
+              this.isHolding = false;
+              const shootBtn = document.getElementById('shoot-btn');
+              if (shootBtn) shootBtn.classList.remove('holding');
+              this.releaseShot();
             } else if (this.meterVal <= 0) {
               this.meterVal = 0;
               this.meterDir = 1;
@@ -6546,7 +7768,7 @@
           this.lastTime = time;
 
           // Wizard meter live speed preview animation
-          if (this.state === 'PRE_GAME' && this.currentWizardStep === 4) {
+          if (this.state === 'PRE_GAME' && this.currentWizardStep === 3) {
             this.updateMeterPreviewAnim(dt);
           }
 
@@ -6566,8 +7788,39 @@
             this.springyRimGroup.rotation.x = this.rimDisplacement * 0.45;
           }
 
-          // Camera lerp
-          if (this.targetCamPos) {
+          // Cutscene orbit & celebration pose animation
+          if (this.isCutsceneActive) {
+            this.cutsceneTime = (this.cutsceneTime || 0) + dt;
+            const orbitAngle = this.cutsceneTime * 0.8;
+            const orbitRadius = 4.2;
+            const targetX = Math.sin(orbitAngle) * orbitRadius;
+            const targetZ = -8 + Math.cos(orbitAngle) * orbitRadius;
+            const targetY = 1.8 + Math.sin(this.cutsceneTime * 2.0) * 0.12;
+
+            this.camera.position.set(targetX, targetY, targetZ);
+            this.camera.lookAt(0, 1.5, -8);
+
+            const isPlayerWin = this.playerScore > this.aiScore;
+            const winningMesh = isPlayerWin ? this.playerMesh : this.aiPlayerMesh;
+            if (winningMesh && winningMesh.userData) {
+              const u = winningMesh.userData;
+              if (u.bodyPivot) u.bodyPivot.position.y = Math.abs(Math.sin(this.cutsceneTime * 6.0)) * 0.15;
+              if (u.leftArmGroup) {
+                u.leftArmGroup.rotation.x = -Math.PI * 0.82;
+                u.leftArmGroup.rotation.z = 0.40;
+              }
+              if (u.rightArmGroup) {
+                u.rightArmGroup.rotation.x = -Math.PI * 0.82;
+                u.rightArmGroup.rotation.z = -0.40;
+              }
+            }
+
+            if (this.celebrationTrophy) {
+              this.celebrationTrophy.rotation.y += dt * 2.5;
+              this.celebrationTrophy.position.y = 1.85 + Math.sin(this.cutsceneTime * 4.0) * 0.08;
+            }
+          } else if (this.targetCamPos) {
+            // Standard camera lerp
             this.camera.position.lerp(this.targetCamPos, 0.06);
             this.camera.lookAt(this.targetCamLook);
           }
