@@ -66,22 +66,23 @@
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
         padding: 12px 16px;
-        background: linear-gradient(180deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0) 100%);
+        background: linear-gradient(180deg, rgba(8,10,15,0.4) 0%, rgba(8,10,15,0) 100%);
         width: 100%;
         box-sizing: border-box;
       }
-      .score-card {
+                  .score-card {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 84px;
-        height: 56px;
-        background: rgba(15, 23, 42, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
         border-radius: 12px;
         padding: 4px;
-        backdrop-filter: blur(8px);
         box-sizing: border-box;
       }
       .score-card.player {
@@ -114,12 +115,14 @@
       }
 
       /* SHOT CLOCK */
-      #shot-clock-container {
+            #shot-clock-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: rgba(220, 38, 38, 0.2);
-        border: 2px solid #ef4444;
+        background: rgba(220, 38, 38, 0.15);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(239, 68, 68, 0.5);
         border-radius: 12px;
         padding: 4px 16px;
         box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
@@ -164,13 +167,13 @@
       }
 
       /* HUD BOTTOM RACK BAR */
-      #hud-bottom {
+                  #hud-bottom {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 10px;
         padding: 12px 16px 20px 16px;
-        background: linear-gradient(0deg, rgba(8,10,15,0.92) 0%, rgba(8,10,15,0) 100%);
+        background: transparent;
       }
       #rack-title-badge {
         font-family: 'Teko', sans-serif;
@@ -189,16 +192,17 @@
         justify-content: center;
         gap: 8px;
       }
-      .rack-dot {
+                        .rack-dot {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 900;
         transition: all 0.2s ease;
       }
@@ -419,17 +423,19 @@
         z-index: 50;
         overflow-y: auto;
       }
-      .modal-card {
+                  .modal-card {
         width: 100%;
         max-width: 460px;
-        background: rgba(15, 23, 42, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 16px;
-        padding: 16px 20px;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        padding: 20px 16px;
         display: flex;
         flex-direction: column;
         gap: 12px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
         max-height: 94vh;
         overflow-y: auto;
       }
@@ -746,9 +752,11 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
       }
-      .meter-diff-card {
-        background: rgba(30, 41, 59, 0.8);
-        border: 2px solid rgba(255, 255, 255, 0.1);
+            .meter-diff-card {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 8px 6px;
         cursor: pointer;
@@ -820,9 +828,11 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
       }
-      .ai-opp-card {
-        background: rgba(30, 41, 59, 0.8);
-        border: 2px solid rgba(255, 255, 255, 0.1);
+            .ai-opp-card {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         padding: 8px 6px;
         cursor: pointer;
@@ -923,10 +933,9 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 23px;
         color: #f8fafc;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
+        font-family: 'Teko', sans-serif;
+        font-size: 22px;
+        letter-spacing: 1px;
         cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
@@ -1009,7 +1018,7 @@
           padding: 4px 10px;
         }
         .nav-secondary-btn {
-          font-size: 10px;
+          font-size: 19px;
           min-height: 42px;
           padding: 4px 8px;
         }
@@ -1035,28 +1044,25 @@
       }
 
       /* MOBILY FRIENDLY LARGE BUTTONS */
-      .cta-button {
+            .cta-button {
         width: 100%;
-        min-height: 58px; /* excelente mobile tap targets */
+        min-height: 58px;
         height: auto;
         padding: 10px 20px;
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        border: 2px solid rgba(255, 255, 255, 0.25);
-        border-radius: 29px;
+        background: rgba(245, 158, 11, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
         font-family: 'Teko', sans-serif;
-        font-size: 26px; /* Huge legible mobile text */
-        letter-spacing: 1.2px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 1px;
         color: #ffffff;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
-        transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         text-transform: uppercase;
-        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
         box-sizing: border-box;
         white-space: normal;
         text-align: center;
@@ -1065,7 +1071,7 @@
       .cta-button:active {
         transform: scale(0.96);
         filter: brightness(0.92);
-        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.5);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       }
 
       /* POST-GAME SCORECARD */
@@ -1082,11 +1088,14 @@
         margin: 4px 0 0 0;
         color: #fbbf24;
       }
-      .score-summary-box {
+            .score-summary-box {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        background: rgba(30, 41, 59, 0.6);
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 16px;
         padding: 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1273,7 +1282,7 @@
               <div id="shot-clock-label">SHOT CLOCK</div>
               <div id="shot-clock-val">70</div>
             </div>
-            <button id="pause-btn" class="pointer-enabled" title="Pause Game">⏸️ PAUSE</button>
+            <button id="pause-btn" class="pointer-enabled" title="Pause Game">PAUSE</button>
             <!-- AI SHOOTING OVERLAY BELOW PAUSE BUTTON -->
             <div id="ai-overlay" style="display: none;">
               <div id="ai-overlay-text">AI SHOOTING</div>
@@ -1335,8 +1344,8 @@
 
           <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
             <button id="resume-btn" class="cta-button" style="min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">RESUME GAME</button>
-            <button id="restart-btn" class="cta-button" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-color: #64748b; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">RESTART ROUND</button>
-            <button id="quit-btn" class="cta-button" style="background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%); border-color: #f87171; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">QUIT TO MENU</button>
+            <button id="restart-btn" class="cta-button" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #64748b; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">RESTART ROUND</button>
+            <button id="quit-btn" class="cta-button" style="background: rgba(153, 27, 27, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #f87171; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">QUIT TO MENU</button>
           </div>
           <div style="font-size: 12px; color: #94a3b8; font-weight: 700; text-align: center; margin-top: 4px; letter-spacing: 0.5px; opacity: 0.8;">
             Follow <span style="color: #38bdf8;">@ralphfrialde</span> on Instagram
@@ -1379,12 +1388,12 @@
           </div>
 
           <!-- SINGLE BUTTON TO VIEW ADVANCED ANALYTICS -->
-          <button id="view-analytics-btn" class="cta-button" style="width: 100%; margin: 8px 0; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; color: #38bdf8; font-size: 26px; min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: normal; height: auto; padding: 12px; text-align: center; line-height: 1.2;">
+          <button id="view-analytics-btn" class="nav-secondary-btn" style="width: fit-content; margin: 8px auto; border: 1px solid rgba(56, 189, 248, 0.5); color: #38bdf8; font-size: 11px; font-family: 'Montserrat', sans-serif; min-height: 28px; padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;">
             <span>📊</span> VIEW ADVANCED ANALYTICS
           </button>
 
           <button id="start-ai-turn-btn" class="cta-button" style="width: 100%; margin-top: 8px; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">
-            START AI TURN ➔
+            START AI TURN →
           </button>
         </div>
       </div>
@@ -1505,17 +1514,17 @@
                 <!-- SUB-STEP A: JERSEY NAME -->
                 <div id="cust-substep-a" class="substep-panel" style="width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center;">
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">1. Enter Jersey Name (Max 8 letters)</label>
-                  <input type="text" id="cust-jersey-name" placeholder="Enter name" value="" maxlength="8" style="width: 80%; background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px; outline: none; box-sizing: border-box; transition: all 0.2s;" />
-                  <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE ➔</button>
+                  <input type="text" id="cust-jersey-name" placeholder="Enter name" value="" maxlength="8" style="width: 80%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px; outline: none; box-sizing: border-box; transition: all 0.2s;" />
+                  <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE →</button>
                 </div>
 
                 <!-- SUB-STEP B: JERSEY NUMBER -->
                 <div id="cust-substep-b" class="substep-panel" style="width: 100%; display: none; flex-direction: column; gap: 8px; align-items: center;">
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">2. Enter Jersey Number (Max 2 digits)</label>
-                  <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.85); border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
+                  <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
                   <div style="display: flex; gap: 8px; width: 80%; margin-top: 4px; justify-content: center;">
-                    <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">⬅ BACK</button>
-                    <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE ➔</button>
+                    <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">← BACK</button>
+                    <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE →</button>
                   </div>
                 </div>
 
@@ -1530,8 +1539,8 @@
                     <button class="color-picker-btn" data-color="lightRed" style="width: 44px; height: 44px; border-radius: 50%; background: #f87171; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Light Red"></button>
                   </div>
                   <div style="display: flex; gap: 8px; width: 80%; justify-content: center;">
-                    <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">⬅ BACK</button>
-                    <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CHOOSE HOW TO PLAY ➔</button>
+                    <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">← BACK</button>
+                    <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CHOOSE HOW TO PLAY →</button>
                   </div>
                 </div>
 
@@ -1598,9 +1607,9 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-2-back" class="nav-secondary-btn">⬅ BACK</button>
+              <button id="step-2-back" class="nav-secondary-btn">← BACK</button>
               <button id="step-2-next" class="nav-primary-btn" style="flex: 1.5;">
-                LET'S GO! ➔
+                LET'S GO! →
               </button>
             </div>
           </div>
@@ -1705,8 +1714,8 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-3-back" class="nav-secondary-btn">⬅ BACK</button>
-              <button id="step-3-next" class="nav-primary-btn">NEXT: METER ➔</button>
+              <button id="step-3-back" class="nav-secondary-btn">← BACK</button>
+              <button id="step-3-next" class="nav-primary-btn">NEXT: METER →</button>
             </div>
           </div>
 
@@ -1754,8 +1763,8 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-4-back" class="nav-secondary-btn">⬅ BACK</button>
-              <button id="step-4-next" class="nav-primary-btn">NEXT: AI RIVAL ➔</button>
+              <button id="step-4-back" class="nav-secondary-btn">← BACK</button>
+              <button id="step-4-next" class="nav-primary-btn">NEXT: AI RIVAL →</button>
             </div>
           </div>
 
@@ -1827,7 +1836,7 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-5-back" class="nav-secondary-btn">⬅ BACK</button>
+              <button id="step-5-back" class="nav-secondary-btn">← BACK</button>
               <button id="start-game-btn" class="nav-primary-btn">
                 START SHOOTOUT 🏀
               </button>
@@ -1837,11 +1846,12 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.2</div>
         </div>
       </div>
 
       <!-- COIN TOSS SCREEN -->
-      <div id="coin-toss-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px);">
+      <div id="coin-toss-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);">
         <div style="background: rgba(30, 41, 59, 0.9); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; text-align: center; max-width: 400px; width: 90%; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
           <h2 style="font-family: 'Teko', sans-serif; font-size: 52px; color: #facc15; margin: 0; line-height: 1; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0,0,0,0.8);">COIN TOSS</h2>
           <p style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 14px; margin: 10px 0 30px 0; font-weight: 700; text-align: center; text-transform: uppercase;">PLAYER STARTS FIRST IF HEADS</p>
@@ -1858,7 +1868,7 @@
           <div id="coin-toss-result" style="display: none; flex-direction: column; align-items: center; margin-top: 20px; width: 100%;">
             <div id="coin-toss-result-text" style="font-family: 'Teko', sans-serif; font-size: 42px; color: #fff; margin-bottom: 5px;">IT'S HEADS!</div>
             <div id="coin-toss-winner-text" style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #4ade80; margin-bottom: 30px; text-transform: uppercase;">YOU WON THE TOSS! YOU SHOOT FIRST.</div>
-            <button id="btn-toss-continue" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">CONTINUE ➔</button>
+            <button id="btn-toss-continue" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">CONTINUE →</button>
           </div>
         </div>
       </div>
@@ -1903,7 +1913,7 @@
           </div>
           
           <!-- SINGLE BUTTON TO VIEW ADVANCED ANALYTICS FROM POSTGAME -->
-          <button id="view-postgame-analytics-btn" class="cta-button" style="width: 100%; margin: 8px 0; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; color: #38bdf8; font-size: 26px; min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: normal; height: auto; padding: 12px; text-align: center; line-height: 1.2;">
+          <button id="view-postgame-analytics-btn" class="nav-secondary-btn" style="width: fit-content; margin: 8px auto; border: 1px solid rgba(56, 189, 248, 0.5); color: #38bdf8; font-size: 11px; font-family: 'Montserrat', sans-serif; min-height: 28px; padding: 4px 12px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;">
             <span>📊</span> VIEW ADVANCED ANALYTICS
           </button>
 
@@ -2755,7 +2765,16 @@
           this.animGrabTimer = 0;
 
           // Concurrent in-flight balls array (rapid shooting!)
+          
+          if (this.inFlightBalls && this.scene) {
+            this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
           this.inFlightBalls = [];
+          if (this.backgroundBalls && this.scene) {
+            this.backgroundBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.backgroundBalls = [];
+
           this.backgroundBalls = [];
 
           // Rack-to-rack running state
@@ -3099,8 +3118,8 @@
           const floorGeo = new THREE.PlaneGeometry(32, 32);
           const floorMat = new THREE.MeshStandardMaterial({
             map: this.courtTex,
-            roughness: 0.70, // Increased roughness to diffuse light beautifully and preserve wood color
-            metalness: 0.02,
+            roughness: 1.0, 
+            metalness: 0.0,
           });
           const floor = new THREE.Mesh(floorGeo, floorMat);
           floor.rotation.x = -Math.PI / 2;
@@ -3410,12 +3429,22 @@
           }
         }
 
+        showBackboardGlow(isMake) {
+          if (!this.bbBorderMat) return;
+          const hexColor = isMake ? 0x4ade80 : 0xef4444;
+          if (this.bbBoxMat) {
+            this.bbBoxMat.color.setHex(hexColor);
+          }
+          this.bbBorderMat.color.setHex(hexColor);
+          this.bbBorderMat.opacity = 1.0;
+          if (this.backboardFlashLight) {
+            this.backboardFlashLight.intensity = 0.0;
+          }
+        }
+
         triggerCrowdCheer() {
           this.crowdState = 'cheering';
           this.crowdTimer = 1.6;
-          if (this.backboardFlashLight) {
-            this.backboardFlashLight.intensity = 15.0; // Flash red goal light behind backboard on score!
-          }
         }
 
         triggerCrowdGroan() {
@@ -3465,20 +3494,39 @@
 
           // Camera flashes
           if (this.crowdFlashes) {
+            const isPlaying = this.state === 'PLAYER_TURN' || this.state === 'AI_TURN';
             this.crowdFlashes.forEach((f) => {
               f.cooldown -= dt;
               if (f.cooldown <= 0) {
-                f.light.intensity = 8.0 + Math.random() * 12.0;
+                if (isPlaying) {
+                  f.light.intensity = 8.0 + Math.random() * 12.0;
+                } else {
+                  f.light.intensity = 0;
+                }
                 f.cooldown = 0.12 + Math.random() * 2.8;
               } else {
-                f.light.intensity *= 0.6;
+                if (isPlaying) {
+                  f.light.intensity *= 0.6;
+                } else {
+                  f.light.intensity = 0;
+                }
               }
             });
           }
 
           // Fade down backboard score flash light
-          if (this.backboardFlashLight && this.backboardFlashLight.intensity > 0.05) {
-            this.backboardFlashLight.intensity *= 0.88;
+          
+                    if (this.bbBorderMat && this.bbBorderMat.opacity > 0.2) {
+            this.bbBorderMat.opacity -= 1.5 * dt;
+            if (this.bbBorderMat.opacity <= 0.2) {
+              this.bbBorderMat.opacity = 0.2;
+              this.bbBorderMat.color.setHex(0xffffff);
+              if (this.bbBoxMat) this.bbBoxMat.color.setHex(0xef4444);
+            }
+          }
+          if (this.backboardFlashLight && this.backboardFlashLight.intensity > 0) {
+            this.backboardFlashLight.intensity -= 100.0 * dt;
+            if (this.backboardFlashLight.intensity < 0) this.backboardFlashLight.intensity = 0;
           }
         }
 
@@ -3598,10 +3646,40 @@
 
           // Backboard Goal Flash PointLight
           this.backboardFlashLight = new THREE.PointLight(0xff2200, 0, 15);
-          this.backboardFlashLight.position.set(0, 3.35, -0.43);
+          this.backboardFlashLight.position.set(0, 3.35, -0.2);
           this.hoopGroup.add(this.backboardFlashLight);
 
           // Backboard Red Square Target Box
+          
+                    const bbW = 1.8;
+          const bbH = 1.05;
+          const borderThickness = 0.08;
+          this.bbBorderMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 });
+          
+          const topGeo = new THREE.BoxGeometry(bbW + borderThickness * 2, borderThickness, 0.1);
+          const bottomGeo = new THREE.BoxGeometry(bbW + borderThickness * 2, borderThickness, 0.1);
+          const sideGeo = new THREE.BoxGeometry(borderThickness, bbH, 0.1);
+          
+          const topBorder = new THREE.Mesh(topGeo, this.bbBorderMat);
+          topBorder.position.set(0, bbH/2 + borderThickness/2, 0);
+          
+          const bottomBorder = new THREE.Mesh(bottomGeo, this.bbBorderMat);
+          bottomBorder.position.set(0, -bbH/2 - borderThickness/2, 0);
+          
+          const leftBorder = new THREE.Mesh(sideGeo, this.bbBorderMat);
+          leftBorder.position.set(-bbW/2 - borderThickness/2, 0, 0);
+          
+          const rightBorder = new THREE.Mesh(sideGeo, this.bbBorderMat);
+          rightBorder.position.set(bbW/2 + borderThickness/2, 0, 0);
+          
+          const bbBorder = new THREE.Group();
+          bbBorder.add(topBorder);
+          bbBorder.add(bottomBorder);
+          bbBorder.add(leftBorder);
+          bbBorder.add(rightBorder);
+          bbBorder.position.set(0, 3.35, -0.37);
+          this.hoopGroup.add(bbBorder);
+
           const boxGeo = new THREE.BoxGeometry(0.6, 0.45, 0.04);
           const edges = new THREE.EdgesGeometry(boxGeo);
           const lineMat = new THREE.LineBasicMaterial({ color: 0xef4444 }); this.bbBoxMat = lineMat;
@@ -4147,6 +4225,12 @@
           const btnNextToB = document.getElementById('cust-next-to-b');
           if (subA && subB && btnNextToB) {
             btnNextToB.addEventListener('click', () => {
+              const nameEl = document.getElementById('cust-jersey-name');
+              let nameInput = nameEl.value.trim();
+              if (!nameInput) {
+                nameEl.value = "PLAYER";
+                nameEl.dispatchEvent(new Event('input'));
+              }
               subA.style.display = 'none';
               subB.style.display = 'flex';
               if (audio && audio.playSwish) audio.playSwish();
@@ -4165,6 +4249,12 @@
           const btnNextToC = document.getElementById('cust-next-to-c');
           if (subB && subC && btnNextToC) {
             btnNextToC.addEventListener('click', () => {
+              const numEl = document.getElementById('cust-jersey-number');
+              let numInput = numEl.value.trim();
+              if (!numInput) {
+                numEl.value = "1";
+                numEl.dispatchEvent(new Event('input'));
+              }
               subB.style.display = 'none';
               subC.style.display = 'flex';
               if (audio && audio.playSwish) audio.playSwish();
@@ -4534,14 +4624,14 @@
             coinScene.add(coin);
 
             let coinY = -2.2;
-            let coinVy = 16;
+            let coinVy = 25;
             let coinRotX = 0;
             let coinRotY = 0;
             let coinRotZ = 0;
             let coinRotSpeedX = Math.PI * 6 + (Math.random() - 0.5) * Math.PI * 4;
             let coinRotSpeedY = Math.PI * 2 + (Math.random() - 0.5) * Math.PI * 4;
             let coinRotSpeedZ = Math.PI * 2 + (Math.random() - 0.5) * Math.PI * 4;
-            const gravity = -35;
+            const gravity = -18;
             
             const isHeads = Math.random() >= 0.5;
             const resultStr = isHeads ? 'heads' : 'tails';
@@ -4600,7 +4690,7 @@
                       winnerText.style.color = "#f87171";
                     }
                     if (audio && audio.playScore) audio.playScore();
-                  }, 1200);
+                  }, 1500);
                   
                   coin.position.y = coinY;
                   coinRenderer.render(coinScene, coinCamera);
@@ -5017,7 +5107,7 @@
             this.bbBoxMat.color.setHex(0xff0000);
             if (this.backboardFlashLight) {
               this.backboardFlashLight.color.setHex(0xff0000);
-              this.backboardFlashLight.intensity = 100;
+              this.backboardFlashLight.intensity = 0;
             }
           } else {
             this.rimMat.emissive.setHex(0x220500);
@@ -5040,7 +5130,7 @@
             this.bbBoxMat.color.setHex(0x38bdf8);
             if (this.backboardFlashLight) {
               this.backboardFlashLight.color.setHex(0x0088ff);
-              this.backboardFlashLight.intensity = 50;
+              this.backboardFlashLight.intensity = 0;
             }
             if (meterWrapper) meterWrapper.classList.add('cold-shake');
           } else {
@@ -5179,6 +5269,7 @@
             if (!info.scored && ballPos.y <= 3.10 && ballPos.y >= 2.80 && vel.y < 0) {
               if (info.guaranteedMake || distXZ <= 0.18) {
                 info.scored = true;
+                this.showBackboardGlow(true);
                 if (info.shotRecord) info.shotRecord.scored = true;
                 info.shot.result = 'hit';
 
@@ -5251,6 +5342,7 @@
             // Floor Bounce or Out of Bounds
             if (ballPos.y <= 0.12 || ballPos.z < -16 || Math.abs(ballPos.x) > 12) {
               if (!info.scored && !info.shot.result) {
+                this.showBackboardGlow(false);
                 info.shot.result = 'miss';
                 audio.playGroan();
                 this.triggerCrowdGroan();
@@ -5345,7 +5437,14 @@
           if (this.clockInterval) clearInterval(this.clockInterval);
           this.state = 'PLAYER_SUMMARY';
           this.turnEnding = false;
+          if (this.inFlightBalls && this.scene) {
+            this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
           this.inFlightBalls = [];
+          if (this.backgroundBalls && this.scene) {
+            this.backgroundBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.backgroundBalls = [];
 
           const mWrap = document.getElementById('meter-wrapper');
           if (mWrap) mWrap.style.display = 'none';
@@ -5361,10 +5460,10 @@
           
           if (isAITurn) {
             if (titleEl) titleEl.innerText = 'AI SCORE TO BEAT';
-            if (nextBtn) nextBtn.innerText = 'START YOUR TURN ➔';
+            if (nextBtn) nextBtn.innerText = 'START YOUR TURN →';
           } else {
             if (titleEl) titleEl.innerText = 'YOUR ROUND SUMMARY';
-            if (nextBtn) nextBtn.innerText = 'NEXT: AI RIVAL ➔';
+            if (nextBtn) nextBtn.innerText = 'NEXT: AI RIVAL →';
           }
 
           // Populate Player Round Summary Modal analytics
@@ -5683,7 +5782,7 @@
 
             this.aiTimeout = setTimeout(() => {
               takeAIShot();
-            }, 1200);
+            }, 1500);
           };
 
           takeAIShot();
@@ -5915,6 +6014,15 @@
         }
 
         showPostGame() {
+          if (this.inFlightBalls && this.scene) {
+            this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.inFlightBalls = [];
+          if (this.backgroundBalls && this.scene) {
+            this.backgroundBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.backgroundBalls = [];
+
           this.state = 'POST_GAME';
           document.getElementById('ai-overlay').style.display = 'none';
           document.getElementById('player-summary-screen').style.display = 'none';
