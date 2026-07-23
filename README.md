@@ -23,3 +23,12 @@
 * Improved optimization of game
 * Easter egg :)
 * Bug Fixes
+
+### Version 1.4 -- 24 July 2026 04:00am SGT
+* Added shot percentage boost when shot timing is not perfect when player is Hot. (5% Easy/Normal, 15% Hard difficulty)
+* Rehauled, and improved UI/EX.
+* Improved shot meter (i.e automatic shot release when holding the shoot button until the meter bar reaches 100%; VERY VERY LATE feedback.)
+* Redesigned player's advanced analytics with coach's tip.
+*  Added trophy ceremony cutscene at the end of the shootout
+* Improved gameplay
+* Bug Fixes
