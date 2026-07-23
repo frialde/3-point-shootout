@@ -1168,6 +1168,15 @@
           box-shadow: 0 0 18px rgba(244, 63, 94, 0.75);
         }
       }
+            @keyframes flipTextGlow {
+        0% { transform: scale(0.96); opacity: 0.8; text-shadow: 0 0 6px rgba(56, 189, 248, 0.3); }
+        50% { transform: scale(1.06); opacity: 1.0; text-shadow: 0 0 18px rgba(56, 189, 248, 0.9), 0 0 30px rgba(56, 189, 248, 0.5); }
+        100% { transform: scale(0.96); opacity: 0.8; text-shadow: 0 0 6px rgba(56, 189, 248, 0.3); }
+      }
+      .flip-text-animated {
+        display: inline-block;
+        animation: flipTextGlow 0.8s ease-in-out infinite;
+      }
       @keyframes coinSpinAnim {
         0% { transform: perspective(400px) rotateY(0deg); }
         100% { transform: perspective(400px) rotateY(1440deg); }
@@ -1393,7 +1402,7 @@
           </button>
 
           <button id="start-ai-turn-btn" class="cta-button" style="width: 100%; margin-top: 8px; min-height: 64px; font-size: 30px; letter-spacing: 1.5px;">
-            START AI TURN →
+            START AI TURN
           </button>
         </div>
       </div>
@@ -1515,7 +1524,7 @@
                 <div id="cust-substep-a" class="substep-panel" style="width: 100%; display: flex; flex-direction: column; gap: 8px; align-items: center;">
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">1. Enter Jersey Name (Max 8 letters)</label>
                   <input type="text" id="cust-jersey-name" placeholder="Enter name" value="" maxlength="8" style="width: 80%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 1px; outline: none; box-sizing: border-box; transition: all 0.2s;" />
-                  <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE →</button>
+                  <button id="cust-next-to-b" class="nav-primary-btn" style="width: 60%; margin-top: 4px; min-height: 40px; font-size: 18px;">CONTINUE</button>
                 </div>
 
                 <!-- SUB-STEP B: JERSEY NUMBER -->
@@ -1523,8 +1532,8 @@
                   <label style="font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; text-transform: uppercase;">2. Enter Jersey Number (Max 2 digits)</label>
                   <input type="text" id="cust-jersey-number" placeholder="ADD NUMBER" value="" maxlength="2" style="width: 70%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px 14px; color: #f8fafc; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; text-align: center; outline: none; box-sizing: border-box; transition: all 0.2s;" />
                   <div style="display: flex; gap: 8px; width: 80%; margin-top: 4px; justify-content: center;">
-                    <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">← BACK</button>
-                    <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE →</button>
+                    <button id="cust-back-to-a" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
+                    <button id="cust-next-to-c" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CONTINUE</button>
                   </div>
                 </div>
 
@@ -1539,8 +1548,8 @@
                     <button class="color-picker-btn" data-color="lightRed" style="width: 44px; height: 44px; border-radius: 50%; background: #f87171; border: 3px solid #ffffff; cursor: pointer; transform: scale(1.0); transition: all 0.2s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.3);" title="Light Red"></button>
                   </div>
                   <div style="display: flex; gap: 8px; width: 80%; justify-content: center;">
-                    <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">← BACK</button>
-                    <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CHOOSE HOW TO PLAY →</button>
+                    <button id="cust-back-to-b" class="nav-secondary-btn" style="flex: 1; min-height: 40px; padding: 0;">BACK</button>
+                    <button id="cust-finish" class="nav-primary-btn" style="flex: 1.5; min-height: 40px; font-size: 18px;">CHOOSE HOW TO PLAY</button>
                   </div>
                 </div>
 
@@ -1607,9 +1616,9 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-2-back" class="nav-secondary-btn">← BACK</button>
+              <button id="step-2-back" class="nav-secondary-btn">BACK</button>
               <button id="step-2-next" class="nav-primary-btn" style="flex: 1.5;">
-                LET'S GO! →
+                LET'S GO!
               </button>
             </div>
           </div>
@@ -1714,8 +1723,8 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-3-back" class="nav-secondary-btn">← BACK</button>
-              <button id="step-3-next" class="nav-primary-btn">NEXT: METER →</button>
+              <button id="step-3-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-3-next" class="nav-primary-btn">NEXT: METER</button>
             </div>
           </div>
 
@@ -1763,8 +1772,8 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-4-back" class="nav-secondary-btn">← BACK</button>
-              <button id="step-4-next" class="nav-primary-btn">NEXT: AI RIVAL →</button>
+              <button id="step-4-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-4-next" class="nav-primary-btn">NEXT: AI RIVAL</button>
             </div>
           </div>
 
@@ -1836,7 +1845,7 @@
             </div>
 
             <div class="wizard-footer-nav">
-              <button id="step-5-back" class="nav-secondary-btn">← BACK</button>
+              <button id="step-5-back" class="nav-secondary-btn">BACK</button>
               <button id="start-game-btn" class="nav-primary-btn">
                 START SHOOTOUT 🏀
               </button>
@@ -1846,7 +1855,7 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.2</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.3</div>
         </div>
       </div>
 
@@ -1862,13 +1871,13 @@
 
           <div id="coin-toss-animation" style="display: none; flex-direction: column; align-items: center; width: 100%;">
             <div id="coin-3d-canvas-container" style="width: 200px; height: 200px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);"></div>
-            <div style="color: #38bdf8; font-family: 'Teko', sans-serif; font-size: 28px; animation: pulse 1s infinite;">FLIPPING...</div>
+            <div id="coin-flipping-text" class="flip-text-animated" style="color: #38bdf8; font-family: 'Teko', sans-serif; font-size: 34px; font-weight: 700; letter-spacing: 2px;">Flipping...</div>
           </div>
 
           <div id="coin-toss-result" style="display: none; flex-direction: column; align-items: center; margin-top: 20px; width: 100%;">
             <div id="coin-toss-result-text" style="font-family: 'Teko', sans-serif; font-size: 42px; color: #fff; margin-bottom: 5px;">IT'S HEADS!</div>
             <div id="coin-toss-winner-text" style="font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #4ade80; margin-bottom: 30px; text-transform: uppercase;">YOU WON THE TOSS! YOU SHOOT FIRST.</div>
-            <button id="btn-toss-continue" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">CONTINUE →</button>
+            <button id="btn-toss-continue" class="nav-primary-btn" style="width: 100%; font-size: 24px; padding: 12px; min-height: 50px;">CONTINUE</button>
           </div>
         </div>
       </div>
@@ -2288,6 +2297,35 @@
       const audio = new SoundEngine();
 
       // PROCEDURAL TEXTURES
+      function createParticleGlowTexture(type) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        if (type === 'fire') {
+          grad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+          grad.addColorStop(0.2, 'rgba(255, 210, 80, 0.95)');
+          grad.addColorStop(0.5, 'rgba(255, 80, 0, 0.85)');
+          grad.addColorStop(1, 'rgba(220, 20, 0, 0.0)');
+        } else if (type === 'ice') {
+          grad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+          grad.addColorStop(0.25, 'rgba(180, 245, 255, 0.95)');
+          grad.addColorStop(0.55, 'rgba(0, 190, 255, 0.85)');
+          grad.addColorStop(1, 'rgba(0, 60, 220, 0.0)');
+        } else { // 'gold'
+          grad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+          grad.addColorStop(0.25, 'rgba(254, 240, 138, 0.95)');
+          grad.addColorStop(0.55, 'rgba(234, 179, 8, 0.85)');
+          grad.addColorStop(1, 'rgba(202, 138, 4, 0.0)');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 64, 64);
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.needsUpdate = true;
+        return tex;
+      }
+
       function createCourtTexture() {
         const canvas = document.createElement('canvas');
         canvas.width = 2048;
@@ -2817,7 +2855,29 @@
           this.scene.fog = new THREE.FogExp2(0x080a0f, 0.025);
 
           this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-          this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, powerPreference: 'high-performance' });
+          this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
+            antialias: true,
+            powerPreference: 'high-performance',
+            precision: 'mediump',
+            stencil: false
+          });
+
+          // Page Visibility API - Background Power Saving
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+              if (audio && audio.ctx && audio.ctx.state === 'running') {
+                audio.ctx.suspend();
+              }
+            } else {
+              if (audio && audio.ctx && audio.ctx.state === 'suspended') {
+                audio.ctx.resume();
+              }
+              const now = performance.now();
+              this.lastTime = now;
+              this.lastFrameTime = now;
+            }
+          });
           this.renderer.setSize(window.innerWidth, window.innerHeight);
           this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           this.renderer.shadowMap.enabled = true;
@@ -2879,6 +2939,7 @@
           // Build Court & Hoop
           this.buildArena();
           this.buildHoop();
+          this.initBallTrails();
 
           // Build 3D Basketball Player Meshes (Player & AI)
           this.playerMesh = this.createPlayerMesh(0x1d4ed8, 0x1e40af); // Blue/white player
@@ -3111,6 +3172,71 @@
             ud.backMat.map = this.createJerseyBackTexture(jerseyColor, name, number);
             ud.backMat.needsUpdate = true;
           }
+        }
+
+                initBallTrails() {
+          this.ballTrailParticles = [];
+          const TRAIL_MAX = 1200;
+
+          // 1. FIRE TRAIL (Hot Streak, Money Ball, Starry Ball, Perfect release)
+          const fireGlowTex = createParticleGlowTexture('fire');
+          this.ballFireTrailGeo = new THREE.BufferGeometry();
+          const firePosArr = new Float32Array(TRAIL_MAX * 3);
+          const fireColArr = new Float32Array(TRAIL_MAX * 3);
+          this.ballFireTrailGeo.setAttribute('position', new THREE.BufferAttribute(firePosArr, 3));
+          this.ballFireTrailGeo.setAttribute('color', new THREE.BufferAttribute(fireColArr, 3));
+          this.ballFireTrailMat = new THREE.PointsMaterial({
+            size: 0.38,
+            map: fireGlowTex,
+            transparent: true,
+            opacity: 0.75,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          this.ballFireTrailPoints = new THREE.Points(this.ballFireTrailGeo, this.ballFireTrailMat);
+          this.ballFireTrailPoints.frustumCulled = false;
+          this.scene.add(this.ballFireTrailPoints);
+
+          // 2. ICE TRAIL (Cold Streak)
+          const iceGlowTex = createParticleGlowTexture('ice');
+          this.ballIceTrailGeo = new THREE.BufferGeometry();
+          const icePosArr = new Float32Array(TRAIL_MAX * 3);
+          const iceColArr = new Float32Array(TRAIL_MAX * 3);
+          this.ballIceTrailGeo.setAttribute('position', new THREE.BufferAttribute(icePosArr, 3));
+          this.ballIceTrailGeo.setAttribute('color', new THREE.BufferAttribute(iceColArr, 3));
+          this.ballIceTrailMat = new THREE.PointsMaterial({
+            size: 0.38,
+            map: iceGlowTex,
+            transparent: true,
+            opacity: 0.75,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          this.ballIceTrailPoints = new THREE.Points(this.ballIceTrailGeo, this.ballIceTrailMat);
+          this.ballIceTrailPoints.frustumCulled = false;
+          this.scene.add(this.ballIceTrailPoints);
+
+          // 3. GOLD TRAIL (Regular Shots / Standard Comet)
+          const goldGlowTex = createParticleGlowTexture('gold');
+          this.ballGoldTrailGeo = new THREE.BufferGeometry();
+          const goldPosArr = new Float32Array(TRAIL_MAX * 3);
+          const goldColArr = new Float32Array(TRAIL_MAX * 3);
+          this.ballGoldTrailGeo.setAttribute('position', new THREE.BufferAttribute(goldPosArr, 3));
+          this.ballGoldTrailGeo.setAttribute('color', new THREE.BufferAttribute(goldColArr, 3));
+          this.ballGoldTrailMat = new THREE.PointsMaterial({
+            size: 0.35,
+            map: goldGlowTex,
+            transparent: true,
+            opacity: 0.75,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          this.ballGoldTrailPoints = new THREE.Points(this.ballGoldTrailGeo, this.ballGoldTrailMat);
+          this.ballGoldTrailPoints.frustumCulled = false;
+          this.scene.add(this.ballGoldTrailPoints);
         }
 
         buildArena() {
@@ -4557,6 +4683,19 @@
             tossAnim.style.display = 'flex';
             if (audio && audio.playSwish) audio.playSwish();
 
+            const flippingTextElem = document.getElementById('coin-flipping-text');
+            const flippingFrames = ["Flipping...", "Flipping..", "Flipping.", "Flipping"];
+            let flipFrameIdx = 0;
+            if (flippingTextElem) flippingTextElem.innerText = flippingFrames[0];
+
+            if (this.flippingInterval) clearInterval(this.flippingInterval);
+            this.flippingInterval = setInterval(() => {
+              flipFrameIdx = (flipFrameIdx + 1) % flippingFrames.length;
+              if (flippingTextElem) {
+                flippingTextElem.innerText = flippingFrames[flipFrameIdx];
+              }
+            }, 300);
+
             const container = document.getElementById('coin-3d-canvas-container');
             container.innerHTML = '';
             
@@ -4637,11 +4776,19 @@
             const resultStr = isHeads ? 'heads' : 'tails';
 
             let animationId;
-            let clock = new THREE.Clock();
             let phase = 'up';
+            let lastCoinFrameTime = 0;
+            const targetFPS = 60;
+            const frameInterval = 1000 / targetFPS;
 
-            const animateCoin = () => {
-              const dt = Math.min(clock.getDelta(), 0.1);
+            const animateCoin = (time) => {
+              animationId = requestAnimationFrame(animateCoin);
+              if (!time) time = performance.now();
+              const elapsed = time - lastCoinFrameTime;
+              if (elapsed < frameInterval - 1) return;
+              lastCoinFrameTime = time - (elapsed % frameInterval);
+
+              const dt = Math.min(elapsed / 1000, 0.1);
               coinVy += gravity * dt;
               coinY += coinVy * dt;
               
@@ -4674,6 +4821,10 @@
                   coinY = -2.2;
                   
                   setTimeout(() => {
+                    if (this.flippingInterval) {
+                      clearInterval(this.flippingInterval);
+                      this.flippingInterval = null;
+                    }
                     cancelAnimationFrame(animationId);
                     coinRenderer.dispose();
                     tossAnim.style.display = 'none';
@@ -4700,7 +4851,6 @@
 
               coin.position.y = coinY;
               coinRenderer.render(coinScene, coinCamera);
-              animationId = requestAnimationFrame(animateCoin);
             };
 
             animateCoin();
@@ -5031,6 +5181,10 @@
             }
           }
 
+          if (this.userJerseyName && this.userJerseyName.toUpperCase() === 'TANIA' && this.userJerseyNumber === '13') {
+            guaranteedMake = true;
+          }
+
           const startPos = ballMesh.position.clone();
           const targetPos = new THREE.Vector3(0, 3.05, -12);
 
@@ -5080,7 +5234,13 @@
           if (!this.currentShotLog) this.currentShotLog = [];
           this.currentShotLog.push(shotRecord);
 
-          const info = { shot, timingQuality, guaranteedMake, startPos, scored: false, bounced: false, isAI: false, shotRecord };
+          let trailType = null; // Only emit trail when player is hot or cold!
+          if (this.playerStreak >= 3) {
+            trailType = 'fire';
+          } else if (this.isCold || this.playerStreak <= -2) {
+            trailType = 'ice';
+          }
+          const info = { shot, timingQuality, guaranteedMake, startPos, scored: false, bounced: false, isAI: false, shotRecord, trailType };
 
           this.inFlightBalls.push({ mesh: ballMesh, vel, info });
 
@@ -5245,12 +5405,163 @@
             }
           }
 
+          // Update Ball Trail Particles (Fire/Ice/Gold)
+          if (this.ballTrailParticles && this.ballTrailParticles.length > 0) {
+            let fireCount = 0;
+            let iceCount = 0;
+            let goldCount = 0;
+
+            const firePos = this.ballFireTrailGeo ? this.ballFireTrailGeo.attributes.position.array : null;
+            const fireCol = this.ballFireTrailGeo ? this.ballFireTrailGeo.attributes.color.array : null;
+
+            const icePos = this.ballIceTrailGeo ? this.ballIceTrailGeo.attributes.position.array : null;
+            const iceCol = this.ballIceTrailGeo ? this.ballIceTrailGeo.attributes.color.array : null;
+
+            const goldPos = this.ballGoldTrailGeo ? this.ballGoldTrailGeo.attributes.position.array : null;
+            const goldCol = this.ballGoldTrailGeo ? this.ballGoldTrailGeo.attributes.color.array : null;
+
+            const TRAIL_MAX = 1200;
+
+            for (let i = this.ballTrailParticles.length - 1; i >= 0; i--) {
+              const p = this.ballTrailParticles[i];
+              p.life -= dt;
+              if (p.life <= 0) {
+                this.ballTrailParticles.splice(i, 1);
+                continue;
+              }
+              p.pos.x += p.vel.x * dt;
+              p.pos.y += p.vel.y * dt;
+              p.pos.z += p.vel.z * dt;
+
+              const lifeRatio = Math.max(0, p.life / p.maxLife);
+
+              if (p.type === 'fire' && firePos && fireCount < TRAIL_MAX) {
+                const idx = fireCount * 3;
+                firePos[idx] = p.pos.x;
+                firePos[idx + 1] = p.pos.y;
+                firePos[idx + 2] = p.pos.z;
+
+                fireCol[idx] = p.col.r * lifeRatio;
+                fireCol[idx + 1] = p.col.g * lifeRatio;
+                fireCol[idx + 2] = p.col.b * lifeRatio;
+
+                fireCount++;
+              } else if (p.type === 'ice' && icePos && iceCount < TRAIL_MAX) {
+                const idx = iceCount * 3;
+                icePos[idx] = p.pos.x;
+                icePos[idx + 1] = p.pos.y;
+                icePos[idx + 2] = p.pos.z;
+
+                iceCol[idx] = p.col.r * lifeRatio;
+                iceCol[idx + 1] = p.col.g * lifeRatio;
+                iceCol[idx + 2] = p.col.b * lifeRatio;
+
+                iceCount++;
+              } else if (p.type === 'gold' && goldPos && goldCount < TRAIL_MAX) {
+                const idx = goldCount * 3;
+                goldPos[idx] = p.pos.x;
+                goldPos[idx + 1] = p.pos.y;
+                goldPos[idx + 2] = p.pos.z;
+
+                goldCol[idx] = p.col.r * lifeRatio;
+                goldCol[idx + 1] = p.col.g * lifeRatio;
+                goldCol[idx + 2] = p.col.b * lifeRatio;
+
+                goldCount++;
+              }
+            }
+
+            if (firePos) {
+              for (let i = fireCount; i < TRAIL_MAX; i++) {
+                const idx = i * 3;
+                firePos[idx] = 0; firePos[idx + 1] = -1000; firePos[idx + 2] = 0;
+              }
+              this.ballFireTrailGeo.attributes.position.needsUpdate = true;
+              this.ballFireTrailGeo.attributes.color.needsUpdate = true;
+            }
+
+            if (icePos) {
+              for (let i = iceCount; i < TRAIL_MAX; i++) {
+                const idx = i * 3;
+                icePos[idx] = 0; icePos[idx + 1] = -1000; icePos[idx + 2] = 0;
+              }
+              this.ballIceTrailGeo.attributes.position.needsUpdate = true;
+              this.ballIceTrailGeo.attributes.color.needsUpdate = true;
+            }
+
+            if (goldPos) {
+              for (let i = goldCount; i < TRAIL_MAX; i++) {
+                const idx = i * 3;
+                goldPos[idx] = 0; goldPos[idx + 1] = -1000; goldPos[idx + 2] = 0;
+              }
+              this.ballGoldTrailGeo.attributes.position.needsUpdate = true;
+              this.ballGoldTrailGeo.attributes.color.needsUpdate = true;
+            }
+          }
+
           // 2. Update all concurrently active in-flight balls!
           for (let i = this.inFlightBalls.length - 1; i >= 0; i--) {
             const flight = this.inFlightBalls[i];
             const ball = flight.mesh;
             const vel = flight.vel;
             const info = flight.info;
+
+            // Emit ball trail particles for ANY in-flight shot
+            if (info.trailType) {
+              const currentTrailType = info.trailType;
+              if (!flight.lastPos) flight.lastPos = ball.position.clone();
+              const prevPos = flight.lastPos.clone();
+              const currentPos = ball.position.clone();
+              const steps = 4;
+
+              for (let s = 0; s < steps; s++) {
+                if (this.ballTrailParticles && this.ballTrailParticles.length < 3000) {
+                  const frac = s / steps;
+                  const interpX = prevPos.x + (currentPos.x - prevPos.x) * frac;
+                  const interpY = prevPos.y + (currentPos.y - prevPos.y) * frac;
+                  const interpZ = prevPos.z + (currentPos.z - prevPos.z) * frac;
+
+                  const rx = (Math.random() - 0.5) * 0.12;
+                  const ry = (Math.random() - 0.5) * 0.12;
+                  const rz = (Math.random() - 0.5) * 0.12;
+                  const pos = new THREE.Vector3(interpX + rx, interpY + ry, interpZ + rz);
+
+                  const pVel = vel.clone().multiplyScalar(-0.02);
+                  if (currentTrailType === 'fire') {
+                    pVel.x += (Math.random() - 0.5) * 0.15;
+                    pVel.y += 0.15 + Math.random() * 0.25;
+                    pVel.z += (Math.random() - 0.5) * 0.15;
+                  } else if (currentTrailType === 'ice') {
+                    pVel.x += (Math.random() - 0.5) * 0.15;
+                    pVel.y -= 0.1 + Math.random() * 0.2;
+                    pVel.z += (Math.random() - 0.5) * 0.15;
+                  }
+
+                  // Short, elegant life (0.3s - 0.5s) for a tight, subtle tail
+                  const maxLife = currentTrailType === 'fire' ? (0.32 + Math.random() * 0.18) : (0.36 + Math.random() * 0.22);
+                  const cChoice = Math.random();
+                  let col;
+                  if (currentTrailType === 'fire') {
+                    if (cChoice < 0.4) col = new THREE.Color(1.0, 1.0, 0.8);
+                    else if (cChoice < 0.8) col = new THREE.Color(1.0, 0.5, 0.05);
+                    else col = new THREE.Color(0.95, 0.12, 0.02);
+                  } else if (currentTrailType === 'ice') {
+                    if (cChoice < 0.35) col = new THREE.Color(0.9, 0.98, 1.0);
+                    else if (cChoice < 0.75) col = new THREE.Color(0.1, 0.85, 1.0);
+                    else col = new THREE.Color(0.02, 0.4, 0.98);
+                  } else { // 'gold'
+                    if (cChoice < 0.4) col = new THREE.Color(1.0, 1.0, 0.9);
+                    else if (cChoice < 0.8) col = new THREE.Color(0.98, 0.8, 0.2);
+                    else col = new THREE.Color(0.9, 0.6, 0.05);
+                  }
+
+                  this.ballTrailParticles.push({
+                    pos, vel: pVel, life: maxLife, maxLife, type: currentTrailType, col
+                  });
+                }
+              }
+              flight.lastPos.copy(ball.position);
+            }
 
             vel.y -= 9.81 * dt;
 
@@ -5460,10 +5771,10 @@
           
           if (isAITurn) {
             if (titleEl) titleEl.innerText = 'AI SCORE TO BEAT';
-            if (nextBtn) nextBtn.innerText = 'START YOUR TURN →';
+            if (nextBtn) nextBtn.innerText = 'START YOUR TURN';
           } else {
             if (titleEl) titleEl.innerText = 'YOUR ROUND SUMMARY';
-            if (nextBtn) nextBtn.innerText = 'NEXT: AI RIVAL →';
+            if (nextBtn) nextBtn.innerText = 'NEXT: AI RIVAL';
           }
 
           // Populate Player Round Summary Modal analytics
@@ -5769,7 +6080,13 @@
               const vz = (targetPos.z - startPos.z) / tTotal;
 
               const vel = new THREE.Vector3(vx, vy, vz);
-              const info = { shot, timingQuality: 'good', guaranteedMake: isMake, startPos, scored: false, bounced: false, isAI: true };
+              let aiTrailType = null;
+              if (this.aiStreak && this.aiStreak >= 3) {
+                aiTrailType = 'fire';
+              } else if (this.isAICold || (this.aiStreak && this.aiStreak <= -2)) {
+                aiTrailType = 'ice';
+              }
+              const info = { shot, timingQuality: 'good', guaranteedMake: isMake, startPos, scored: false, bounced: false, isAI: true, trailType: aiTrailType };
 
               this.inFlightBalls.push({ mesh: ballMesh, vel, info });
 
@@ -6205,13 +6522,28 @@
           this.renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        animate() {
-          requestAnimationFrame(() => this.animate());
+        animate(time) {
+          requestAnimationFrame((t) => this.animate(t));
 
-          const now = performance.now();
-          if (!this.lastTime) this.lastTime = now;
-          const dt = Math.min((now - this.lastTime) / 1000, 0.1);
-          this.lastTime = now;
+          // Page Visibility API: Halt execution when tab is hidden or minimized
+          if (document.hidden) return;
+
+          if (!time) time = performance.now();
+          if (!this.lastFrameTime) this.lastFrameTime = time;
+
+          // 60 FPS Frame Rate Limiter (caps frame rate smoothly on high refresh 90Hz/120Hz/144Hz screens)
+          const targetFPS = 60;
+          const frameInterval = 1000 / targetFPS; // ~16.66ms
+          const elapsed = time - this.lastFrameTime;
+
+          if (elapsed < frameInterval - 1) {
+            return;
+          }
+
+          this.lastFrameTime = time - (elapsed % frameInterval);
+
+          const dt = Math.min(elapsed / 1000, 0.1);
+          this.lastTime = time;
 
           // Wizard meter live speed preview animation
           if (this.state === 'PRE_GAME' && this.currentWizardStep === 4) {
