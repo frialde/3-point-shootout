@@ -17,7 +17,7 @@
 * Reduced glowing on the court
 * Bug Fixes
 
-### Version 1.3 -- 23 July 2026 05:50pm SGT
+### Version 1.3 -- 23 July 2026 06:00pm SGT
 * Added cosmestic trail to ball when player is Hot/Cold
 * Improved UI elements.
 * Improved optimization of game
