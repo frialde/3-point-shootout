@@ -29,6 +29,18 @@
 * Rehauled, and improved UI/EX.
 * Improved shot meter (i.e automatic shot release when holding the shoot button until the meter bar reaches 100%; VERY VERY LATE feedback.)
 * Redesigned player's advanced analytics with coach's tip.
-*  Added trophy ceremony cutscene at the end of the shootout
+* Added trophy ceremony cutscene at the end of the shootout
 * Improved gameplay
 * Bug Fixes
+
+### Version 1.5 -- 25 July 2026 01:00am SGT
+* Adjusted shot percentage boost when shot timing is not perfect when player is Hot. (15% to 10% Hard difficulty)
+* Rehauled, and improved UI/EX.
+* Improved shot meter visually.
+* Improved shot mechanics.
+* Advanced analytics now is really advanced analytics.
+* Improved gameplay and animations.
+* Added settings button in title screen & pause button.
+* Ability to toggle sound, change FPS, enable haptics.
+* Bug Fixes
+* Arcade mode coming soon?????
