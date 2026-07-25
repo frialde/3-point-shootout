@@ -92,6 +92,35 @@
         justify-self: start;
         border-left: 4px solid #38bdf8;
       }
+      .score-card.arcade-card {
+        width: 112px !important;
+        min-width: 105px !important;
+        height: 56px !important;
+        background: rgba(15, 23, 42, 0.7) !important;
+        border: 1px solid rgba(56, 189, 248, 0.5) !important;
+        border-left: 4px solid #38bdf8 !important;
+        border-radius: 12px !important;
+        padding: 4px 6px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-shadow: 0 4px 15px rgba(56,189,248,0.35) !important;
+      }
+      .score-card.arcade-card .player-label {
+        color: #7dd3fc !important;
+        font-size: 10px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
+      }
+      .score-card.arcade-card .player-val {
+        color: #38bdf8 !important;
+        font-size: 20px !important;
+        font-weight: 900 !important;
+        line-height: 1.1 !important;
+        white-space: nowrap !important;
+        margin-top: 2px !important;
+      }
       .score-card.ai {
         justify-self: end;
         border-right: 4px solid #f43f5e;
@@ -146,6 +175,15 @@
         font-weight: 700;
         color: #ef4444;
         font-variant-numeric: tabular-nums;
+        transition: transform 0.15s ease, color 0.15s ease;
+      }
+      @keyframes timeGainGlow {
+        0% { transform: scale(1.4); color: #4ade80; text-shadow: 0 0 15px #22c55e; }
+        50% { transform: scale(1.2); color: #22c55e; text-shadow: 0 0 10px #22c55e; }
+        100% { transform: scale(1); color: #ef4444; text-shadow: none; }
+      }
+      .time-gain-pulse {
+        animation: timeGainGlow 0.65s ease-out;
       }
 
       /* PAUSE BUTTON */
@@ -525,7 +563,7 @@
       /* FEEDBACK POPUP */
       #feedback-popup {
         position: absolute;
-        top: 36%;
+        top: 28%;
         left: 50%;
         transform: translate(-50%, -50%) scale(0.8);
         font-family: 'Teko', sans-serif;
@@ -1585,6 +1623,14 @@
         75% { transform: translateX(-3px) rotate(-0.6deg); }
         100% { transform: translateX(0); }
       }
+      @keyframes floatPulse {
+        0% { transform: translateY(-4px) scale(0.96); }
+        100% { transform: translateY(4px) scale(1.04); }
+      }
+      @keyframes ballSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
       .cold-shake {
         animation: coldShake 0.45s infinite ease-in-out;
         filter: hue-rotate(180deg) brightness(1.2);
@@ -1647,10 +1693,45 @@
 
       <!-- HUD OVERLAY -->
       <div id="hud-overlay" class="ui-layer" style="display: none;">
+        <!-- FLOATING POWER-UP BALL OVERLAY -->
+        <div id="floating-powerup-ball" class="pointer-enabled" style="display: none; position: fixed; z-index: 2500; cursor: pointer; user-select: none; touch-action: manipulation; width: 66px; height: 66px; border-radius: 50%; align-items: center; justify-content: center; transform: translate(-50%, -50%); transition: transform 0.1s ease-out;">
+          <div id="floating-ball-sphere" style="width: 100%; height: 100%; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; overflow: visible; animation: floatPulse 1.5s ease-in-out infinite alternate;">
+            <!-- Spherical 3D gradient background -->
+            <div id="floating-ball-bg" style="position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #7dd3fc 0%, #0284c7 55%, #0c4a6e 85%, #0f172a 100%); border: 2.5px solid #ffffff; box-shadow: 0 0 30px rgba(56, 189, 248, 0.9), inset 0 0 14px rgba(255,255,255,0.8);"></div>
+            <!-- Basketball seam overlay SVG with spin animation -->
+            <svg style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.45; pointer-events: none; animation: ballSpin 3.5s linear infinite;" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#ffffff" stroke-width="3.5" />
+              <line x1="50" y1="2" x2="50" y2="98" stroke="#ffffff" stroke-width="3" />
+              <line x1="2" y1="50" x2="98" y2="50" stroke="#ffffff" stroke-width="3" />
+              <path d="M 22,12 A 42,42 0 0,1 22,88" fill="none" stroke="#ffffff" stroke-width="3" />
+              <path d="M 78,12 A 42,42 0 0,1 78,88" fill="none" stroke="#ffffff" stroke-width="3" />
+            </svg>
+            <span id="floating-ball-emoji" style="position: relative; z-index: 2; font-size: 28px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));">🧊</span>
+          </div>
+        </div>
+
+        <!-- ARCADE POWER-UP ACTIVE HUD STATUS -->
+        <div id="arcade-powerup-status" style="display: none; position: absolute; top: 72px; left: 50%; transform: translateX(-50%); z-index: 1100; pointer-events: none; padding: 6px 14px; border-radius: 12px; font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); flex-direction: column; align-items: center; gap: 4px; white-space: nowrap; min-width: 180px;">
+          <div style="display: flex; align-items: center; gap: 6px; justify-content: center; width: 100%;">
+            <span id="powerup-status-icon">🧊</span>
+            <span id="powerup-status-text">ICE BALL LOADED (SWISH TO FREEZE)</span>
+          </div>
+          <div id="powerup-progress-container" style="display: none; width: 100%; height: 3px; background: rgba(255,255,255,0.15); border-radius: 1.5px; overflow: hidden; margin-top: 2px;">
+            <div id="powerup-progress-bar" style="width: 100%; height: 100%; background: currentColor; border-radius: 1.5px; transition: width 0.05s linear;"></div>
+          </div>
+        </div>
+
+        <!-- 3, 2, 1 COUNTDOWN OVERLAY -->
+        <div id="arcade-countdown-overlay" style="display: none; position: absolute; inset: 0; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none;">
+          <div id="arcade-countdown-text" style="font-family: 'Teko', sans-serif; font-size: 160px; font-weight: 700; color: #facc15; text-shadow: 0 0 40px rgba(250, 204, 21, 0.9), 0 4px 25px rgba(0,0,0,0.9); line-height: 1; letter-spacing: 2px;">3</div>
+          <div id="arcade-countdown-sub" style="font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin-top: -10px;">GET READY!</div>
+          <div id="arcade-countdown-tip" style="display: none; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #38bdf8; text-shadow: 0 2px 8px rgba(0,0,0,0.9); margin-top: 16px; padding: 8px 18px; background: rgba(15, 23, 42, 0.85); border: 1px dashed rgba(56, 189, 248, 0.5); border-radius: 20px; max-width: 85%; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">💡 TIP: Release inside the green zone for a guaranteed Swish!</div>
+        </div>
+
         <!-- TOP BAR -->
         <div id="hud-top">
-          <div class="score-card player">
-            <div class="player-label">PLAYER</div>
+          <div id="player-score-card-container" class="score-card player pointer-enabled">
+            <div id="player-hud-label" class="player-label">PLAYER</div>
             <div id="player-score-val" class="player-val">0</div>
           </div>
 
@@ -1666,9 +1747,14 @@
           </div>
 
           <div style="justify-self: end; height: 56px; display: flex; align-items: center; position: relative;">
-            <div class="score-card ai pointer-enabled" style="margin: 0;">
+            <div id="ai-score-card-container" class="score-card ai pointer-enabled" style="margin: 0;">
               <div id="ai-hud-label" class="player-label">AI</div>
               <div id="ai-score-val" class="player-val">0</div>
+            </div>
+
+            <div id="arcade-goal-card-container" class="score-card arcade-goal" style="display: none; margin: 0; width: 112px; min-width: 105px; height: 56px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(6, 182, 212, 0.5); border-right: 4px solid #06b6d4; border-radius: 12px; padding: 4px 6px; box-sizing: border-box; text-align: center; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(6,182,212,0.35);">
+              <div class="player-label" style="color: #67e8f9; font-size: 10px; font-weight: 800; letter-spacing: 0.5px;">GOAL</div>
+              <div id="arcade-goal-val" class="player-val" style="color: #38bdf8; font-size: 20px; font-weight: 900; line-height: 1.1; white-space: nowrap; margin-top: 2px;">50 PTS</div>
             </div>
           </div>
         </div>
@@ -1722,22 +1808,23 @@
 
       <!-- PAUSE SCREEN MODAL -->
       <div id="pause-screen" class="modal-screen pointer-enabled" style="display: none;">
-        <div class="modal-card" style="position: relative; text-align: center; gap: 20px; padding: 28px 24px;">
-          <!-- Settings Gear Button -->
-          <button id="pause-settings-btn" class="settings-gear-btn pointer-enabled" style="position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; color: #94a3b8; transition: color 0.15s, transform 0.2s; padding: 6px; display: flex; align-items: center; justify-content: center; z-index: 10;" title="Game Settings">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-          </button>
-          <div class="title-header">
-            <h1 style="font-family: 'Teko', sans-serif; font-size: 42px; line-height: 0.95; letter-spacing: 1.5px; margin: 0 36px 4px 36px;">GAME PAUSED</h1>
-            <p style="font-size: 14px; color: #94a3b8; margin-top: 4px;">Take a breath and get ready to swish!</p>
+        <div class="modal-card" style="position: relative; text-align: center; gap: 20px; padding: 24px 20px; max-width: 400px; width: 92%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 6px; box-sizing: border-box;">
+            <div style="font-family: 'Teko', sans-serif; font-size: 38px; color: #fff; margin: 0; line-height: 1; letter-spacing: 1.5px;">GAME PAUSED</div>
+            <button id="pause-settings-btn" class="settings-gear-btn pointer-enabled" style="background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; cursor: pointer; color: #94a3b8; transition: all 0.15s; padding: 8px; display: flex; align-items: center; justify-content: center;" title="Game Settings">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="title-header" style="text-align: left; width: 100%;">
+            <p style="font-size: 13px; color: #cbd5e1; margin: 0; font-family: 'Montserrat', sans-serif;">Take a breath and get ready to swish!</p>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
             <button id="resume-btn" class="cta-button" style="min-height: 58px; font-size: 26px; letter-spacing: 1.5px;">RESUME GAME</button>
-            <button id="pause-tips-btn" class="cta-button pointer-enabled" style="background: rgba(234, 179, 8, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: rgba(234, 179, 8, 0.6); color: #fde047; min-height: 48px; font-size: 18px; letter-spacing: 1px;">💡 PRO SHOOTING TIPS</button>
+            <button id="pause-tips-btn" class="cta-button pointer-enabled" style="background: rgba(234, 179, 8, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(234, 179, 8, 0.6); color: #fde047; min-height: 52px; font-size: 24px; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;">💡 PRO SHOOTING TIPS</button>
             <button id="restart-btn" class="cta-button" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #64748b; min-height: 52px; font-size: 24px; letter-spacing: 1.5px;">RESTART ROUND</button>
             <button id="quit-btn" class="cta-button" style="background: rgba(153, 27, 27, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #f87171; min-height: 52px; font-size: 24px; letter-spacing: 1.5px;">QUIT TO MENU</button>
           </div>
@@ -1761,8 +1848,51 @@
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: #e2e8f0; line-height: 1.5;">
+            <!-- Arcade Power-Ups Card -->
+            <div id="tip-sec-arcade" style="background: rgba(6, 182, 212, 0.12); border: 1.5px solid rgba(6, 182, 212, 0.45); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="color: #38bdf8; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span>🕹️</span> ARCADE MODE POWER-UPS &amp; BONUSES
+                </div>
+                <span style="font-size: 10px; font-weight: 800; background: #06b6d4; color: #020617; padding: 2px 6px; border-radius: 4px;">ARCADE EXCLUSIVE</span>
+              </div>
+              
+              <!-- Floating Ice Ball -->
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 8px; padding: 8px 10px; display: flex; align-items: flex-start; gap: 8px;">
+                <span style="font-size: 22px;">🧊</span>
+                <div>
+                  <div style="color: #38bdf8; font-weight: 800; font-size: 12px;">FLOATING ICE BALL (TIME FREEZE)</div>
+                  <div style="color: #cbd5e1; font-size: 11px; line-height: 1.35; margin-top: 2px;">
+                    Tap the floating Ice Ball drifting across the screen to equip it as your next shot. <strong>Score it to freeze the Shot Clock for 5 full seconds!</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating Golden Ball -->
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(250, 204, 21, 0.4); border-radius: 8px; padding: 8px 10px; display: flex; align-items: flex-start; gap: 8px;">
+                <span style="font-size: 22px;">🌟</span>
+                <div>
+                  <div style="color: #facc15; font-weight: 800; font-size: 12px;">FLOATING GOLDEN BALL (MAGNET NET)</div>
+                  <div style="color: #cbd5e1; font-size: 11px; line-height: 1.35; margin-top: 2px;">
+                    Tap the floating Golden Ball to equip it. <strong>Score it to activate Magnet Net for 5 seconds</strong> — creating a magnetic force field around the rim that gently pulls close shots straight into the net!
+                  </div>
+                </div>
+              </div>
+
+              <!-- Perfect Release Bonus -->
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(74, 222, 128, 0.4); border-radius: 8px; padding: 8px 10px; display: flex; align-items: flex-start; gap: 8px;">
+                <span style="font-size: 22px;">⏱️</span>
+                <div>
+                  <div style="color: #4ade80; font-weight: 800; font-size: 12px;">PERFECT RELEASE TIME BONUS (+0.5s)</div>
+                  <div style="color: #cbd5e1; font-size: 11px; line-height: 1.35; margin-top: 2px;">
+                    Starting from <strong>Round 4 onwards</strong>, every Perfect Green Release adds <strong>+0.5 seconds</strong> bonus time to your shot clock!
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Cold Streak Tip -->
-            <div style="background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;">
+            <div id="tip-sec-cold" style="background: rgba(239, 68, 68, 0.12); border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;">
               <div style="color: #f87171; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px;">
                 <span>🥶</span> AVOID COLD STREAKS (3 MISSES IN A ROW)
               </div>
@@ -1779,7 +1909,7 @@
             </div>
 
             <!-- Perfect Green Release -->
-            <div style="background: rgba(34, 197, 94, 0.1); border: 1.5px solid rgba(34, 197, 94, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div id="tip-sec-perfect" style="background: rgba(34, 197, 94, 0.1); border: 1.5px solid rgba(34, 197, 94, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
               <div style="color: #4ade80; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px;">
                 <span>🎯</span> TARGET PERFECT GREEN RELEASES
               </div>
@@ -1787,7 +1917,7 @@
             </div>
 
             <!-- Hot Streak Boost -->
-            <div style="background: rgba(234, 179, 8, 0.1); border: 1.5px solid rgba(234, 179, 8, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div id="tip-sec-hot" style="background: rgba(234, 179, 8, 0.1); border: 1.5px solid rgba(234, 179, 8, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
               <div style="color: #fde047; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px;">
                 <span>🔥</span> BUILD HOT STREAKS (3+ MAKES)
               </div>
@@ -1799,7 +1929,7 @@
             </div>
 
             <!-- Money Balls & Starry Range -->
-            <div style="background: rgba(56, 189, 248, 0.1); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div id="tip-sec-money" style="background: rgba(56, 189, 248, 0.1); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
               <div style="color: #38bdf8; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px;">
                 <span>💰</span> MONEY BALLS & STARRY RANGE (2 & 3 PTS)
               </div>
@@ -1810,7 +1940,7 @@
             </div>
 
             <!-- Pacing & Shot Clock -->
-            <div style="background: rgba(168, 85, 247, 0.1); border: 1.5px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+            <div id="tip-sec-pacing" style="background: rgba(168, 85, 247, 0.1); border: 1.5px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
               <div style="color: #c084fc; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px;">
                 <span>⏱️</span> PACING & SHOT CLOCK
               </div>
@@ -2251,7 +2381,7 @@
         </div>
         <div style="margin-top: 8px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.5</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
         </div>
       </div>
 
@@ -2298,16 +2428,16 @@
                 </div>
               </button>
 
-              <!-- ARCADE MODE (COMING SOON) -->
-              <div id="btn-mode-arcade" style="width: 100%; padding: 20px 14px; border-radius: 16px; min-height: 94px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; background: rgba(30, 41, 59, 0.45); border: 1.5px dashed rgba(255, 255, 255, 0.25); box-sizing: border-box; cursor: not-allowed;">
-                <div style="position: absolute; top: 6px; right: 10px; background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: #f87171; font-family: 'Montserrat', sans-serif; font-size: 8.5px; font-weight: 800; padding: 2px 7px; border-radius: 10px; letter-spacing: 1px;">COMING SOON</div>
-                <div style="font-family: 'Teko', sans-serif; font-size: 32px; line-height: 1; letter-spacing: 1px; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; white-space: nowrap;">
-                  👾 <span>ARCADE MODE</span>
+              <!-- ARCADE MODE (NEW!) -->
+              <button id="btn-mode-arcade" class="nav-primary-btn pointer-enabled" style="width: 100%; padding: 20px 14px; border-radius: 16px; min-height: 94px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(6, 182, 212, 0.35); border: 2px solid rgba(255, 255, 255, 0.4); box-sizing: border-box; background: linear-gradient(135deg, #1e293b, #0f172a);">
+                <div style="position: absolute; top: 6px; right: 10px; background: rgba(16, 185, 129, 0.25); border: 1px solid #10b981; color: #34d399; font-family: 'Montserrat', sans-serif; font-size: 8.5px; font-weight: 800; padding: 2px 7px; border-radius: 10px; letter-spacing: 1px;">NEW</div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 32px; line-height: 1; letter-spacing: 1px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; white-space: nowrap;">
+                  <span>ARCADE MODE</span>
                 </div>
-                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: #64748b; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">
-                  POWER-UPS &amp; MULTIPLIERS
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: #38bdf8; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">
+                  SURVIVAL ROUND PROGRESSION
                 </div>
-              </div>
+              </button>
             </div>
           </div>
 
@@ -2316,7 +2446,7 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.5</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
         </div>
       </div>
 
@@ -2664,7 +2794,187 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.5</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
+        </div>
+      </div>
+
+      <!-- ARCADE PRE-GAME SCREEN (SURVIVAL CONTROLLER) -->
+      <div id="arcade-pregame-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+        <div id="arcade-bouncing-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1;"></div>
+        <div class="modal-card" style="position: relative; z-index: 2; max-width: 380px; width: 92%; max-height: 96vh; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; box-sizing: border-box; gap: 8px; border: 2px solid #06b6d4; box-shadow: 0 0 25px rgba(6, 182, 212, 0.35); border-radius: 18px;">
+          
+          <div class="title-header" style="text-align: center; margin-bottom: 0;">
+            <h1 style="font-family: 'Teko', sans-serif; font-size: 38px; color: #06b6d4; text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); line-height: 0.95; margin: 0; letter-spacing: 1.5px;">ARCADE MODE</h1>
+            <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 0.5px; margin-top: 2px; margin-bottom: 0; text-transform: uppercase;">SURVIVAL ROUND PROGRESSION</p>
+          </div>
+
+          <!-- ROUND SPECIFICS DISPLAY -->
+          <div id="arcade-round-info-box" style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid #06b6d4; border-radius: 14px; width: 100%; padding: 10px 12px; box-sizing: border-box; text-align: center; display: flex; flex-direction: column; gap: 6px;">
+            <div id="arcade-round-title" style="font-family: 'Teko', sans-serif; font-size: 28px; color: #fff; line-height: 1; letter-spacing: 0.5px;">ROUND 1: THE WARM UP</div>
+            <div id="arcade-round-desc" style="font-family: 'Montserrat', sans-serif; font-size: 11px; color: #cbd5e1; font-weight: 500; line-height: 1.2;">Shoot from the top of the key to survive!</div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin-top: 2px;">
+              <div style="background: rgba(255, 255, 255, 0.05); padding: 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="color: #06b6d4; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 0.5px;">TIME LIMIT</div>
+                <div id="arcade-round-time" style="font-family: 'Teko', sans-serif; font-size: 24px; color: #fff; line-height: 1;">25 SECONDS</div>
+              </div>
+              <div style="background: rgba(255, 255, 255, 0.05); padding: 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="color: #10b981; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 0.5px;">TARGET GOAL</div>
+                <div id="arcade-round-target" style="font-family: 'Teko', sans-serif; font-size: 24px; color: #fff; line-height: 1;">50 POINTS</div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 4px 10px; border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.15);">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: #94a3b8;">METER DIFFICULTY:</span>
+              <span id="arcade-round-diff" style="font-family: 'Teko', sans-serif; font-size: 18px; color: #facc15; letter-spacing: 0.5px; font-weight: 700; text-transform: uppercase;">EASY</span>
+            </div>
+          </div>
+
+          <!-- ARCADE RULES & POWER-UPS -->
+          <div style="background: rgba(15, 23, 42, 0.75); border: 1.5px solid rgba(6, 182, 212, 0.4); border-radius: 12px; padding: 10px 12px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-family: 'Teko', sans-serif; font-size: 17px; color: #06b6d4; letter-spacing: 0.5px; text-transform: uppercase;">ARCADE RULES &amp; POWER-UPS</div>
+              <span style="font-size: 9px; font-weight: 800; color: #a855f7; background: rgba(168, 85, 247, 0.2); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(168, 85, 247, 0.4);">SPECIALS</span>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 4px; font-family: 'Montserrat', sans-serif; font-size: 9.5px; color: #cbd5e1;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Base / Streak 5 / 10+:</span>
+                <span style="font-weight: 800; color: #fff;">+2 / +3 / +6 PTS</span>
+              </div>
+
+              <!-- Floating Ice Ball -->
+              <div style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px; padding: 4px 8px; display: flex; flex-direction: column; gap: 1px;">
+                <div style="font-weight: 800; color: #38bdf8; font-size: 10px; display: flex; align-items: center; gap: 4px;">
+                  <span>🧊</span> FLOATING ICE BALL
+                </div>
+                <div style="color: #e0f2fe; font-size: 9px; line-height: 1.2;">Tap floating Ice Ball to load it. Score it to <strong>Freeze Shot Clock for 5s</strong>!</div>
+              </div>
+
+              <!-- Floating Golden Ball -->
+              <div style="background: rgba(250, 204, 21, 0.12); border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 6px; padding: 4px 8px; display: flex; flex-direction: column; gap: 1px;">
+                <div style="font-weight: 800; color: #facc15; font-size: 10px; display: flex; align-items: center; gap: 4px;">
+                  <span>🌟</span> FLOATING GOLDEN BALL
+                </div>
+                <div style="color: #fef9c3; font-size: 9px; line-height: 1.2;">Tap floating Golden Ball to load it. Score it for <strong>Magnet Net for 5s</strong> (pulls close shots in)!</div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255, 255, 255, 0.15); padding-top: 3px; margin-top: 1px;">
+                <span>Round 4+ Perfects:</span>
+                <span style="font-weight: 800; color: #4ade80;">+0.5 SECOND BONUS ⏱️</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wizard-footer-nav" style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 2px;">
+            <div style="display: flex; gap: 6px; width: 100%;">
+              <button id="btn-arcade-guide" class="nav-secondary-btn" style="flex: 1; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px; padding: 4px; min-height: 40px; border: 1.5px solid #a855f7; color: #c084fc; background: rgba(168, 85, 247, 0.18); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                📖 GUIDE
+              </button>
+              <button id="btn-arcade-leaderboard" class="nav-secondary-btn" style="flex: 1; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px; padding: 4px; min-height: 40px; border: 1.5px solid #06b6d4; color: #38bdf8; background: rgba(6, 182, 212, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                🏆 RANKS
+              </button>
+              <button id="btn-arcade-back" class="nav-secondary-btn" style="flex: 1; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px; padding: 4px; min-height: 40px; border-radius: 12px;">MENU</button>
+            </div>
+            <button id="btn-arcade-start" class="nav-primary-btn" style="width: 100%; font-family: 'Teko', sans-serif; font-size: 22px; letter-spacing: 0.5px; padding: 6px; min-height: 42px; box-shadow: 0 0 12px rgba(6, 182, 212, 0.5); border: 2px solid #fff; background: linear-gradient(135deg, #0891b2, #06b6d4); border-radius: 12px;">START ROUND 1</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARCADE ROUND CLEAR SCREEN -->
+      <div id="arcade-round-clear-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px);">
+        <div class="modal-card" style="border: 2px solid #10b981; box-shadow: 0 0 25px rgba(16, 185, 129, 0.35); max-width: 380px; text-align: center; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <h2 style="font-family: 'Teko', sans-serif; font-size: 46px; color: #10b981; margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 1.5px;">ROUND CLEAR!</h2>
+          <p id="arcade-clear-subtitle" style="color: #cbd5e1; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; margin: 4px 0 0 0; text-transform: uppercase;">You survived Round 1!</p>
+
+          <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; width: 100%; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #94a3b8;">CUMULATIVE SCORE</span>
+              <span id="arcade-clear-score" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #fff; line-height: 1;">74 PTS</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #94a3b8;">ROUND GOAL</span>
+              <span id="arcade-clear-target" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #10b981; line-height: 1;">50 PTS</span>
+            </div>
+          </div>
+
+          <button id="btn-arcade-continue-round" class="nav-primary-btn" style="width: 100%; font-family: 'Teko', sans-serif; font-size: 26px; letter-spacing: 1px; padding: 10px; min-height: 48px; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); border: 2px solid #fff; background: linear-gradient(135deg, #059669, #10b981);">CONTINUE TO ROUND 2</button>
+        </div>
+      </div>
+
+      <!-- ARCADE GAME OVER SCREEN -->
+      <div id="arcade-game-over-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px);">
+        <div class="modal-card" style="border: 2px solid #ef4444; box-shadow: 0 0 25px rgba(239, 68, 68, 0.35); max-width: 380px; text-align: center; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <h2 style="font-family: 'Teko', sans-serif; font-size: 46px; color: #ef4444; margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 1.5px;">GAME OVER</h2>
+          <p id="arcade-fail-subtitle" style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; margin: 4px 0 0 0; text-transform: uppercase;">FAILED TO REACH GOAL</p>
+
+          <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; width: 100%; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #cbd5e1;">FINAL SCORE</span>
+              <span id="arcade-fail-score" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #fff; line-height: 1;">38 PTS</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #cbd5e1;">REQUIRED GOAL</span>
+              <span id="arcade-fail-target" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #ef4444; line-height: 1;">50 PTS</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #cbd5e1;">ROUND REACHED</span>
+              <span id="arcade-fail-round" style="font-family: 'Teko', sans-serif; font-size: 22px; color: #facc15; line-height: 1;">ROUND 1</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+            <button id="btn-arcade-retry" class="cta-button pointer-enabled" style="width: 100%; min-height: 54px; font-size: 24px;">TRY AGAIN</button>
+            <button id="btn-arcade-fail-menu" class="nav-secondary-btn" style="width: 100%; min-height: 44px; font-size: 18px; margin-top: 6px; border-radius: 12px;">BACK TO MENU</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCADE VICTORY SCREEN -->
+      <div id="arcade-victory-screen" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px);">
+        <div class="modal-card" style="border: 2px solid #facc15; box-shadow: 0 0 35px rgba(250, 204, 21, 0.5); max-width: 400px; text-align: center; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <h2 style="font-family: 'Teko', sans-serif; font-size: 52px; color: #facc15; margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(250, 204, 21, 0.4);">GRAND CHAMPION!</h2>
+          <p style="color: #cbd5e1; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; margin: 4px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">YOU CONQUERED THE ARCADE SHOOTOUT!</p>
+
+          <div style="background: rgba(15, 23, 42, 0.9); border: 2px solid rgba(250, 204, 21, 0.3); border-radius: 12px; width: 100%; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #cbd5e1;">FINAL HIGH SCORE</span>
+              <span id="arcade-victory-score" style="font-family: 'Teko', sans-serif; font-size: 34px; color: #4ade80; line-height: 1;">386 PTS</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #cbd5e1;">TOTAL MAKES</span>
+              <span id="arcade-victory-makes" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #fff; line-height: 1;">143 MAKES</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+              <span style="font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #cbd5e1;">PERFECT RELEASES</span>
+              <span id="arcade-victory-perfects" style="font-family: 'Teko', sans-serif; font-size: 26px; color: #eab308; line-height: 1;">32 PERFECTS</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+            <button id="btn-arcade-victory-retry" class="cta-button pointer-enabled" style="width: 100%; min-height: 54px; font-size: 24px; background: linear-gradient(135deg, #eab308, #facc15);">PLAY AGAIN</button>
+            <button id="btn-arcade-victory-menu" class="nav-secondary-btn" style="width: 100%; min-height: 44px; font-size: 18px; margin-top: 6px; border-radius: 12px;">BACK TO MENU</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCADE LEADERBOARD MODAL -->
+      <div id="arcade-leaderboard-modal" class="modal-screen pointer-enabled" style="display: none; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 2100;">
+        <div class="modal-card" style="border: 2px solid #06b6d4; box-shadow: 0 0 30px rgba(6, 182, 212, 0.4); max-width: 400px; width: 92%; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; border-radius: 18px; box-sizing: border-box;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <h2 style="font-family: 'Teko', sans-serif; font-size: 38px; color: #06b6d4; margin: 0; line-height: 1; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">ARCADE LEADERBOARD</h2>
+          </div>
+          <p style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 1px;">ALL-TIME SURVIVAL HIGH SCORES</p>
+
+          <!-- LEADERBOARD CONTENT TABLE / LIST -->
+          <div id="arcade-leaderboard-list" style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(6, 182, 212, 0.3); border-radius: 12px; width: 100%; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto;">
+            <!-- Rendered dynamically in JS -->
+          </div>
+
+          <div style="display: flex; gap: 8px; width: 100%; margin-top: 4px;">
+            <button id="btn-close-arcade-leaderboard" class="nav-secondary-btn" style="flex: 1; font-family: 'Teko', sans-serif; font-size: 22px; letter-spacing: 0.5px; padding: 6px; min-height: 42px; border-radius: 12px; border: 1.5px solid #06b6d4; color: #38bdf8; background: rgba(6, 182, 212, 0.15);">CLOSE</button>
+          </div>
         </div>
       </div>
 
@@ -2760,40 +3070,57 @@
 
         init() {
           if (!this.ctx) {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const sr = this.ctx.sampleRate;
-
-            // Pre-generate noise buffers to avoid blocking the main thread during gameplay
             try {
-              // 1. Swish Noise Buffer (0.35s)
-              const swishSize = Math.floor(sr * 0.35);
-              this.swishBuffer = this.ctx.createBuffer(1, swishSize, sr);
-              const swishData = this.swishBuffer.getChannelData(0);
-              for (let i = 0; i < swishSize; i++) {
-                swishData[i] = Math.random() * 2 - 1;
-              }
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                this.ctx = new AudioCtx();
+                const sr = this.ctx.sampleRate;
 
-              // 2. Cheer Noise Buffer (1.8s)
-              const cheerSize = Math.floor(sr * 1.8);
-              this.cheerBuffer = this.ctx.createBuffer(1, cheerSize, sr);
-              const cheerData = this.cheerBuffer.getChannelData(0);
-              for (let i = 0; i < cheerSize; i++) {
-                cheerData[i] = Math.random() * 2 - 1;
-              }
+                // Pre-generate noise buffers to avoid blocking the main thread during gameplay
+                try {
+                  // 1. Swish Noise Buffer (0.35s)
+                  const swishSize = Math.floor(sr * 0.35);
+                  this.swishBuffer = this.ctx.createBuffer(1, swishSize, sr);
+                  const swishData = this.swishBuffer.getChannelData(0);
+                  for (let i = 0; i < swishSize; i++) {
+                    swishData[i] = Math.random() * 2 - 1;
+                  }
 
-              // 3. Groan Noise Buffer (1.2s)
-              const groanSize = Math.floor(sr * 1.2);
-              this.groanBuffer = this.ctx.createBuffer(1, groanSize, sr);
-              const groanData = this.groanBuffer.getChannelData(0);
-              for (let i = 0; i < groanSize; i++) {
-                groanData[i] = Math.random() * 2 - 1;
+                  // 2. Cheer Noise Buffer (1.8s)
+                  const cheerSize = Math.floor(sr * 1.8);
+                  this.cheerBuffer = this.ctx.createBuffer(1, cheerSize, sr);
+                  const cheerData = this.cheerBuffer.getChannelData(0);
+                  for (let i = 0; i < cheerSize; i++) {
+                    cheerData[i] = Math.random() * 2 - 1;
+                  }
+
+                  // 3. Groan Noise Buffer (1.2s)
+                  const groanSize = Math.floor(sr * 1.2);
+                  this.groanBuffer = this.ctx.createBuffer(1, groanSize, sr);
+                  const groanData = this.groanBuffer.getChannelData(0);
+                  for (let i = 0; i < groanSize; i++) {
+                    groanData[i] = Math.random() * 2 - 1;
+                  }
+                } catch (err) {
+                  console.warn("Failed to pre-warm audio buffers: ", err);
+                }
               }
             } catch (err) {
-              console.warn("Failed to pre-warm audio buffers: ", err);
+              console.warn("AudioContext creation or device start error: ", err);
+              this.ctx = null;
             }
           }
-          if (this.ctx.state === 'suspended') {
-            this.ctx.resume();
+          if (this.ctx && this.ctx.state === 'suspended') {
+            try {
+              const p = this.ctx.resume();
+              if (p && typeof p.catch === 'function') {
+                p.catch(err => {
+                  console.warn("AudioContext failed to resume: ", err);
+                });
+              }
+            } catch (err) {
+              console.warn("AudioContext resume exception: ", err);
+            }
           }
         }
 
@@ -2923,6 +3250,31 @@
           osc2.start(now);
           osc1.stop(now + 1.2);
           osc2.stop(now + 1.2);
+        }
+
+        playTick(secondsLeft = 5) {
+          if (this.muted) return;
+          if (!this.ctx) return;
+          this.init();
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          // Pitch rises slightly as timer approaches zero (5s: ~750Hz, 1s: ~1150Hz)
+          const pitch = 750 + (5 - Math.max(1, Math.min(5, secondsLeft))) * 100;
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(pitch, now);
+          osc.frequency.exponentialRampToValueAtTime(pitch * 0.5, now + 0.08);
+
+          const vol = secondsLeft <= 2 ? 0.38 : 0.22;
+          gain.gain.setValueAtTime(vol, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.08);
         }
 
         playCheer() {
@@ -3178,6 +3530,107 @@
             osc.start(now + i * 0.10);
             osc.stop(now + i * 0.10 + 0.45);
           });
+        }
+
+        startBeachAmbience() {
+          this.init();
+          if (this.beachSource || !this.ctx) return;
+          try {
+            const bufferSize = this.ctx.sampleRate * 3;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+            for (let i = 0; i < bufferSize; i++) {
+              const white = Math.random() * 2 - 1;
+              b0 = 0.99886 * b0 + white * 0.0555179;
+              b1 = 0.99332 * b1 + white * 0.0750759;
+              b2 = 0.96900 * b2 + white * 0.1538520;
+              b3 = 0.86650 * b3 + white * 0.3104856;
+              b4 = 0.55000 * b4 + white * 0.5329522;
+              b5 = -0.7616 * b5 - white * 0.0168980;
+              data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
+              b6 = white * 0.115926;
+            }
+
+            // 1. Ocean Wave Surf Noise Source
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 350;
+
+            const lfo = this.ctx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.value = 0.18; // ~5.5s wave rolling cycle
+
+            const lfoGain = this.ctx.createGain();
+            lfoGain.gain.value = 280; // Modulates filter between ~100Hz and ~630Hz
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(filter.frequency);
+
+            // 2. Coastal Wind Breeze Noise Layer
+            const windNoise = this.ctx.createBufferSource();
+            windNoise.buffer = buffer;
+            windNoise.loop = true;
+
+            const windFilter = this.ctx.createBiquadFilter();
+            windFilter.type = 'bandpass';
+            windFilter.frequency.value = 450;
+            windFilter.Q.value = 2.5;
+
+            const windLfo = this.ctx.createOscillator();
+            windLfo.type = 'sine';
+            windLfo.frequency.value = 0.08; // ~12.5s wind gust cycle
+
+            const windLfoGain = this.ctx.createGain();
+            windLfoGain.gain.value = 300;
+
+            windLfo.connect(windLfoGain);
+            windLfoGain.connect(windFilter.frequency);
+
+            // Master Ambience Gain
+            const mainGain = this.ctx.createGain();
+            mainGain.gain.value = this.muted ? 0 : 0.28;
+
+            noise.connect(filter);
+            filter.connect(mainGain);
+
+            windNoise.connect(windFilter);
+            windFilter.connect(mainGain);
+
+            mainGain.connect(this.ctx.destination);
+
+            noise.start();
+            lfo.start();
+            windNoise.start();
+            windLfo.start();
+
+            this.beachSource = { noise, lfo, windNoise, windLfo, mainGain, filter };
+          } catch(e) {
+            console.warn("Beach ambience initialization error:", e);
+          }
+        }
+
+        stopBeachAmbience() {
+          if (this.beachSource && this.ctx) {
+            try {
+              const now = this.ctx.currentTime;
+              this.beachSource.mainGain.gain.linearRampToValueAtTime(0.001, now + 0.4);
+              const bs = this.beachSource;
+              setTimeout(() => {
+                try {
+                  bs.noise.stop();
+                  bs.lfo.stop();
+                  if (bs.windNoise) bs.windNoise.stop();
+                  if (bs.windLfo) bs.windLfo.stop();
+                } catch(err) {}
+              }, 450);
+            } catch(e) {}
+            this.beachSource = null;
+          }
         }
       }
 
@@ -3643,6 +4096,18 @@
         }
       }
 
+      // SHOOTING TIPS FOR COUNTDOWN OVERLAY (3-POINT SHOOTOUT)
+      const SHOOTING_TIPS = [
+        "💡 TIP: Release inside the green zone for a guaranteed Swish!",
+        "💡 TIP: Money balls on the money rack are worth 2 points each!",
+        "💡 TIP: Starry balls placed in deep range are worth 3 points each!",
+        "💡 TIP: Build a 3-shot streak to get ON FIRE and boost your make percentages!",
+        "💡 TIP: Don't rush your shots! You have 70 full seconds for all 5 racks.",
+        "💡 TIP: Watch the meter bar smoothly—rhythm and timing beat fast tapping!",
+        "💡 TIP: Customize your Money Rack position in Pregame for maximum score!",
+        "💡 TIP: Perfect green releases guarantee a swish and build your hot streak!"
+      ];
+
       // GAME ENGINE
       class GameEngine {
         constructor() {
@@ -3659,7 +4124,14 @@
           this.emojiManager = new BouncingEmojisManager('emoji-bouncing-container');
           this.emojiManager.init();
 
+          // Remove player's score each time application is launched
+          try {
+            localStorage.removeItem('hoops-arcade-leaderboard');
+          } catch(e) {}
+
           this.state = 'PRE_GAME'; // PRE_GAME, PLAYER_TURN, AI_TURN, POST_GAME
+          this.gameMode = 'shootout'; // 'shootout' or 'arcade'
+          this.arenaObjects = [];
           this.moneyRackIdx = 4;
           this.aiDiff = 'medium';
           this.meterDiff = 'normal'; // 'easy', 'normal', 'hard'
@@ -3721,6 +4193,13 @@
           this.setRimCold(false);
           this.turnEnding = false;
 
+          // Arcade Power-Up State
+          this.powerUpSpawnTimer = 15;
+          this.floatingPowerUp = null;
+          this.equippedPowerUp = null;
+          this.freezeTimer = 0;
+          this.magnetTimer = 0;
+
           // Net swish animation state
           this.netSwishTimer = 0;
           this.netSwishDir = new THREE.Vector3();
@@ -3747,7 +4226,7 @@
           this.scene.background = new THREE.Color(0x080a0f);
           this.scene.fog = new THREE.FogExp2(0x080a0f, 0.025);
 
-          this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+          this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
           this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
             antialias: true,
@@ -3760,11 +4239,17 @@
           document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
               if (audio && audio.ctx && audio.ctx.state === 'running') {
-                audio.ctx.suspend();
+                try {
+                  const p = audio.ctx.suspend();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                } catch (e) {}
               }
             } else {
               if (audio && audio.ctx && audio.ctx.state === 'suspended') {
-                audio.ctx.resume();
+                try {
+                  const p = audio.ctx.resume();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                } catch (e) {}
               }
               const now = performance.now();
               this.lastTime = now;
@@ -3779,8 +4264,10 @@
           this.renderer.toneMappingExposure = 1.15;
 
           // Lights - Bright & Reflective Professional Indoor Arena Lighting
+          this.defaultLights = [];
           const ambLight = new THREE.AmbientLight(0xb0c4de, 0.52);
           this.scene.add(ambLight);
+          this.defaultLights.push(ambLight);
 
           // Key Overhead Arena Directional Light
           const mainLight = new THREE.DirectionalLight(0xfffaed, 0.90);
@@ -3795,6 +4282,7 @@
           mainLight.shadow.camera.top = 16;
           mainLight.shadow.camera.bottom = -16;
           this.scene.add(mainLight);
+          this.defaultLights.push(mainLight);
 
           // Ceiling-to-Floor Arena Spotlights Array (Soft overhead lights shining down from high rafters)
           const ceilingSpotConfigs = [
@@ -3812,6 +4300,8 @@
             spot.castShadow = false;
             this.scene.add(spot);
             this.scene.add(spot.target);
+            this.defaultLights.push(spot);
+            this.defaultLights.push(spot.target);
           });
 
           // Focused Front Arena Spotlight directly illuminating the Hoop, Rim, & Glass Backboard
@@ -3821,6 +4311,8 @@
           hoopSpot.castShadow = false;
           this.scene.add(hoopSpot);
           this.scene.add(hoopSpot.target);
+          this.defaultLights.push(hoopSpot);
+          this.defaultLights.push(hoopSpot.target);
 
           // Textures
           this.courtTex = createCourtTexture();
@@ -4135,6 +4627,28 @@
         }
 
         buildArena() {
+          this.clearPreviousArena();
+
+          if (this.gameMode === 'arcade') {
+            this.buildOutdoorArena();
+            if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
+            return;
+          }
+
+          if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
+
+          // Restore default lights for Shootout Mode
+          this.restoreDefaultLights();
+
+          // Intercept scene.add to track all constructed objects for easy clearing
+          const originalSceneAdd = this.scene.add;
+          const addedObjects = [];
+          const self = this;
+          this.scene.add = function(obj) {
+            addedObjects.push(obj);
+            originalSceneAdd.call(self.scene, obj);
+          };
+
           // 1. Polished Semi-Gloss Hardwood Court Floor (Shiny & Reflective NBA maple wood)
           if (this.courtTex && this.renderer) {
             this.courtTex.anisotropy = Math.min(16, this.renderer.capabilities.getMaxAnisotropy());
@@ -4435,6 +4949,7 @@
                   group: spectatorGroup,
                   armL: armL,
                   armR: armR,
+                  head: head,
                   baseY: specY,
                   rotY: spectatorGroup.rotation.y,
                   offset: Math.random() * Math.PI * 2,
@@ -4453,6 +4968,10 @@
             this.scene.add(flashLight);
             this.crowdFlashes.push({ light: flashLight, cooldown: Math.random() * 2 });
           }
+
+          // Restore original scene.add and assign to arenaObjects
+          this.scene.add = originalSceneAdd;
+          this.arenaObjects = addedObjects;
         }
 
         showBackboardGlow(isMake) {
@@ -4469,14 +4988,30 @@
           }
         }
 
-        triggerCrowdCheer() {
-          this.crowdState = 'cheering';
-          this.crowdTimer = 1.6;
+        triggerCrowdCheer(type = 'swish') {
+          if (type === 'buzzer_beater') {
+            this.crowdState = 'buzzer_beater';
+            this.crowdTimer = 3.5;
+          } else if (type === 'starry' || type === 'streak') {
+            this.crowdState = 'standing_ovation';
+            this.crowdTimer = 2.6;
+          } else if (type === 'money') {
+            this.crowdState = 'standing_ovation';
+            this.crowdTimer = 2.0;
+          } else {
+            this.crowdState = 'cheering';
+            this.crowdTimer = 1.6;
+          }
         }
 
-        triggerCrowdGroan() {
-          this.crowdState = 'disappointed';
-          this.crowdTimer = 1.3;
+        triggerCrowdGroan(type = 'miss') {
+          if (type === 'timeout') {
+            this.crowdState = 'disappointed';
+            this.crowdTimer = 2.5;
+          } else {
+            this.crowdState = 'hands_on_head';
+            this.crowdTimer = 1.8;
+          }
         }
 
         updateCrowd(dt) {
@@ -4492,13 +5027,30 @@
           const time = Date.now() * 0.003;
 
           this.crowdSpectators.forEach((spec) => {
-            if (this.crowdState === 'cheering') {
-              // Jump up and wave arms frantically!
-              const jump = Math.abs(Math.sin(time * spec.speed + spec.offset)) * 0.35;
-              spec.group.position.y = spec.baseY + jump;
-              spec.armL.rotation.z = Math.PI - 0.4 + Math.sin(time * 8 + spec.offset) * 0.4;
-              spec.armR.rotation.z = -Math.PI + 0.4 - Math.sin(time * 8 + spec.offset) * 0.4;
-              spec.group.rotation.x = -0.15;
+            if (this.crowdState === 'standing_ovation' || this.crowdState === 'buzzer_beater') {
+              // Standing ovation: jump high, raise both arms high in V-shape!
+              const isBuzzer = (this.crowdState === 'buzzer_beater');
+              const jump = Math.abs(Math.sin(time * (isBuzzer ? 12 : 9) + spec.offset)) * (isBuzzer ? 0.45 : 0.35);
+              spec.group.position.y = spec.baseY + 0.12 + jump;
+              spec.armL.rotation.z = Math.PI - 0.2 + Math.sin(time * 10 + spec.offset) * 0.35;
+              spec.armR.rotation.z = -Math.PI + 0.2 - Math.sin(time * 10 + spec.offset) * 0.35;
+              spec.armL.rotation.x = 0;
+              spec.armR.rotation.x = 0;
+              spec.armL.rotation.y = 0;
+              spec.armR.rotation.y = 0;
+              if (spec.head) spec.head.rotation.x = -0.22;
+              spec.group.rotation.x = -0.1;
+            } else if (this.crowdState === 'hands_on_head') {
+              // Hands on sides of head / facepalm pose in dismay!
+              spec.group.position.y = spec.baseY - 0.04;
+              spec.armL.rotation.z = 2.3 + Math.sin(time * 3 + spec.offset) * 0.05;
+              spec.armL.rotation.x = -0.45;
+              spec.armL.rotation.y = -0.35;
+              spec.armR.rotation.z = -2.3 - Math.sin(time * 3 + spec.offset) * 0.05;
+              spec.armR.rotation.x = -0.45;
+              spec.armR.rotation.y = 0.35;
+              if (spec.head) spec.head.rotation.x = 0.32;
+              spec.group.rotation.x = 0.25;
             } else if (this.crowdState === 'disappointed') {
               // Slump forward in disappointment
               spec.group.position.y = spec.baseY;
@@ -4506,33 +5058,66 @@
               spec.armR.rotation.z = -0.2;
               spec.armL.rotation.x = 0.8;
               spec.armR.rotation.x = 0.8;
+              spec.armL.rotation.y = 0;
+              spec.armR.rotation.y = 0;
+              if (spec.head) spec.head.rotation.x = 0.4;
               spec.group.rotation.x = 0.35;
-            } else {
-              // Idle natural breathing & subtle movement
-              const idleBob = Math.sin(time * 1.5 + spec.offset) * 0.03;
-              spec.group.position.y = spec.baseY + idleBob;
-              spec.armL.rotation.z = 0.15;
-              spec.armR.rotation.z = -0.15;
+            } else if (this.crowdState === 'cheering') {
+              // Standard make cheer
+              const jump = Math.abs(Math.sin(time * spec.speed + spec.offset)) * 0.28;
+              spec.group.position.y = spec.baseY + jump;
+              spec.armL.rotation.z = Math.PI - 0.4 + Math.sin(time * 8 + spec.offset) * 0.4;
+              spec.armR.rotation.z = -Math.PI + 0.4 - Math.sin(time * 8 + spec.offset) * 0.4;
               spec.armL.rotation.x = 0;
               spec.armR.rotation.x = 0;
-              spec.group.rotation.x = 0;
+              spec.armL.rotation.y = 0;
+              spec.armR.rotation.y = 0;
+              if (spec.head) spec.head.rotation.x = 0;
+              spec.group.rotation.x = -0.1;
+            } else {
+              // Idle natural movement
+              spec.armL.rotation.y = 0;
+              spec.armR.rotation.y = 0;
+              if (this.playerStreak >= 5) {
+                const hype = Math.sin(time * 4 + spec.offset) * 0.04;
+                spec.group.position.y = spec.baseY + 0.08 + hype;
+                spec.armL.rotation.z = 0.8 + Math.sin(time * 5 + spec.offset) * 0.2;
+                spec.armR.rotation.z = -0.8 - Math.sin(time * 5 + spec.offset) * 0.2;
+                spec.armL.rotation.x = 0;
+                spec.armR.rotation.x = 0;
+                if (spec.head) spec.head.rotation.x = -0.1;
+                spec.group.rotation.x = 0;
+              } else {
+                const idleBob = Math.sin(time * 1.5 + spec.offset) * 0.03;
+                spec.group.position.y = spec.baseY + idleBob;
+                spec.armL.rotation.z = 0.15;
+                spec.armR.rotation.z = -0.15;
+                spec.armL.rotation.x = 0;
+                spec.armR.rotation.x = 0;
+                if (spec.head) {
+                  spec.head.rotation.x = 0;
+                  spec.head.rotation.y = Math.sin(time * 1.2 + spec.offset) * 0.18;
+                }
+                spec.group.rotation.x = 0;
+              }
             }
           });
 
           // Camera flashes
           if (this.crowdFlashes) {
             const isPlaying = this.state === 'PLAYER_TURN' || this.state === 'AI_TURN';
+            const isHyped = (this.crowdState === 'buzzer_beater' || this.crowdState === 'standing_ovation');
             this.crowdFlashes.forEach((f) => {
               f.cooldown -= dt;
               if (f.cooldown <= 0) {
-                if (isPlaying) {
-                  f.light.intensity = 8.0 + Math.random() * 12.0;
+                if (isPlaying || isHyped) {
+                  f.light.intensity = isHyped ? (15.0 + Math.random() * 20.0) : (8.0 + Math.random() * 12.0);
                 } else {
                   f.light.intensity = 0;
                 }
-                f.cooldown = 0.12 + Math.random() * 2.8;
+                f.cooldown = isHyped ? (0.05 + Math.random() * 0.8) : (0.12 + Math.random() * 2.8);
               } else {
-                if (isPlaying) {
+                if (isPlaying || isHyped) {
                   f.light.intensity *= 0.6;
                 } else {
                   f.light.intensity = 0;
@@ -5013,6 +5598,28 @@
         }
 
         setupShots() {
+          if (this.gameMode === 'arcade') {
+            this.spots = [
+              { name: 'RACK - CENTER 3-POINT', type: 'rack', rackIdx: 2, angle: 0, dist: 7.24 }
+            ];
+            this.shots = [];
+            // Generate 100 shots (20 racks of 5) at the center spot
+            for (let r = 0; r < 20; r++) {
+              for (let b = 0; b < 5; b++) {
+                const isMoneyBall = (b === 4);
+                this.shots.push({
+                  spot: this.spots[0],
+                  ballIdxInSpot: b,
+                  ballType: isMoneyBall ? 'money' : 'regular',
+                  pts: isMoneyBall ? 2 : 1
+                });
+              }
+            }
+            this.currentShotIdx = 0;
+            this.build3DRacks();
+            return;
+          }
+
           // Define 7 shooting spots along 3pt arc:
           // Spot 0: Rack 1 (Right Corner) - 5 balls
           // Spot 1: Rack 2 (Right Wing) - 5 balls
@@ -5068,6 +5675,65 @@
 
           this.shotBallMeshes = [];
           this.shotBallInitialPositions = [];
+
+          if (this.gameMode === 'arcade') {
+            // Arcade Mode: single rack at Center 3-Point
+            const spot = this.spots[0];
+            const rx = spot.dist * Math.sin(spot.angle);
+            const rz = -12 + spot.dist * Math.cos(spot.angle);
+            const lookDir = new THREE.Vector3(0, 0, -12).sub(new THREE.Vector3(rx, 0, rz));
+            const rotY = Math.atan2(lookDir.x, lookDir.z);
+
+            const rackX = rx - 0.72 * Math.cos(rotY);
+            const rackZ = rz + 0.72 * Math.sin(rotY);
+
+            // Metal rack structure
+            const rackGeo = new THREE.BoxGeometry(0.3, 0.7, 1.2);
+            const rackMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 });
+            const rack = new THREE.Mesh(rackGeo, rackMat);
+            rack.position.set(rackX, 0.35, rackZ);
+            rack.rotation.y = rotY;
+            this.racksGroup.add(rack);
+
+            // Determine active rack set (5-ball window)
+            const rackBase = Math.floor(this.currentShotIdx / 5) * 5;
+
+            // Spawn only the remaining balls in this 5-ball window
+            this.shots.forEach((shot, shotIdx) => {
+              if (shotIdx < rackBase || shotIdx >= rackBase + 5) {
+                // Not in active rack set - add placeholder in arrays to keep indexing aligned
+                this.shotBallMeshes.push(null);
+                this.shotBallInitialPositions.push(new THREE.Vector3());
+                return;
+              }
+
+              // In active rack set
+              let tex = this.ballTexReg;
+              if (shot.ballType === 'money') tex = this.ballTexMoney;
+
+              const ballGeo = new THREE.SphereGeometry(0.12, 16, 16);
+              const ballMat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 });
+              const ballMesh = new THREE.Mesh(ballGeo, ballMat);
+
+              const ballIdxInSpot = shotIdx % 5;
+              const offsetZ = (2 - ballIdxInSpot) * 0.22;
+              const localVec = new THREE.Vector3(0, 0.78, offsetZ);
+              localVec.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY);
+              ballMesh.position.set(rackX + localVec.x, localVec.y, rackZ + localVec.z);
+
+              // If this ball has already been shot, hide it
+              if (shotIdx < this.currentShotIdx) {
+                ballMesh.visible = false;
+              }
+
+              this.racksGroup.add(ballMesh);
+              this.shotBallMeshes.push(ballMesh);
+              this.shotBallInitialPositions.push(ballMesh.position.clone());
+            });
+
+            this.scene.add(this.racksGroup);
+            return;
+          }
 
           this.spots.forEach((spot) => {
             const rx = spot.dist * Math.sin(spot.angle);
@@ -5416,10 +6082,114 @@
           const btnModeShootout = document.getElementById('btn-mode-shootout');
           if (btnModeShootout) {
             btnModeShootout.addEventListener('click', () => {
+              this.gameMode = 'shootout';
+              if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
+              this.buildArena(); // Ensure indoor stadium arena is built
               document.getElementById('title-gamemode-screen').style.display = 'none';
               document.getElementById('pregame-screen').style.display = 'flex';
               this.setWizardStep(1);
               if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const btnModeArcade = document.getElementById('btn-mode-arcade');
+          if (btnModeArcade) {
+            btnModeArcade.addEventListener('click', () => {
+              this.startArcadeMode();
+            });
+          }
+
+          const btnArcadeGuide = document.getElementById('btn-arcade-guide');
+          if (btnArcadeGuide) {
+            btnArcadeGuide.addEventListener('click', () => {
+              this.showTipsModal();
+            });
+          }
+
+          const floatingBallEl = document.getElementById('floating-powerup-ball');
+          if (floatingBallEl) {
+            const handlePowerUpTap = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (this.floatingPowerUp) {
+                this.equipPowerUp(this.floatingPowerUp.type);
+              }
+            };
+            floatingBallEl.addEventListener('click', handlePowerUpTap);
+            floatingBallEl.addEventListener('touchstart', handlePowerUpTap, { passive: false });
+          }
+
+          const btnArcadeLeaderboard = document.getElementById('btn-arcade-leaderboard');
+          if (btnArcadeLeaderboard) {
+            btnArcadeLeaderboard.addEventListener('click', () => {
+              this.renderArcadeLeaderboard();
+              document.getElementById('arcade-leaderboard-modal').style.display = 'flex';
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const btnCloseArcadeLeaderboard = document.getElementById('btn-close-arcade-leaderboard');
+          if (btnCloseArcadeLeaderboard) {
+            btnCloseArcadeLeaderboard.addEventListener('click', () => {
+              document.getElementById('arcade-leaderboard-modal').style.display = 'none';
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          }
+
+          const btnArcadeBack = document.getElementById('btn-arcade-back');
+          if (btnArcadeBack) {
+            btnArcadeBack.addEventListener('click', () => {
+              document.getElementById('arcade-pregame-screen').style.display = 'none';
+              document.getElementById('title-gamemode-screen').style.display = 'flex';
+            });
+          }
+
+          const btnArcadeStart = document.getElementById('btn-arcade-start');
+          if (btnArcadeStart) {
+            btnArcadeStart.addEventListener('click', () => {
+              this.startArcadeRound();
+            });
+          }
+
+          const btnArcadeContinue = document.getElementById('btn-arcade-continue-round');
+          if (btnArcadeContinue) {
+            btnArcadeContinue.addEventListener('click', () => {
+              this.arcadeRound++;
+              this.showArcadePregameInfo();
+            });
+          }
+
+          const btnArcadeRetry = document.getElementById('btn-arcade-retry');
+          if (btnArcadeRetry) {
+            btnArcadeRetry.addEventListener('click', () => {
+              this.arcadeRound = 1;
+              this.playerScore = 0;
+              this.playerStreak = 0;
+              this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
+              this.showArcadePregameInfo();
+            });
+          }
+
+          const btnArcadeFailMenu = document.getElementById('btn-arcade-fail-menu');
+          if (btnArcadeFailMenu) {
+            btnArcadeFailMenu.addEventListener('click', () => {
+              this.quitToMenu();
+            });
+          }
+
+          const btnArcadeVicRetry = document.getElementById('btn-arcade-victory-retry');
+          if (btnArcadeVicRetry) {
+            btnArcadeVicRetry.addEventListener('click', () => {
+              this.arcadeRound = 1;
+              this.playerScore = 0;
+              this.startArcadeRound();
+            });
+          }
+
+          const btnArcadeVicMenu = document.getElementById('btn-arcade-victory-menu');
+          if (btnArcadeVicMenu) {
+            btnArcadeVicMenu.addEventListener('click', () => {
+              this.quitToMenu();
             });
           }
 
@@ -5485,7 +6255,7 @@
 
           // Pro Tips Modal Handlers
           const tipsModal = document.getElementById('shooting-tips-modal');
-          const openTipsModal = () => { if (tipsModal) tipsModal.style.display = 'flex'; };
+          const openTipsModal = () => { this.showTipsModal(); };
           const closeTipsModal = () => { if (tipsModal) tipsModal.style.display = 'none'; };
 
           const pauseTipsBtn = document.getElementById('pause-tips-btn');
@@ -6004,7 +6774,7 @@
           const shootBtn = document.getElementById('shoot-btn');
 
           const startHoldingShot = () => {
-            if (this.state === 'PLAYER_TURN' && !this.isHolding && !this.isPaused && !this.isRunningToRack && this.currentShotIdx < this.shots.length) {
+            if (this.state === 'PLAYER_TURN' && !this.isHolding && !this.isPaused && !this.isCountingDown && !this.isRunningToRack && this.currentShotIdx < this.shots.length) {
               this.isHolding = true;
               this.meterVal = 0;
               this.meterDir = 1;
@@ -6035,14 +6805,14 @@
           };
 
           const onPressStart = (e) => {
-            if (e.target.closest('#jersey-creation-screen') || e.target.closest('#title-gamemode-screen') || e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#shooting-tips-modal') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#analytics-modal') || e.target.closest('#settings-modal')) return;
+            if (e.target.closest('#jersey-creation-screen') || e.target.closest('#title-gamemode-screen') || e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#shooting-tips-modal') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#analytics-modal') || e.target.closest('#settings-modal') || e.target.closest('#floating-powerup-ball')) return;
             e.preventDefault();
             audio.init();
             startHoldingShot();
           };
 
           const onPressEnd = (e) => {
-            if (e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#shooting-tips-modal') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#settings-modal')) return;
+            if (e.target.closest('#pregame-screen') || e.target.closest('#postgame-screen') || e.target.closest('#pause-screen') || e.target.closest('#shooting-tips-modal') || e.target.closest('#pause-btn') || e.target.closest('#player-summary-screen') || e.target.closest('#settings-modal') || e.target.closest('#floating-powerup-ball')) return;
             e.preventDefault();
             releaseHoldingShot();
           };
@@ -6080,7 +6850,42 @@
           if (this.state !== 'PLAYER_TURN' && this.state !== 'AI_TURN') return;
           this.isPaused = !this.isPaused;
           document.getElementById('pause-screen').style.display = this.isPaused ? 'flex' : 'none';
+          const pauseTipsBtn = document.getElementById('pause-tips-btn');
+          if (pauseTipsBtn) {
+            pauseTipsBtn.style.display = (this.gameMode === 'arcade') ? 'none' : 'flex';
+          }
           if (!this.isPaused) document.getElementById('shooting-tips-modal').style.display = 'none';
+        }
+
+        showTipsModal() {
+          const modal = document.getElementById('shooting-tips-modal');
+          if (!modal) return;
+
+          const tipArcade = document.getElementById('tip-sec-arcade');
+          const tipCold = document.getElementById('tip-sec-cold');
+          const tipPerfect = document.getElementById('tip-sec-perfect');
+          const tipHot = document.getElementById('tip-sec-hot');
+          const tipMoney = document.getElementById('tip-sec-money');
+          const tipPacing = document.getElementById('tip-sec-pacing');
+
+          if (this.gameMode === 'arcade') {
+            if (tipArcade) tipArcade.style.display = 'flex';
+            if (tipCold) tipCold.style.display = 'none';
+            if (tipPerfect) tipPerfect.style.display = 'flex';
+            if (tipHot) tipHot.style.display = 'flex';
+            if (tipMoney) tipMoney.style.display = 'none';
+            if (tipPacing) tipPacing.style.display = 'none';
+          } else {
+            if (tipArcade) tipArcade.style.display = 'none';
+            if (tipCold) tipCold.style.display = 'flex';
+            if (tipPerfect) tipPerfect.style.display = 'flex';
+            if (tipHot) tipHot.style.display = 'flex';
+            if (tipMoney) tipMoney.style.display = 'flex';
+            if (tipPacing) tipPacing.style.display = 'flex';
+          }
+
+          modal.style.display = 'flex';
+          if (audio && audio.playSwish) audio.playSwish();
         }
 
         resumeGame() {
@@ -6095,7 +6900,11 @@
           if (this.aiTimeout) clearTimeout(this.aiTimeout);
           document.getElementById('pause-screen').style.display = 'none';
           document.getElementById('shooting-tips-modal').style.display = 'none';
-          this.initGameLogic();
+          if (this.gameMode === 'arcade') {
+            this.startArcadeRound();
+          } else {
+            this.initGameLogic();
+          }
         }
 
         quitToMenu() {
@@ -6110,6 +6919,24 @@
           document.getElementById('postgame-screen').style.display = 'none';
           document.getElementById('pregame-screen').style.display = 'none';
           document.getElementById('jersey-creation-screen').style.display = 'none';
+          
+          // Hide Arcade screens
+          document.getElementById('arcade-pregame-screen').style.display = 'none';
+          document.getElementById('arcade-round-clear-screen').style.display = 'none';
+          document.getElementById('arcade-game-over-screen').style.display = 'none';
+          document.getElementById('arcade-victory-screen').style.display = 'none';
+
+          if (this.gameMode === 'arcade') {
+            if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
+            this.gameMode = 'shootout';
+            this.buildArena(); // restore indoor arena
+          }
+
+          const aiScoreCard = document.getElementById('ai-score-card-container');
+          if (aiScoreCard) aiScoreCard.style.display = 'flex';
+          const arcadeGoalCard = document.getElementById('arcade-goal-card-container');
+          if (arcadeGoalCard) arcadeGoalCard.style.display = 'none';
+
           document.getElementById('title-gamemode-screen').style.display = 'flex';
           this.state = 'PRE_GAME';
 
@@ -6119,6 +6946,1370 @@
 
           if (this.setWizardStep) this.setWizardStep(3);
           if (this.emojiManager) this.emojiManager.init();
+        }
+
+        // ==========================================
+        // ARCADE MODE SUPPORT & LOGIC
+        // ==========================================
+        get arcadeRounds() {
+          return [
+            { round: 1, desc: 'The Warm Up', limit: 25, target: 50, diff: 'easy' },
+            { round: 2, desc: 'Rhythm shooter', limit: 25, target: 100, diff: 'normal' },
+            { round: 3, desc: 'Hot streak', limit: 25, target: 150, diff: 'hard' },
+            { round: 4, desc: 'Fast fire', limit: 15, target: 200, diff: 'hard' },
+            { round: 5, desc: 'Beat the clock', limit: 15, target: 250, diff: 'hard' },
+            { round: 6, desc: 'Sniper elite', limit: 15, target: 300, diff: 'hard' }
+          ];
+        }
+
+        clearAllInFlightBalls() {
+          if (this.inFlightBalls && this.scene) {
+            this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.inFlightBalls = [];
+          if (this.backgroundBalls && this.scene) {
+            this.backgroundBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
+          }
+          this.backgroundBalls = [];
+        }
+
+        startArcadeMode() {
+          this.gameMode = 'arcade';
+          this.arcadeRound = 1;
+          this.playerScore = 0;
+          this.playerStreak = 0;
+          this.isCold = false;
+          this.makesWhileCold = 0;
+          this.setRimCold(false);
+          this.setRimFire(false);
+          this.clearAllInFlightBalls();
+          this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
+
+          // Build the outdoor park arena dynamically!
+          this.buildArena();
+
+          // Open pregame screen
+          this.showArcadePregameInfo();
+        }
+
+        showArcadePregameInfo() {
+          this.clearAllInFlightBalls();
+          const config = (this.arcadeRounds && this.arcadeRounds[this.arcadeRound - 1])
+            ? this.arcadeRounds[this.arcadeRound - 1]
+            : { round: this.arcadeRound, desc: 'Survival', limit: 15, target: 300 + (this.arcadeRound - 6) * 50, diff: 'hard' };
+
+          const roundDiff = (this.arcadeRound >= 3) ? 'hard' : config.diff;
+
+          document.getElementById('arcade-round-title').innerText = `ROUND ${config.round}: ${config.desc.toUpperCase()}`;
+          document.getElementById('arcade-round-time').innerText = `${config.limit} SECONDS`;
+          document.getElementById('arcade-round-target').innerText = `${config.target} POINTS`;
+          document.getElementById('arcade-round-diff').innerText = roundDiff.toUpperCase();
+          
+          const startBtn = document.getElementById('btn-arcade-start');
+          if (startBtn) {
+            startBtn.innerText = `START ROUND ${config.round}`;
+          }
+
+          document.getElementById('title-gamemode-screen').style.display = 'none';
+          document.getElementById('pregame-screen').style.display = 'none';
+          document.getElementById('arcade-round-clear-screen').style.display = 'none';
+          document.getElementById('arcade-game-over-screen').style.display = 'none';
+          document.getElementById('arcade-victory-screen').style.display = 'none';
+          document.getElementById('arcade-pregame-screen').style.display = 'flex';
+          
+          if (audio && audio.playSwish) audio.playSwish();
+        }
+
+        startArcadeRound() {
+          this.gameMode = 'arcade';
+          this.clearAllInFlightBalls();
+          this.isCold = false;
+          this.makesWhileCold = 0;
+          this.setRimCold(false);
+
+          // Ensure outdoor court & beach environment are active
+          if (!this.outdoorOcean) {
+            this.buildOutdoorArena();
+          }
+          if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
+
+          // Reset shot meter and jump shot animation state
+          this.isHolding = false;
+          this.meterVal = 0;
+          this.meterDir = 1;
+          this.animJumpTimer = 99;
+          this.animGrabTimer = 0;
+          this.isRunningToRack = false;
+
+          this.freezeTimer = 0;
+          this.magnetTimer = 0;
+          this.equippedPowerUp = null;
+          this.floatingPowerUp = null;
+          this.powerUpSpawnTimer = 12 + Math.random() * 8;
+          this.setRimMagnet(false);
+          const floatEl = document.getElementById('floating-powerup-ball');
+          if (floatEl) floatEl.style.display = 'none';
+          this.updatePowerUpHUD();
+
+          const mPin = document.getElementById('meter-pin');
+          if (mPin) {
+            mPin.classList.remove('perfect-release', 'release-line');
+            mPin.style.background = '#ffffff';
+            mPin.style.bottom = '0%';
+          }
+          const fbPop = document.getElementById('feedback-popup');
+          if (fbPop) fbPop.classList.remove('show');
+          const tFb = document.getElementById('meter-feedback');
+          if (tFb) tFb.classList.remove('show');
+
+          // Hide any previous overlays
+          document.getElementById('arcade-pregame-screen').style.display = 'none';
+          document.getElementById('arcade-round-clear-screen').style.display = 'none';
+          document.getElementById('arcade-game-over-screen').style.display = 'none';
+          document.getElementById('arcade-victory-screen').style.display = 'none';
+          document.getElementById('title-gamemode-screen').style.display = 'none';
+
+          // Show HUD
+          document.getElementById('hud-overlay').style.display = 'flex';
+          const hudTop = document.getElementById('hud-top');
+          if (hudTop) hudTop.style.display = 'grid';
+          const mWrap = document.getElementById('meter-wrapper');
+          if (mWrap) mWrap.style.display = 'flex';
+          const mContainer = document.getElementById('meter-container');
+          if (mContainer) mContainer.style.display = 'flex';
+          document.getElementById('shoot-btn').style.display = 'flex';
+          document.getElementById('ai-overlay').style.display = 'none';
+
+          // Hide 1,2,3,4,5 ball UI tracker in Arcade mode
+          const trackerContainer = document.getElementById('rack-tracker');
+          if (trackerContainer) trackerContainer.style.display = 'none';
+
+          // Load round configuration (Hard difficulty for Round 3 onwards)
+          const currentRoundConfig = (this.arcadeRounds && this.arcadeRounds[this.arcadeRound - 1])
+            ? this.arcadeRounds[this.arcadeRound - 1]
+            : { round: this.arcadeRound, desc: 'Survival', limit: 15, target: 300 + (this.arcadeRound - 6) * 50, diff: 'hard' };
+
+          this.shotClock = currentRoundConfig.limit;
+          this.meterDiff = (this.arcadeRound >= 3) ? 'hard' : currentRoundConfig.diff;
+          document.getElementById('shot-clock-val').innerText = Math.ceil(this.shotClock);
+
+          // Hide AI score card, show Arcade goal card
+          const aiScoreCard = document.getElementById('ai-score-card-container');
+          if (aiScoreCard) aiScoreCard.style.display = 'none';
+          const arcadeGoalCard = document.getElementById('arcade-goal-card-container');
+          if (arcadeGoalCard) {
+            arcadeGoalCard.style.display = 'block';
+            const goalVal = document.getElementById('arcade-goal-val');
+            if (goalVal) goalVal.innerText = `${currentRoundConfig.target} PTS`;
+          }
+
+          // Reset player streak count to 0 for each round in arcade mode
+          this.playerStreak = 0;
+          this.setRimFire(false);
+
+          // If round 1, reset cumulative score & stats!
+          if (this.arcadeRound === 1) {
+            this.playerScore = 0;
+            this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
+          }
+
+          if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
+
+          this.state = 'PLAYER_TURN';
+          this.isPaused = false;
+          this.turnEnding = false;
+
+          // Rebuild and prepare shots
+          this.setupShots();
+          this.updateCameraForShot(true);
+          this.update3DShotClock();
+          this.updateHUD();
+
+          if (this.clockInterval) clearInterval(this.clockInterval);
+          if (this.countInterval) clearInterval(this.countInterval);
+
+          // 3, 2, 1 Countdown Sequence before Round Start!
+          this.isCountingDown = true;
+          const countdownEl = document.getElementById('arcade-countdown-overlay');
+          const textEl = document.getElementById('arcade-countdown-text');
+          const subEl = document.getElementById('arcade-countdown-sub');
+          const tipEl = document.getElementById('arcade-countdown-tip');
+
+          const startTimer = () => {
+            if (this.clockInterval) clearInterval(this.clockInterval);
+            this.clockInterval = setInterval(() => {
+              if (this.isPaused) return;
+              if (this.state === 'PLAYER_TURN') {
+                if (this.freezeTimer > 0) {
+                  // Time frozen by Ice Ball power-up!
+                  return;
+                }
+                this.shotClock--;
+                document.getElementById('shot-clock-val').innerText = Math.ceil(this.shotClock);
+                this.update3DShotClock();
+
+                if (this.shotClock <= 5 && this.shotClock > 0) {
+                  if (audio && audio.playTick) audio.playTick(this.shotClock);
+                }
+
+                if (this.shotClock <= 0) {
+                  clearInterval(this.clockInterval);
+                  audio.playBuzzer();
+                  this.endArcadeRound();
+                }
+              }
+            }, 1000);
+          };
+
+          if (countdownEl && textEl) {
+            countdownEl.style.display = 'flex';
+            textEl.style.color = '#facc15';
+            textEl.innerText = '3';
+            if (subEl) subEl.innerText = `ROUND ${this.arcadeRound} STARTING!`;
+            if (tipEl) {
+              tipEl.style.display = 'none';
+            }
+            if (audio && audio.playSwish) audio.playSwish();
+
+            let count = 3;
+            this.countInterval = setInterval(() => {
+              count--;
+              if (count === 2) {
+                textEl.innerText = '2';
+                if (audio && audio.playSwish) audio.playSwish();
+              } else if (count === 1) {
+                textEl.innerText = '1';
+                if (audio && audio.playSwish) audio.playSwish();
+              } else if (count === 0) {
+                textEl.innerText = 'GO!';
+                textEl.style.color = '#4ade80';
+                if (subEl) subEl.innerText = 'SWISH AS MANY AS YOU CAN!';
+                if (audio && audio.playSwish) audio.playSwish();
+              } else {
+                clearInterval(this.countInterval);
+                countdownEl.style.display = 'none';
+                this.isCountingDown = false;
+                startTimer();
+              }
+            }, 900);
+          } else {
+            this.isCountingDown = false;
+            startTimer();
+          }
+        }
+
+        endArcadeRound() {
+          if (this.clockInterval) clearInterval(this.clockInterval);
+          if (this.countInterval) clearInterval(this.countInterval);
+          this.isPaused = true; // freeze game updates
+          this.clearAllInFlightBalls();
+
+          // Reset shot meter, jump shot, and UI elements
+          this.isHolding = false;
+          this.meterVal = 0;
+          this.meterDir = 1;
+          this.animJumpTimer = 99;
+          this.animGrabTimer = 0;
+          this.isRunningToRack = false;
+
+          const mPin = document.getElementById('meter-pin');
+          if (mPin) {
+            mPin.classList.remove('perfect-release', 'release-line');
+            mPin.style.background = '#ffffff';
+            mPin.style.bottom = '0%';
+          }
+          const mWrap = document.getElementById('meter-wrapper');
+          if (mWrap) mWrap.style.display = 'none';
+          const shootBtn = document.getElementById('shoot-btn');
+          if (shootBtn) shootBtn.style.display = 'none';
+          const fbPop = document.getElementById('feedback-popup');
+          if (fbPop) fbPop.classList.remove('show');
+          const tFb = document.getElementById('meter-feedback');
+          if (tFb) tFb.classList.remove('show');
+
+          const currentRoundConfig = this.arcadeRounds[this.arcadeRound - 1];
+          const target = currentRoundConfig.target;
+          const score = this.playerScore;
+
+          if (score >= target) {
+            // Cleared!
+            this.triggerCrowdCheer('buzzer_beater');
+            if (this.arcadeRound === 6) {
+              // GRAND VICTORY!
+              this.saveArcadeScore(score, 6);
+              document.getElementById('arcade-victory-score').innerText = `${score} PTS`;
+              document.getElementById('arcade-victory-makes').innerText = `${this.stats.makes} MAKES`;
+              document.getElementById('arcade-victory-perfects').innerText = `${this.stats.perfects} PERFECT RELEASES`;
+              document.getElementById('arcade-victory-screen').style.display = 'flex';
+            } else {
+              // Advance round clear popup
+              document.getElementById('arcade-clear-subtitle').innerText = `YOU SURVIVED ROUND ${this.arcadeRound}!`;
+              document.getElementById('arcade-clear-score').innerText = `${score} PTS`;
+              document.getElementById('arcade-clear-target').innerText = `${target} PTS`;
+              
+              const nextRound = this.arcadeRound + 1;
+              const continueBtn = document.getElementById('btn-arcade-continue-round');
+              if (continueBtn) {
+                continueBtn.innerText = `CONTINUE TO ROUND ${nextRound}`;
+              }
+              document.getElementById('arcade-round-clear-screen').style.display = 'flex';
+            }
+          } else {
+            // GAME OVER!
+            this.triggerCrowdGroan('timeout');
+            this.saveArcadeScore(score, this.arcadeRound);
+            document.getElementById('arcade-fail-subtitle').innerText = `FAILED TO REACH ROUND ${this.arcadeRound} GOAL`;
+            document.getElementById('arcade-fail-score').innerText = `${score} PTS`;
+            document.getElementById('arcade-fail-target').innerText = `${target} PTS`;
+            document.getElementById('arcade-fail-round').innerText = `ROUND ${this.arcadeRound}`;
+            document.getElementById('arcade-game-over-screen').style.display = 'flex';
+          }
+        }
+
+        getArcadeLeaderboard() {
+          try {
+            const data = localStorage.getItem('hoops-arcade-leaderboard');
+            if (data) {
+              return JSON.parse(data);
+            }
+          } catch(e) {}
+          return [
+            { name: 'STEPH CURRY', score: 320, round: 6, date: 'ALL-TIME' },
+            { name: 'DAME LILLARD', score: 275, round: 6, date: 'ALL-TIME' },
+            { name: 'FRIALDE', score: 240, round: 5, date: 'ALL-TIME' },
+            { name: 'DEVIN BOOKER', score: 195, round: 4, date: 'ALL-TIME' },
+            { name: 'KLAY THOMPSON', score: 160, round: 4, date: 'ALL-TIME' },
+            { name: 'BEN SIMMONS', score: 5, round: 1, date: 'ALL-TIME' }
+          ];
+        }
+
+        saveArcadeScore(score, round) {
+          if (!score || score <= 0) return;
+          const list = this.getArcadeLeaderboard();
+          const today = new Date();
+          const dateStr = `${today.getMonth() + 1}/${today.getDate()}`;
+          const playerName = (this.userJerseyName && this.userJerseyName.trim())
+            ? `${this.userJerseyName.trim().toUpperCase()} (YOU)`
+            : 'YOU (PLAYER)';
+
+          // Check if player already exists in the current session leaderboard
+          const playerIdx = list.findIndex(e => e.isPlayer || e.name.endsWith('(YOU)') || e.name === 'YOU (PLAYER)' || (this.userJerseyName && e.name.includes(this.userJerseyName.trim().toUpperCase())));
+
+          if (playerIdx !== -1) {
+            // Update existing entry dynamically if score is higher or equal
+            if (score >= list[playerIdx].score) {
+              list[playerIdx].score = score;
+              list[playerIdx].round = Math.max(list[playerIdx].round || 1, round);
+              list[playerIdx].name = playerName;
+              list[playerIdx].date = dateStr;
+              list[playerIdx].isPlayer = true;
+            }
+          } else {
+            // Add new player entry
+            list.push({
+              name: playerName,
+              score: score,
+              round: round,
+              date: dateStr,
+              isPlayer: true
+            });
+          }
+
+          list.sort((a, b) => b.score - a.score);
+          const topList = list.slice(0, 10);
+          try {
+            localStorage.setItem('hoops-arcade-leaderboard', JSON.stringify(topList));
+          } catch(e) {}
+        }
+
+        renderArcadeLeaderboard() {
+          const container = document.getElementById('arcade-leaderboard-list');
+          if (!container) return;
+          const list = this.getArcadeLeaderboard();
+          if (!list || list.length === 0) {
+            container.innerHTML = `<div style="color: #94a3b8; font-family: 'Montserrat', sans-serif; font-size: 11px; padding: 12px; text-align: center;">No arcade scores recorded yet!</div>`;
+            return;
+          }
+          let html = '';
+          list.forEach((entry, idx) => {
+            let rankBadge = `#${idx + 1}`;
+            let rankColor = '#cbd5e1';
+            const isPlayer = entry.isPlayer || entry.name.includes('(YOU)') || entry.name === 'YOU (PLAYER)';
+            
+            let bgStyle = 'background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);';
+            if (isPlayer) {
+              bgStyle = 'background: rgba(6, 182, 212, 0.22); border: 1.5px solid #06b6d4; box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);';
+            } else if (idx === 0) {
+              rankBadge = '#1';
+              rankColor = '#facc15';
+              bgStyle = 'background: rgba(250, 204, 21, 0.12); border: 1px solid rgba(250, 204, 21, 0.35);';
+            } else if (idx === 1) {
+              rankBadge = '#2';
+              rankColor = '#e2e8f0';
+              bgStyle = 'background: rgba(226, 232, 240, 0.10); border: 1px solid rgba(226, 232, 240, 0.25);';
+            } else if (idx === 2) {
+              rankBadge = '#3';
+              rankColor = '#f97316';
+              bgStyle = 'background: rgba(249, 115, 22, 0.10); border: 1px solid rgba(249, 115, 22, 0.25);';
+            }
+
+            const nameColor = isPlayer ? '#38bdf8' : '#ffffff';
+
+            html += `
+              <div style="${bgStyle} padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: ${rankColor}; width: 24px; text-align: center; display: inline-block;">${rankBadge}</span>
+                  <div style="text-align: left;">
+                    <div style="font-family: 'Teko', sans-serif; font-size: 22px; color: ${nameColor}; line-height: 1; letter-spacing: 0.5px;">${entry.name}</div>
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 9.5px; color: #94a3b8; font-weight: 700;">ROUND ${entry.round} • ${entry.date}</div>
+                  </div>
+                </div>
+                <div style="font-family: 'Teko', sans-serif; font-size: 26px; font-weight: 700; color: #38bdf8; line-height: 1;">${entry.score} <span style="font-size: 14px; color: #94a3b8; font-weight: 500;">PTS</span></div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        }
+
+        createSkyGradientTexture() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          const grad = ctx.createLinearGradient(0, 0, 0, 512);
+          grad.addColorStop(0.0, '#0284c7'); // Deep vibrant sky blue at zenith
+          grad.addColorStop(0.35, '#38bdf8'); // Bright tropical blue sky
+          grad.addColorStop(0.65, '#7dd3fc'); // Soft cyan-blue middle sky
+          grad.addColorStop(0.82, '#fde047'); // Warm golden yellow sunset glow
+          grad.addColorStop(0.94, '#f97316'); // Vibrant sunset orange along horizon
+          grad.addColorStop(1.0, '#fdba74'); // Warm peach horizon glow
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, 512, 512);
+          return new THREE.CanvasTexture(canvas);
+        }
+
+        createChainlinkTexture() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 128;
+          canvas.height = 128;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, 128, 128);
+
+          // Subtle dark tint
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.08)';
+          ctx.fillRect(0, 0, 128, 128);
+
+          // Chain-link wire grid
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 3.5;
+
+          const step = 16;
+          for (let i = -128; i < 256; i += step) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i + 256, 256);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(i, 256);
+            ctx.lineTo(i + 256, 0);
+            ctx.stroke();
+          }
+
+          const tex = new THREE.CanvasTexture(canvas);
+          tex.wrapS = THREE.RepeatWrapping;
+          tex.wrapT = THREE.RepeatWrapping;
+          return tex;
+        }
+
+        buildOutdoorArena() {
+          this.clearPreviousArena();
+
+          if (this.camera) {
+            this.camera.far = 500;
+            this.camera.updateProjectionMatrix();
+          }
+
+          // Set bright realistic sky background and atmospheric haze
+          this.scene.background = new THREE.Color(0x38bdf8);
+          this.scene.fog = new THREE.Fog(0x7dd3fc, 90, 300);
+
+          const originalSceneAdd = this.scene.add;
+          const addedObjects = [];
+          const self = this;
+          this.scene.add = function(obj) {
+            addedObjects.push(obj);
+            originalSceneAdd.call(self.scene, obj);
+          };
+
+          this.outdoorClouds = [];
+          this.outdoorBirds = [];
+          this.outdoorSpectators = [];
+          this.outdoorPedestrians = [];
+          this.outdoorPalms = [];
+
+          // 1. Warm Sunset Golden Ambiance & Atmospheric Lighting
+          const sunAmbient = new THREE.AmbientLight(0xffedd5, 0.95);
+          this.scene.add(sunAmbient);
+
+          // Hemisphere light for sky and ocean reflections
+          const hemiLight = new THREE.HemisphereLight(0xfdba74, 0x0284c7, 0.75);
+          this.scene.add(hemiLight);
+
+          // Key Directional Sun Light
+          const sunLight = new THREE.DirectionalLight(0xffedd5, 2.10);
+          sunLight.position.set(-25, 22, -35);
+          sunLight.castShadow = true;
+          sunLight.shadow.mapSize.width = 2048;
+          sunLight.shadow.mapSize.height = 2048;
+          sunLight.shadow.camera.near = 1;
+          sunLight.shadow.camera.far = 100;
+          sunLight.shadow.camera.left = -40;
+          sunLight.shadow.camera.right = 40;
+          sunLight.shadow.camera.top = 40;
+          sunLight.shadow.camera.bottom = -40;
+          sunLight.shadow.bias = -0.0005;
+          this.scene.add(sunLight);
+          this.outdoorSunLight = sunLight;
+
+          // Golden Rim Light from behind hoop for beautiful rim highlights on palms and backboard
+          const rimLight = new THREE.DirectionalLight(0xf97316, 0.90);
+          rimLight.position.set(-15, 12, -70);
+          this.scene.add(rimLight);
+          this.outdoorRimLight = rimLight;
+
+          // 2. Sunset Sky Dome with Sky Gradient
+          const skyGeo = new THREE.SphereGeometry(250, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+          const skyMat = new THREE.MeshBasicMaterial({
+            map: this.createSkyGradientTexture(),
+            side: THREE.BackSide,
+            fog: false
+          });
+          const sky = new THREE.Mesh(skyGeo, skyMat);
+          sky.position.set(0, -2, 0);
+          this.scene.add(sky);
+
+          // Glowing Sunset HALF-SUN Setting Directly on the Ocean Horizon
+          const sunVisGroup = new THREE.Group();
+          sunVisGroup.position.set(-3, 0.2, -140); // Positioned sitting right on top of ocean horizon line (y=0)
+
+          // Top Hemisphere for Half-Sun shape
+          const sunVisGeo = new THREE.SphereGeometry(14, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+          const sunVisMat = new THREE.MeshBasicMaterial({ color: 0xfff7ed, fog: false });
+          const sunVis = new THREE.Mesh(sunVisGeo, sunVisMat);
+          sunVisGroup.add(sunVis);
+
+          // Semi-Circle Glow Halo around setting half-sun
+          const haloGeo = new THREE.RingGeometry(14, 30, 32, 8, 0, Math.PI);
+          const haloMat = new THREE.MeshBasicMaterial({ color: 0xf97316, side: THREE.DoubleSide, transparent: true, opacity: 0.65, fog: false });
+          const halo = new THREE.Mesh(haloGeo, haloMat);
+          halo.position.z = 0.1;
+          sunVisGroup.add(halo);
+
+          this.scene.add(sunVisGroup);
+          this.outdoorSunGroup = sunVisGroup;
+          this.outdoorSunHaloMat = haloMat;
+
+          // Golden Sunset Reflection Strip on the Ocean Water Surface
+          const sunReflectGeo = new THREE.PlaneGeometry(20, 95);
+          const sunReflectMat = new THREE.MeshBasicMaterial({
+            color: 0xfde047,
+            transparent: true,
+            opacity: 0.50,
+            side: THREE.DoubleSide,
+            fog: false
+          });
+          const sunReflect = new THREE.Mesh(sunReflectGeo, sunReflectMat);
+          sunReflect.rotation.x = -Math.PI / 2;
+          sunReflect.position.set(-3, 0.005, -95);
+          this.scene.add(sunReflect);
+          this.outdoorSunReflect = sunReflect;
+
+          // 3. 3D Fluffy White & Golden Sunset Clouds (Lowered Down in Frame)
+          const cloudPositions = [
+            { x: -38, y: 12, z: -30, s: 1.8 },
+            { x: -15, y: 16, z: -40, s: 2.2 },
+            { x: 18, y: 14, z: -35, s: 2.0 },
+            { x: 40, y: 11, z: -25, s: 1.8 },
+            { x: -42, y: 10, z: 5, s: 1.6 },
+            { x: 42, y: 13, z: 12, s: 1.8 },
+            { x: -25, y: 17, z: 25, s: 1.8 },
+            { x: 25, y: 15, z: 30, s: 2.0 },
+            { x: 0, y: 18, z: -20, s: 2.5 },
+            { x: -50, y: 12, z: -15, s: 2.0 },
+            { x: 50, y: 13, z: -10, s: 2.0 },
+            { x: -20, y: 15, z: -15, s: 2.2 },
+            { x: 20, y: 16, z: -10, s: 2.2 }
+          ];
+
+          cloudPositions.forEach(cp => {
+            const cloud = this.create3DCloud(cp.x, cp.y, cp.z, cp.s);
+            this.scene.add(cloud);
+            this.outdoorClouds.push(cloud);
+          });
+
+          // 4. Flying Birds in the Sunset Sky
+          const createBird = (x, y, z, speed, phase) => {
+            const birdGroup = new THREE.Group();
+            birdGroup.position.set(x, y, z);
+
+            const birdMat = new THREE.MeshBasicMaterial({ color: 0xffedd5, fog: false });
+            const body = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.45, 6), birdMat);
+            body.rotation.x = Math.PI / 2;
+            birdGroup.add(body);
+
+            const wingGeo = new THREE.PlaneGeometry(0.5, 0.2);
+            const leftWing = new THREE.Mesh(wingGeo, birdMat);
+            leftWing.position.set(-0.25, 0, 0);
+            birdGroup.add(leftWing);
+
+            const rightWing = new THREE.Mesh(wingGeo, birdMat);
+            rightWing.position.set(0.25, 0, 0);
+            birdGroup.add(rightWing);
+
+            this.scene.add(birdGroup);
+            return { group: birdGroup, leftWing, rightWing, speed, phase, baseZ: z };
+          };
+
+          [
+            { x: -50, y: 18, z: -40, speed: 4.5, phase: 0 },
+            { x: -42, y: 21, z: -35, speed: 4.8, phase: 0.5 },
+            { x: -35, y: 17, z: -45, speed: 4.2, phase: 1.0 },
+            { x: -60, y: 22, z: -25, speed: 5.0, phase: 1.5 },
+            { x: -20, y: 19, z: -50, speed: 4.0, phase: 2.0 },
+            { x: -10, y: 23, z: -30, speed: 4.6, phase: 2.5 },
+            { x: 10, y: 18, z: -60, speed: 4.3, phase: 3.0 },
+            { x: 30, y: 20, z: -42, speed: 4.7, phase: 3.5 }
+          ].forEach(b => {
+            this.outdoorBirds.push(createBird(b.x, b.y, b.z, b.speed, b.phase));
+          });
+
+          // 5. Sunset Golden Sandy Beach & Sea Background
+          // Golden Sandy Beach Shoreline (z = -25 to z = -55)
+          const sandGeo = new THREE.PlaneGeometry(350, 30);
+          const sandMat = new THREE.MeshStandardMaterial({
+            color: 0xeab308, // Golden sunset sand
+            roughness: 0.95,
+            metalness: 0.05
+          });
+          const sand = new THREE.Mesh(sandGeo, sandMat);
+          sand.rotation.x = -Math.PI / 2;
+          sand.position.set(0, -0.008, -40); // Sand plane covers z = -25 to z = -55
+          sand.receiveShadow = true;
+          this.scene.add(sand);
+
+          // Sparkling Tropical Sea / Ocean Plane (Starts right at shoreline z = -55 and extends to horizon z = -255)
+          const oceanGeo = new THREE.PlaneGeometry(450, 200);
+          const oceanMat = new THREE.MeshStandardMaterial({
+            color: 0x0284c7, // Sparkling tropical sea blue
+            roughness: 0.15,
+            metalness: 0.35,
+            emissive: 0x0369a1,
+            emissiveIntensity: 0.35
+          });
+          const ocean = new THREE.Mesh(oceanGeo, oceanMat);
+          ocean.rotation.x = -Math.PI / 2;
+          ocean.position.set(0, -0.012, -155); // Ocean extends from z = -55 to z = -255
+          this.scene.add(ocean);
+          this.outdoorOcean = ocean;
+
+          // Boardwalk / Beach Promenade Walkway
+          const walkPathGeo = new THREE.PlaneGeometry(200, 6);
+          const walkPathMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.85 });
+          const walkPath = new THREE.Mesh(walkPathGeo, walkPathMat);
+          walkPath.rotation.x = -Math.PI / 2;
+          walkPath.position.set(0, -0.005, -22); // Boardwalk covers z = -19 to z = -25
+          walkPath.receiveShadow = true;
+          this.scene.add(walkPath);
+
+          // 6. Park Grass Apron & Concrete Court Apron
+          // Grass park grounds around basketball court (z = -20 to z = +40)
+          const grassGeo = new THREE.PlaneGeometry(300, 60);
+          const grassMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.90, metalness: 0.05 });
+          const grass = new THREE.Mesh(grassGeo, grassMat);
+          grass.rotation.x = -Math.PI / 2;
+          grass.position.set(0, -0.01, 10);
+          grass.receiveShadow = true;
+          this.scene.add(grass);
+
+          const apronGeo = new THREE.PlaneGeometry(36, 36);
+          const apronMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.90, metalness: 0.05 });
+          const apron = new THREE.Mesh(apronGeo, apronMat);
+          apron.rotation.x = -Math.PI / 2;
+          apron.position.set(0, -0.005, 0);
+          apron.receiveShadow = true;
+          this.scene.add(apron);
+
+          // 7. Asphalt Outdoor Basketball Court
+          const courtGeo = new THREE.PlaneGeometry(32, 32);
+          const courtMat = new THREE.MeshStandardMaterial({
+            map: this.courtTex,
+            color: 0x334155, // Dark slate asphalt
+            roughness: 0.85,
+            metalness: 0.08
+          });
+          const court = new THREE.Mesh(courtGeo, courtMat);
+          court.rotation.x = -Math.PI / 2;
+          court.position.set(0, 0, 0);
+          court.receiveShadow = true;
+          this.scene.add(court);
+
+          // 8. Chain-link Perimeter Fence with Mesh Net
+          if (!this.chainlinkTex) {
+            this.chainlinkTex = this.createChainlinkTexture();
+          }
+          const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.25 });
+          const buildFenceSide = (startX, startZ, endX, endZ, height = 3.2) => {
+            const fenceGroup = new THREE.Group();
+            const len = Math.hypot(endX - startX, endZ - startZ);
+            const angle = Math.atan2(endX - startX, endZ - startZ);
+            fenceGroup.position.set((startX + endX) / 2, height / 2, (startZ + endZ) / 2);
+            fenceGroup.rotation.y = angle + Math.PI / 2;
+
+            const railGeo = new THREE.CylinderGeometry(0.04, 0.04, len);
+            const topRail = new THREE.Mesh(railGeo, fenceMat);
+            topRail.rotation.z = Math.PI / 2;
+            topRail.position.y = height / 2 - 0.05;
+            fenceGroup.add(topRail);
+
+            const botRail = new THREE.Mesh(railGeo, fenceMat);
+            botRail.rotation.z = Math.PI / 2;
+            botRail.position.y = -height / 2 + 0.1;
+            fenceGroup.add(botRail);
+
+            const midRail = new THREE.Mesh(railGeo, fenceMat);
+            midRail.rotation.z = Math.PI / 2;
+            midRail.position.y = 0;
+            fenceGroup.add(midRail);
+
+            const postCount = Math.floor(len / 3.0) + 1;
+            for (let p = 0; p <= postCount; p++) {
+              const px = -len / 2 + (p / postCount) * len;
+              const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, height), fenceMat);
+              post.position.set(px, 0, 0);
+              fenceGroup.add(post);
+            }
+
+            // Textured chain-link mesh net panel stretched between fence rails
+            const meshTex = this.chainlinkTex.clone();
+            meshTex.needsUpdate = true;
+            meshTex.repeat.set(len * 0.75, height * 0.75);
+
+            const wireMat = new THREE.MeshStandardMaterial({
+              map: meshTex,
+              transparent: true,
+              opacity: 0.65,
+              side: THREE.DoubleSide,
+              roughness: 0.3,
+              metalness: 0.8
+            });
+            const wireMesh = new THREE.Mesh(new THREE.PlaneGeometry(len, height), wireMat);
+            fenceGroup.add(wireMesh);
+
+            return fenceGroup;
+          };
+
+          this.scene.add(buildFenceSide(-18, -17, 18, -17));
+          this.scene.add(buildFenceSide(-18, -17, -18, 15));
+          this.scene.add(buildFenceSide(18, -17, 18, 15));
+
+          // 9. Wooden Park Benches along Sidelines
+          const buildParkBench = (x, z, rotY) => {
+            const benchGroup = new THREE.Group();
+            benchGroup.position.set(x, 0, z);
+            benchGroup.rotation.y = rotY;
+
+            const woodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.7 });
+            const metalMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.3 });
+
+            for (let s = 0; s < 4; s++) {
+              const slat = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.05, 0.12), woodMat);
+              slat.position.set(0, 0.45, -0.2 + s * 0.14);
+              benchGroup.add(slat);
+            }
+
+            for (let b = 0; b < 3; b++) {
+              const slat = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.12, 0.05), woodMat);
+              slat.position.set(0, 0.65 + b * 0.15, -0.28);
+              benchGroup.add(slat);
+            }
+
+            [-0.9, 0.9].forEach(lx => {
+              const leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.45, 0.5), metalMat);
+              leg.position.set(lx, 0.22, 0);
+              benchGroup.add(leg);
+
+              const backLeg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.85, 0.08), metalMat);
+              backLeg.position.set(lx, 0.42, -0.28);
+              benchGroup.add(backLeg);
+            });
+
+            return benchGroup;
+          };
+
+          this.scene.add(buildParkBench(-16.2, -2.4, Math.PI / 2 + 0.08));
+          this.scene.add(buildParkBench(16.7, 1.1, -Math.PI / 2 - 0.12));
+
+          // 10. Streetball Floodlight Lamp Poles
+          const buildStreetLamp = (x, z) => {
+            const lampGroup = new THREE.Group();
+            lampGroup.position.set(x, 0, z);
+
+            const metalMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.2 });
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 8.5), metalMat);
+            pole.position.y = 4.25;
+            lampGroup.add(pole);
+
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.25, 1.2), metalMat);
+            head.position.set(0, 8.5, 0.4);
+            lampGroup.add(head);
+
+            const bulbMat = new THREE.MeshStandardMaterial({ color: 0xfffbe3, emissive: 0xfffbe3, emissiveIntensity: 1.5 });
+            const bulb = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.05, 1.0), bulbMat);
+            bulb.position.set(0, 8.35, 0.4);
+            lampGroup.add(bulb);
+
+            return lampGroup;
+          };
+
+          this.scene.add(buildStreetLamp(-17.3, -15.4));
+          this.scene.add(buildStreetLamp(16.8, -14.6));
+          this.scene.add(buildStreetLamp(-16.9, 10.5));
+          this.scene.add(buildStreetLamp(17.4, 9.8));
+
+          // 11. Spectators Sitting on Sideline Benches & Standing along Fence (Randomized & Off-Centered)
+          const shirtColors = [0xef4444, 0x3b82f6, 0x22c55e, 0xeab308, 0xa855f7, 0xf97316, 0xec4899, 0x14b8a6, 0xf8fafc];
+          const createOutdoorSpectator = (x, z, rotY, isSitting = false) => {
+            const group = new THREE.Group();
+            group.position.set(x, isSitting ? 0.45 : 0, z);
+            group.rotation.y = rotY;
+
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.8 });
+            const shirtColor = shirtColors[Math.floor(Math.random() * shirtColors.length)];
+            const shirtMat = new THREE.MeshStandardMaterial({ color: shirtColor, roughness: 0.7 });
+            const pantsMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), skinMat);
+            head.position.y = isSitting ? 0.75 : 1.35;
+            group.add(head);
+
+            if (Math.random() > 0.4) {
+              const cap = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.12, 8), shirtMat);
+              cap.position.set(0, isSitting ? 0.88 : 1.48, 0);
+              group.add(cap);
+            }
+
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.55, 0.22), shirtMat);
+            torso.position.y = isSitting ? 0.42 : 0.95;
+            group.add(torso);
+
+            const armGeo = new THREE.BoxGeometry(0.1, 0.45, 0.1);
+            const armLGroup = new THREE.Group();
+            armLGroup.position.set(-0.24, isSitting ? 0.62 : 1.15, 0);
+            const armL = new THREE.Mesh(armGeo, skinMat);
+            armL.position.y = -0.2;
+            armLGroup.add(armL);
+            group.add(armLGroup);
+
+            const armRGroup = new THREE.Group();
+            armRGroup.position.set(0.24, isSitting ? 0.62 : 1.15, 0);
+            const armR = new THREE.Mesh(armGeo, skinMat);
+            armR.position.y = -0.2;
+            armRGroup.add(armR);
+            group.add(armRGroup);
+
+            if (isSitting) {
+              const thighL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.35, 0.12), pantsMat);
+              thighL.position.set(-0.1, 0.18, 0.12);
+              thighL.rotation.x = Math.PI / 2;
+              group.add(thighL);
+
+              const thighR = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.35, 0.12), pantsMat);
+              thighR.position.set(0.1, 0.18, 0.12);
+              thighR.rotation.x = Math.PI / 2;
+              group.add(thighR);
+            } else {
+              const legL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.65, 0.12), pantsMat);
+              legL.position.set(-0.1, 0.32, 0);
+              group.add(legL);
+
+              const legR = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.65, 0.12), pantsMat);
+              legR.position.set(0.1, 0.32, 0);
+              group.add(legR);
+            }
+
+            this.scene.add(group);
+            return {
+              group,
+              armLGroup,
+              armRGroup,
+              head,
+              baseY: isSitting ? 0.45 : 0,
+              isSitting,
+              offset: Math.random() * Math.PI * 2,
+              speed: 0.8 + Math.random() * 0.6
+            };
+          };
+
+          // Left bench spectators (asymmetric placements)
+          [-17.1, -15.2, -13.8].forEach(z => {
+            this.outdoorSpectators.push(createOutdoorSpectator(-16.2 + (Math.random() * 0.3 - 0.15), z, Math.PI / 2 + (Math.random() * 0.2 - 0.1), true));
+          });
+          // Right bench spectators (4 spectators, staggered z and angle)
+          [-17.6, -16.1, -14.4, -12.9].forEach(z => {
+            this.outdoorSpectators.push(createOutdoorSpectator(16.7 + (Math.random() * 0.3 - 0.15), z, -Math.PI / 2 + (Math.random() * 0.25 - 0.12), true));
+          });
+          // Standing fence spectators (scattered irregularly across back fence)
+          [-14.5, -11.2, -7.8, -4.1, -1.2, 2.5, 6.1, 9.4, 12.8, 16.2].forEach(x => {
+            const zOffset = -18.2 + (Math.random() * 0.8 - 0.4);
+            const rotOffset = (Math.random() * 0.4 - 0.2);
+            this.outdoorSpectators.push(createOutdoorSpectator(x, zOffset, rotOffset, false));
+          });
+
+          // Background Crowd Watching from Boardwalk & Beach Sand behind court
+          [
+            { x: -12.5, z: -22.4, rotY: 0.1, sitting: false },
+            { x: -6.8, z: -23.8, rotY: -0.15, sitting: false },
+            { x: -1.5, z: -21.9, rotY: 0.05, sitting: false },
+            { x: 4.8, z: -24.2, rotY: -0.2, sitting: false },
+            { x: 10.5, z: -22.1, rotY: 0.12, sitting: false },
+            { x: 15.8, z: -23.5, rotY: -0.28, sitting: false },
+            { x: -18.2, z: -21.1, rotY: 0.3, sitting: false },
+            { x: -8.2, z: -27.8, rotY: 0.15, sitting: true },
+            { x: 7.4, z: -28.2, rotY: -0.1, sitting: true }
+          ].forEach(spec => {
+            this.outdoorSpectators.push(createOutdoorSpectator(spec.x, spec.z, spec.rotY, spec.sitting));
+          });
+
+          // 12. Animated Pedestrians Walking in Background (Asymmetrical paths)
+          const createOutdoorPedestrian = (x, z, dir = 1) => {
+            const group = new THREE.Group();
+            group.position.set(x, 0, z);
+            group.rotation.y = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.8 });
+            const shirtMat = new THREE.MeshStandardMaterial({ color: shirtColors[Math.floor(Math.random() * shirtColors.length)], roughness: 0.7 });
+            const pantsMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8 });
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), skinMat);
+            head.position.y = 1.35;
+            group.add(head);
+
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.55, 0.22), shirtMat);
+            torso.position.y = 0.95;
+            group.add(torso);
+
+            const legGeo = new THREE.BoxGeometry(0.12, 0.62, 0.12);
+            const legLGroup = new THREE.Group();
+            legLGroup.position.set(-0.1, 0.62, 0);
+            const legL = new THREE.Mesh(legGeo, pantsMat);
+            legL.position.y = -0.31;
+            legLGroup.add(legL);
+            group.add(legLGroup);
+
+            const legRGroup = new THREE.Group();
+            legRGroup.position.set(0.1, 0.62, 0);
+            const legR = new THREE.Mesh(legGeo, pantsMat);
+            legR.position.y = -0.31;
+            legRGroup.add(legR);
+            group.add(legRGroup);
+
+            const armGeo = new THREE.BoxGeometry(0.1, 0.45, 0.1);
+            const armLGroup = new THREE.Group();
+            armLGroup.position.set(-0.24, 1.15, 0);
+            const armL = new THREE.Mesh(armGeo, skinMat);
+            armL.position.y = -0.2;
+            armLGroup.add(armL);
+            group.add(armLGroup);
+
+            const armRGroup = new THREE.Group();
+            armRGroup.position.set(0.24, 1.15, 0);
+            const armR = new THREE.Mesh(armGeo, skinMat);
+            armR.position.y = -0.2;
+            armRGroup.add(armR);
+            group.add(armRGroup);
+
+            this.scene.add(group);
+            return {
+              group,
+              legLGroup,
+              legRGroup,
+              armLGroup,
+              armRGroup,
+              dir,
+              speed: 1.8 + Math.random() * 0.8,
+              xMin: -45,
+              xMax: 45
+            };
+          };
+
+          this.outdoorPedestrians.push(createOutdoorPedestrian(-33, -20.8, 1));
+          this.outdoorPedestrians.push(createOutdoorPedestrian(22, -21.8, -1));
+          this.outdoorPedestrians.push(createOutdoorPedestrian(-12, -22.5, 1));
+          this.outdoorPedestrians.push(createOutdoorPedestrian(38, -21.5, -1));
+          this.outdoorPedestrians.push(createOutdoorPedestrian(8, -23.2, 1));
+
+          // 13. 3D Tropical Palm Trees framing the Court & Beach (Asymmetrical & Organic Placement)
+          const palmPositions = [
+            // Left Flank (Near Court & Park Grass - non-uniform heights & organic spacing)
+            { x: -17.2, z: -13.8, s: 1.32 },
+            { x: -22.5, z: -4.1, s: 1.45 },
+            { x: -18.8, z: 6.5, s: 1.25 },
+            { x: -25.2, z: 15.3, s: 1.48 },
+            { x: -21.4, z: -25.6, s: 1.55 },
+
+            // Right Flank (Asymmetric from left flank)
+            { x: 19.8, z: -17.3, s: 1.38 },
+            { x: 23.4, z: -7.8, s: 1.42 },
+            { x: 18.2, z: 3.2, s: 1.28 },
+            { x: 26.1, z: 12.9, s: 1.50 },
+            { x: 20.5, z: -29.2, s: 1.40 },
+
+            // Directly Behind Court (Sandy Beach & Boardwalk - z: -27 to -45)
+            { x: -14.8, z: -27.5, s: 1.42 },
+            { x: -5.2, z: -35.1, s: 1.30 },
+            { x: 11.2, z: -31.8, s: 1.45 },
+            { x: 18.6, z: -26.2, s: 1.36 },
+            { x: -22.8, z: -41.4, s: 1.52 },
+            { x: 3.8, z: -43.6, s: 1.40 },
+            { x: 27.2, z: -38.5, s: 1.48 },
+
+            // Distant Beach Backdrop
+            { x: -31.5, z: -52.8, s: 1.38 },
+            { x: 15.2, z: -59.4, s: 1.46 },
+            { x: -8.4, z: -63.2, s: 1.50 }
+          ];
+
+          palmPositions.forEach(pos => {
+            const palm = this.createPalmTree(pos.x, pos.z, pos.s);
+            this.scene.add(palm);
+            if (this.outdoorPalms) this.outdoorPalms.push(palm);
+          });
+
+          this.scene.add = originalSceneAdd;
+          this.arenaObjects = addedObjects;
+        }
+
+        updateOutdoorEnvironment(dt) {
+          if (this.gameMode !== 'arcade') return;
+
+          const time = Date.now() * 0.003;
+
+          // DYNAMIC SUNSET SHIFT: Shift sun position, halo colors, ocean reflection, and sky haze dynamically per round & time!
+          const rIdx = Math.max(0, (this.arcadeRound || 1) - 1);
+          const shotClockVal = (this.shotClock !== undefined) ? this.shotClock : 25;
+          const currentLimit = (this.arcadeRounds && this.arcadeRounds[rIdx]) ? this.arcadeRounds[rIdx].limit : 25;
+          const roundFraction = Math.max(0, Math.min(1, 1 - (shotClockVal / currentLimit)));
+          const totalProgress = Math.min(1, (rIdx + roundFraction) / 5.5);
+
+          // 1. Sun dips lower towards horizon as rounds progress
+          if (this.outdoorSunGroup) {
+            this.outdoorSunGroup.position.x = -3 - totalProgress * 12 + Math.sin(time * 0.15) * 0.4;
+            this.outdoorSunGroup.position.y = 0.2 - totalProgress * 2.8;
+          }
+
+          // 2. Glowing Halo shifts from bright golden orange to fiery sunset crimson amber
+          if (this.outdoorSunHaloMat) {
+            this.outdoorSunHaloMat.opacity = 0.60 + Math.sin(time * 1.8) * 0.10 + totalProgress * 0.18;
+            const r = 0.98;
+            const g = Math.max(0.18, 0.45 - totalProgress * 0.25);
+            const b = Math.max(0.05, 0.08 + totalProgress * 0.12);
+            this.outdoorSunHaloMat.color.setRGB(r, g, b);
+          }
+
+          // 3. Water Reflection Strip shifts color & pulsates gently with ocean tide
+          if (this.outdoorSunReflect) {
+            if (this.outdoorSunGroup) {
+              this.outdoorSunReflect.position.x = this.outdoorSunGroup.position.x;
+            }
+            this.outdoorSunReflect.scale.x = 1.0 + Math.sin(time * 1.5) * 0.15 + totalProgress * 0.35;
+            const r = 0.99;
+            const g = Math.max(0.38, 0.88 - totalProgress * 0.38);
+            const b = Math.max(0.10, 0.28 + totalProgress * 0.18);
+            this.outdoorSunReflect.material.color.setRGB(r, g, b);
+            this.outdoorSunReflect.material.opacity = 0.50 + Math.sin(time * 1.2) * 0.08 + totalProgress * 0.15;
+          }
+
+          // 4. Atmospheric Directional & Rim Sunlight Shifts
+          if (this.outdoorSunLight) {
+            this.outdoorSunLight.intensity = Math.max(1.35, 2.10 - totalProgress * 0.70);
+            this.outdoorSunLight.position.y = Math.max(10, 22 - totalProgress * 10);
+          }
+          if (this.outdoorRimLight) {
+            this.outdoorRimLight.intensity = 0.90 + totalProgress * 0.45;
+            const r = 0.98;
+            const g = Math.max(0.22, 0.45 - totalProgress * 0.20);
+            const b = Math.max(0.08, 0.08 + totalProgress * 0.10);
+            this.outdoorRimLight.color.setRGB(r, g, b);
+          }
+
+          // 5. Horizon Fog color shifts to warm sunset twilight haze
+          if (this.scene && this.scene.fog) {
+            const r = 0.49 + totalProgress * 0.20;
+            const g = Math.max(0.25, 0.82 - totalProgress * 0.40);
+            const b = Math.max(0.50, 0.98 - totalProgress * 0.30);
+            this.scene.fog.color.setRGB(r, g, b);
+          }
+
+          // 1. Drifting Clouds
+          if (this.outdoorClouds) {
+            this.outdoorClouds.forEach(cloud => {
+              cloud.position.x += dt * 0.35;
+              if (cloud.position.x > 65) cloud.position.x = -65;
+            });
+          }
+
+          // 2. Flying Birds
+          if (this.outdoorBirds) {
+            this.outdoorBirds.forEach(bird => {
+              bird.group.position.x += bird.speed * dt;
+              bird.group.position.z = bird.baseZ + Math.sin(time + bird.phase) * 1.5;
+              bird.leftWing.rotation.z = Math.sin(time * 12 + bird.phase) * 0.45;
+              bird.rightWing.rotation.z = -Math.sin(time * 12 + bird.phase) * 0.45;
+              if (bird.group.position.x > 75) bird.group.position.x = -75;
+            });
+          }
+
+          // 3. Gentle Ocean Wave Ripple
+          if (this.outdoorOcean) {
+            this.outdoorOcean.position.y = -0.05 + Math.sin(time * 1.2) * 0.03;
+          }
+
+          // 4. Cheering & Watching Spectators
+          if (this.outdoorSpectators) {
+            this.outdoorSpectators.forEach(spec => {
+              if (this.crowdState === 'standing_ovation' || this.crowdState === 'buzzer_beater') {
+                // Standing ovation / Buzzer beater frenzy
+                const isBuzzer = (this.crowdState === 'buzzer_beater');
+                const jump = Math.abs(Math.sin(time * (isBuzzer ? 12 : 9) + spec.offset)) * (spec.isSitting ? 0.28 : 0.42);
+                spec.group.position.y = spec.baseY + (spec.isSitting ? 0.35 : 0.12) + jump;
+                spec.armLGroup.rotation.z = 2.4 + Math.sin(time * 10 + spec.offset) * 0.45;
+                spec.armLGroup.rotation.x = 0;
+                spec.armRGroup.rotation.z = -2.4 - Math.sin(time * 10 + spec.offset) * 0.45;
+                spec.armRGroup.rotation.x = 0;
+                if (spec.head) spec.head.rotation.x = -0.25;
+              } else if (this.crowdState === 'hands_on_head') {
+                // Hands on head pose on miss
+                spec.group.position.y = spec.baseY;
+                spec.armLGroup.rotation.z = 2.2 + Math.sin(time * 3 + spec.offset) * 0.05;
+                spec.armLGroup.rotation.x = -0.42;
+                spec.armRGroup.rotation.z = -2.2 - Math.sin(time * 3 + spec.offset) * 0.05;
+                spec.armRGroup.rotation.x = -0.42;
+                if (spec.head) spec.head.rotation.x = 0.32;
+              } else if (this.crowdState === 'disappointed') {
+                // Disappointed slump
+                spec.group.position.y = spec.baseY;
+                spec.armLGroup.rotation.z = 0.2;
+                spec.armLGroup.rotation.x = 0.6;
+                spec.armRGroup.rotation.z = -0.2;
+                spec.armRGroup.rotation.x = 0.6;
+                if (spec.head) spec.head.rotation.x = 0.4;
+              } else if (this.crowdState === 'cheering' || this.state === 'BALL_IN_FLIGHT') {
+                // Regular make cheer
+                const jump = Math.abs(Math.sin(time * 8 + spec.offset)) * (spec.isSitting ? 0.10 : 0.25);
+                spec.group.position.y = spec.baseY + jump;
+                spec.armLGroup.rotation.z = 1.8 + Math.sin(time * 10 + spec.offset) * 0.4;
+                spec.armLGroup.rotation.x = 0;
+                spec.armRGroup.rotation.z = -1.8 - Math.sin(time * 10 + spec.offset) * 0.4;
+                spec.armRGroup.rotation.x = 0;
+                if (spec.head) spec.head.rotation.x = -0.1;
+              } else {
+                // Idle movement
+                spec.group.position.y = spec.baseY + Math.sin(time * 2 + spec.offset) * 0.02;
+                spec.armLGroup.rotation.x = 0;
+                spec.armRGroup.rotation.x = 0;
+                if (this.playerStreak >= 5) {
+                  spec.armLGroup.rotation.z = 0.9 + Math.sin(time * 5 + spec.offset) * 0.2;
+                  spec.armRGroup.rotation.z = -0.9 - Math.sin(time * 5 + spec.offset) * 0.2;
+                  if (spec.head) spec.head.rotation.x = -0.1;
+                } else {
+                  spec.armLGroup.rotation.z = 0.15;
+                  spec.armRGroup.rotation.z = -0.15;
+                  if (spec.head) {
+                    spec.head.rotation.x = 0;
+                    spec.head.rotation.y = Math.sin(time * 1.2 + spec.offset) * 0.18;
+                  }
+                }
+              }
+            });
+          }
+
+          // 5. Walking Pedestrians in Background
+          if (this.outdoorPedestrians) {
+            this.outdoorPedestrians.forEach(ped => {
+              ped.group.position.x += ped.speed * ped.dir * dt;
+              const walkPhase = time * 6 * (ped.speed / 2);
+              ped.legLGroup.rotation.x = Math.sin(walkPhase) * 0.45;
+              ped.legRGroup.rotation.x = -Math.sin(walkPhase) * 0.45;
+              ped.armLGroup.rotation.x = -Math.sin(walkPhase) * 0.4;
+              ped.armRGroup.rotation.x = Math.sin(walkPhase) * 0.4;
+
+              if (ped.dir > 0 && ped.group.position.x > ped.xMax) {
+                ped.dir = -1;
+                ped.group.rotation.y = -Math.PI / 2;
+              } else if (ped.dir < 0 && ped.group.position.x < ped.xMin) {
+                ped.dir = 1;
+                ped.group.rotation.y = Math.PI / 2;
+              }
+            });
+          }
+
+          // 6. Palm Leaves Swaying in Tropical Breeze
+          if (this.outdoorPalms) {
+            this.outdoorPalms.forEach((palm, pIdx) => {
+              if (palm.userData && palm.userData.fronds) {
+                palm.userData.fronds.forEach(f => {
+                  const swayTime = time * 2.2 + pIdx * 0.8 + f.index * 0.5;
+                  f.leaf.rotation.x = f.baseRotX + Math.sin(swayTime) * 0.09;
+                  f.group.rotation.z = Math.sin(swayTime * 0.75) * 0.05;
+                });
+              }
+            });
+          }
+        }
+
+        create3DCloud(x, y, z, scale = 1.0) {
+          const cloudGroup = new THREE.Group();
+          cloudGroup.position.set(x, y, z);
+          cloudGroup.scale.set(scale, scale, scale);
+
+          const cloudMat = new THREE.MeshBasicMaterial({
+            color: 0xffedd5,
+            fog: false
+          });
+
+          const puffs = [
+            { x: 0, y: 0, z: 0, r: 2.5 },
+            { x: 2.0, y: 0.4, z: 0.2, r: 2.0 },
+            { x: -2.0, y: 0.2, z: -0.3, r: 1.9 },
+            { x: 0.9, y: 1.3, z: 0.1, r: 1.8 },
+            { x: -0.9, y: 1.1, z: 0.3, r: 1.7 },
+            { x: 3.2, y: -0.2, z: 0.1, r: 1.4 },
+            { x: -3.2, y: -0.3, z: -0.1, r: 1.4 }
+          ];
+
+          puffs.forEach(p => {
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(p.r, 12, 10), cloudMat);
+            sphere.position.set(p.x, p.y, p.z);
+            cloudGroup.add(sphere);
+          });
+
+          return cloudGroup;
+        }
+
+        createPalmTree(x, z, scale = 1.0) {
+          const palmGroup = new THREE.Group();
+          palmGroup.position.set(x, 0, z);
+          palmGroup.scale.set(scale, scale, scale);
+          palmGroup.rotation.y = Math.random() * Math.PI * 2;
+
+          const segments = 6;
+          let curY = 0;
+          const woodMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.85 });
+
+          for (let i = 0; i < segments; i++) {
+            const h = 1.0;
+            const rBot = 0.35 - (i * 0.03);
+            const rTop = rBot - 0.03;
+            const segMesh = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, h, 8), woodMat);
+            segMesh.position.y = curY + h / 2;
+            segMesh.position.x = Math.sin(i * 0.3) * 0.15;
+            segMesh.rotation.z = -0.06 * (i + 1);
+            palmGroup.add(segMesh);
+            curY += h;
+          }
+
+          const frondCount = 9;
+          const leafMat = new THREE.MeshStandardMaterial({
+            color: 0x15803d,
+            roughness: 0.6,
+            side: THREE.DoubleSide
+          });
+
+          const fronds = [];
+          for (let f = 0; f < frondCount; f++) {
+            const angle = (f / frondCount) * Math.PI * 2;
+            const frondGroup = new THREE.Group();
+            frondGroup.position.set(0, curY, 0);
+            frondGroup.rotation.y = angle;
+
+            const leafGeo = new THREE.PlaneGeometry(0.8, 3.2);
+            const leaf = new THREE.Mesh(leafGeo, leafMat);
+            leaf.position.set(0, 0, 1.5);
+            leaf.rotation.x = -Math.PI / 3;
+            frondGroup.add(leaf);
+
+            palmGroup.add(frondGroup);
+            fronds.push({ group: frondGroup, leaf: leaf, baseRotX: -Math.PI / 3, index: f });
+          }
+          palmGroup.userData.fronds = fronds;
+
+          const coconutMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.9 });
+          [
+            { x: 0.2, y: curY - 0.2, z: 0.2 },
+            { x: -0.2, y: curY - 0.2, z: 0.15 },
+            { x: 0.1, y: curY - 0.2, z: -0.2 }
+          ].forEach(cp => {
+            const nut = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), coconutMat);
+            nut.position.set(cp.x, cp.y, cp.z);
+            palmGroup.add(nut);
+          });
+
+          return palmGroup;
+        }
+
+        clearPreviousArena() {
+          if (this.arenaObjects) {
+            this.arenaObjects.forEach(obj => {
+              this.scene.remove(obj);
+              if (obj.geometry) obj.geometry.dispose();
+              if (obj.material) {
+                if (Array.isArray(obj.material)) {
+                  obj.material.forEach(m => m.dispose());
+                } else {
+                  obj.material.dispose();
+                }
+              }
+            });
+          }
+          this.arenaObjects = [];
+
+          if (this.outdoorClouds) {
+            this.outdoorClouds.forEach(c => this.scene.remove(c));
+            this.outdoorClouds = [];
+          }
+          if (this.outdoorBirds) {
+            this.outdoorBirds.forEach(b => this.scene.remove(b.group));
+            this.outdoorBirds = [];
+          }
+          if (this.outdoorSpectators) {
+            this.outdoorSpectators.forEach(s => this.scene.remove(s.group));
+            this.outdoorSpectators = [];
+          }
+          if (this.outdoorPedestrians) {
+            this.outdoorPedestrians.forEach(p => this.scene.remove(p.group));
+            this.outdoorPedestrians = [];
+          }
+          if (this.outdoorOcean) {
+            this.scene.remove(this.outdoorOcean);
+            this.outdoorOcean = null;
+          }
+
+          if (this.defaultLights) {
+            this.defaultLights.forEach(l => {
+              this.scene.remove(l);
+            });
+          }
+        }
+
+        restoreDefaultLights() {
+          this.scene.background = new THREE.Color(0x080a0f);
+          this.scene.fog = new THREE.FogExp2(0x080a0f, 0.025);
+          if (this.defaultLights) {
+            this.defaultLights.forEach(l => {
+              this.scene.add(l);
+            });
+          }
         }
 
         startShootout() {
@@ -6331,6 +8522,18 @@
         }
 
         initGameLogic() {
+          if (this.gameMode === 'arcade') {
+            this.startArcadeRound();
+            return;
+          }
+
+          // Ensure Shootout Mode is active and indoor stadium arena is built
+          this.gameMode = 'shootout';
+          if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
+          if (this.outdoorOcean) {
+            this.buildArena(); // Rebuild indoor arena
+          }
+
           if (this.backgroundBalls) {
             this.backgroundBalls.forEach(b => this.scene.remove(b.mesh));
             this.backgroundBalls = [];
@@ -6402,9 +8605,10 @@
         }
 
         getShotTimingRanges(diff, isStarry) {
+          let baseRanges;
           if (diff === 'easy') {
             if (isStarry) {
-              return {
+              baseRanges = {
                 v_early_end: 55,
                 early_end: 73,
                 sl_early_end: 81,
@@ -6414,7 +8618,7 @@
                 perfStarryMake: 0.72, slMake: 0.70, slStarryMake: 0.30, earlyMake: 0.25
               };
             } else {
-              return {
+              baseRanges = {
                 v_early_end: 50,
                 early_end: 68,
                 sl_early_end: 78,
@@ -6426,7 +8630,7 @@
             }
           } else if (diff === 'hard') {
             if (isStarry) {
-              return {
+              baseRanges = {
                 v_early_end: 64,
                 early_end: 76,
                 sl_early_end: 82.3,
@@ -6436,7 +8640,7 @@
                 perfStarryMake: 0.38, slMake: 0.30, slStarryMake: 0.05, earlyMake: 0.05
               };
             } else {
-              return {
+              baseRanges = {
                 v_early_end: 60,
                 early_end: 73,
                 sl_early_end: 81.5,
@@ -6448,7 +8652,7 @@
             }
           } else { // Normal
             if (isStarry) {
-              return {
+              baseRanges = {
                 v_early_end: 62,
                 early_end: 77,
                 sl_early_end: 81.8,
@@ -6458,7 +8662,7 @@
                 perfStarryMake: 0.55, slMake: 0.50, slStarryMake: 0.15, earlyMake: 0.12
               };
             } else {
-              return {
+              baseRanges = {
                 v_early_end: 58,
                 early_end: 72,
                 sl_early_end: 80,
@@ -6469,6 +8673,8 @@
               };
             }
           }
+
+          return baseRanges;
         }
 
         updateMeterUIForDifficulty() {
@@ -6530,11 +8736,16 @@
           this.animJumpTimer = 99;
           this.animGrabTimer = 0;
 
-          const camDist = 2.4;
-          const cx = spotX2 + camDist * Math.sin(nextSpot.angle);
-          const cz = -12 + (nextSpot.dist + camDist) * Math.cos(nextSpot.angle);
-          this.targetCamPos.set(cx, 1.95, cz);
-          this.targetCamLook.set(0, 2.7, -12);
+          if (this.gameMode === 'arcade') {
+            this.targetCamPos.set(spotX2, 1.85, spotZ2);
+            this.targetCamLook.set(0, 2.75, -12);
+          } else {
+            const camDist = 2.4;
+            const cx = spotX2 + camDist * Math.sin(nextSpot.angle);
+            const cz = -12 + (nextSpot.dist + camDist) * Math.cos(nextSpot.angle);
+            this.targetCamPos.set(cx, 1.95, cz);
+            this.targetCamLook.set(0, 2.7, -12);
+          }
         }
 
         updateCameraForShot(immediate = false) {
@@ -6550,7 +8761,8 @@
             this.playerMesh.visible = false;
             this.aiPlayerMesh.visible = true;
           } else {
-            this.playerMesh.visible = true;
+            // Hide player model in Arcade mode for true First-Person POV
+            this.playerMesh.visible = (this.gameMode !== 'arcade');
             this.aiPlayerMesh.visible = false;
           }
 
@@ -6560,13 +8772,19 @@
             activeMesh.rotation.y = Math.atan2(lookDir.x, lookDir.z);
           }
 
-          // 3rd Person POV Camera Position
-          const camDist = 2.4;
-          const cx = spotX + camDist * Math.sin(spot.angle);
-          const cz = -12 + (spot.dist + camDist) * Math.cos(spot.angle);
+          if (this.gameMode === 'arcade') {
+            // First Person POV Camera Position (Eye-level at spot looking directly at the hoop)
+            this.targetCamPos = new THREE.Vector3(spotX, 1.85, spotZ);
+            this.targetCamLook = new THREE.Vector3(0, 2.75, -12);
+          } else {
+            // 3rd Person POV Camera Position
+            const camDist = 2.4;
+            const cx = spotX + camDist * Math.sin(spot.angle);
+            const cz = -12 + (spot.dist + camDist) * Math.cos(spot.angle);
 
-          this.targetCamPos = new THREE.Vector3(cx, 1.95, cz);
-          this.targetCamLook = new THREE.Vector3(0, 2.7, -12);
+            this.targetCamPos = new THREE.Vector3(cx, 1.95, cz);
+            this.targetCamLook = new THREE.Vector3(0, 2.7, -12);
+          }
 
           if (immediate) {
             this.camera.position.copy(this.targetCamPos);
@@ -6616,6 +8834,21 @@
             guaranteedMake = true;
             this.showTimingFeedback('PERFECT', '#22c55e');
             if (mPin) mPin.classList.add('perfect-release');
+
+            // Arcade Mode Power-Up: +0.5 seconds time gain for perfect releases from round 4 onwards
+            if (this.gameMode === 'arcade' && this.arcadeRound >= 4) {
+              this.shotClock += 0.5;
+              const clockValEl = document.getElementById('shot-clock-val');
+              if (clockValEl) {
+                clockValEl.innerText = Math.ceil(this.shotClock);
+                clockValEl.classList.remove('time-gain-pulse');
+                void clockValEl.offsetWidth; // trigger reflow for animation restart
+                clockValEl.classList.add('time-gain-pulse');
+              }
+              this.update3DShotClock();
+              this.showFeedback('PERFECT RELEASE!<br><span style="color:#4ade80;font-size:1.05em;font-weight:900;">+0.5 SEC BONUS! ⏱️</span>', '#22c55e');
+              if (audio && audio.playGreenLockTone) audio.playGreenLockTone();
+            }
           } else if (val >= ranges.early_end && val < ranges.sl_early_end - 0.35) {
             timingQuality = 'slightly_early';
             const makeRate = (isStarry ? ranges.slStarryMake : ranges.slMake) + hotBoost;
@@ -6781,12 +9014,20 @@
           this.playerShotLog.push(shotRecord);
 
           let trailType = null; // Only emit trail when player is hot or cold!
-          if (this.playerStreak >= 3) {
+          let activePowerUp = null;
+          if (this.equippedPowerUp) {
+            activePowerUp = this.equippedPowerUp;
+            trailType = activePowerUp === 'ice' ? 'ice' : 'gold';
+            this.equippedPowerUp = null;
+            this.updatePowerUpHUD();
+          } else if (this.playerStreak >= 10) {
+            trailType = 'purple_fire';
+          } else if (this.playerStreak >= 3) {
             trailType = 'fire';
           } else if (this.isCold || this.playerStreak <= -2) {
             trailType = 'ice';
           }
-          const info = { shot, timingQuality, guaranteedMake, startPos, scored: false, bounced: false, isAI: false, shotRecord, trailType };
+          const info = { shot, timingQuality, guaranteedMake, startPos, scored: false, bounced: false, isAI: false, shotRecord, trailType, powerUp: activePowerUp };
 
           this.inFlightBalls.push({ mesh: ballMesh, vel, info });
 
@@ -6804,13 +9045,21 @@
 
         
         
-        setRimFire(active) {
+        setRimFire(active, isPurple = false) {
           if (!this.rimMat || !this.bbBoxMat) return;
           if (this.firePoints) this.firePoints.visible = active;
           if (active) {
-            this.rimMat.emissive.setHex(0xff3b00); // Stronger emissive
-            this.rimMat.color.setHex(0xffaa00);
+            if (isPurple) {
+              if (this.fireMat) this.fireMat.color.setHex(0xc084fc); // Vibrant purple particles
+              this.rimMat.emissive.setHex(0x7e22ce); // Deep purple emissive glow
+              this.rimMat.color.setHex(0xa855f7);
+            } else {
+              if (this.fireMat) this.fireMat.color.setHex(0xffaa00); // Standard orange particles
+              this.rimMat.emissive.setHex(0xff3b00); // Stronger emissive
+              this.rimMat.color.setHex(0xffaa00);
+            }
           } else {
+            if (this.fireMat) this.fireMat.color.setHex(0xffaa00);
             this.rimMat.emissive.setHex(0xff3b00);
             this.rimMat.color.setHex(0xff5500);
           }
@@ -6828,6 +9077,246 @@
             this.rimMat.emissive.setHex(0xff3b00);
             this.rimMat.color.setHex(0xff5500);
             if (meterWrapper) meterWrapper.classList.remove('cold-shake');
+          }
+        }
+
+        setRimMagnet(active) {
+          if (!this.rimMat || !this.bbBoxMat) return;
+          if (active) {
+            this.rimMat.color.setHex(0xfacc15);
+            this.rimMat.emissive.setHex(0xd97706);
+            this.rimMat.emissiveIntensity = 0.9;
+          } else {
+            if (!this.firePoints || !this.firePoints.visible) {
+              if (!this.isCold) {
+                this.rimMat.color.setHex(0xe11d48);
+                this.rimMat.emissive.setHex(0x9f1239);
+                this.rimMat.emissiveIntensity = 0.3;
+              }
+            }
+          }
+        }
+
+        equipPowerUp(type) {
+          this.equippedPowerUp = type; // 'ice' or 'gold'
+          if (this.floatingPowerUp) {
+            this.floatingPowerUp = null;
+            const el = document.getElementById('floating-powerup-ball');
+            if (el) el.style.display = 'none';
+          }
+
+          // Update current shot ball mesh visual
+          const currentMesh = (this.shotBallMeshes && this.currentShotIdx < this.shotBallMeshes.length) ? this.shotBallMeshes[this.currentShotIdx] : null;
+          if (currentMesh && currentMesh.material) {
+            if (type === 'ice') {
+              currentMesh.material.color.setHex(0x38bdf8);
+              currentMesh.material.emissive.setHex(0x0284c7);
+              currentMesh.material.emissiveIntensity = 0.8;
+            } else if (type === 'gold') {
+              currentMesh.material.color.setHex(0xfacc15);
+              currentMesh.material.emissive.setHex(0xd97706);
+              currentMesh.material.emissiveIntensity = 0.8;
+            }
+          }
+
+          if (audio) {
+            if (type === 'ice' && audio.playGreenLockTone) audio.playGreenLockTone();
+            if (type === 'gold' && audio.playReleaseSnap) audio.playReleaseSnap('perfect');
+          }
+
+          this.updatePowerUpHUD();
+
+          if (type === 'ice') {
+            this.showFeedback('🧊 ICE BALL LOADED!<br><span style="font-size:0.8em;color:#e0f2fe;">SWISH TO FREEZE CLOCK (5s)</span>', '#38bdf8');
+          } else if (type === 'gold') {
+            this.showFeedback('🌟 GOLDEN BALL LOADED!<br><span style="font-size:0.8em;color:#fef08a;">SWISH FOR MAGNET NET (5s)</span>', '#facc15');
+          }
+        }
+
+        updatePowerUpHUD() {
+          const statusEl = document.getElementById('arcade-powerup-status');
+          const iconEl = document.getElementById('powerup-status-icon');
+          const textEl = document.getElementById('powerup-status-text');
+          const clockValEl = document.getElementById('shot-clock-val');
+          const clockContainer = document.getElementById('shot-clock-container');
+          const progContainer = document.getElementById('powerup-progress-container');
+          const progBar = document.getElementById('powerup-progress-bar');
+
+          if (!statusEl || this.gameMode !== 'arcade') {
+            if (statusEl) statusEl.style.display = 'none';
+            return;
+          }
+
+          if (this.freezeTimer > 0) {
+            statusEl.style.display = 'flex';
+            statusEl.style.background = 'rgba(15, 23, 42, 0.9)';
+            statusEl.style.border = '2px solid #38bdf8';
+            statusEl.style.color = '#38bdf8';
+            statusEl.style.boxShadow = '0 0 20px rgba(56, 189, 248, 0.8)';
+            if (iconEl) iconEl.innerText = '🧊';
+            if (textEl) textEl.innerText = `TIME FROZEN: ${this.freezeTimer.toFixed(1)}s`;
+
+            if (clockContainer) {
+              clockContainer.style.border = '2px solid #38bdf8';
+              clockContainer.style.boxShadow = '0 0 20px #06b6d4';
+            }
+            if (clockValEl) clockValEl.style.color = '#38bdf8';
+
+            if (progContainer && progBar) {
+              progContainer.style.display = 'block';
+              progBar.style.width = `${Math.max(0, Math.min(100, (this.freezeTimer / 5.0) * 100))}%`;
+            }
+          } else if (this.magnetTimer > 0) {
+            statusEl.style.display = 'flex';
+            statusEl.style.background = 'rgba(15, 23, 42, 0.9)';
+            statusEl.style.border = '2px solid #facc15';
+            statusEl.style.color = '#facc15';
+            statusEl.style.boxShadow = '0 0 20px rgba(250, 204, 21, 0.8)';
+            if (iconEl) iconEl.innerText = '🧲';
+            if (textEl) textEl.innerText = `MAGNET NET ACTIVE: ${this.magnetTimer.toFixed(1)}s`;
+
+            if (clockContainer) {
+              clockContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+              clockContainer.style.boxShadow = 'none';
+            }
+            if (clockValEl) clockValEl.style.color = '#ffffff';
+
+            if (progContainer && progBar) {
+              progContainer.style.display = 'block';
+              progBar.style.width = `${Math.max(0, Math.min(100, (this.magnetTimer / 5.0) * 100))}%`;
+            }
+          } else if (this.equippedPowerUp) {
+            statusEl.style.display = 'flex';
+            if (this.equippedPowerUp === 'ice') {
+              statusEl.style.background = 'rgba(15, 23, 42, 0.9)';
+              statusEl.style.border = '2px solid #38bdf8';
+              statusEl.style.color = '#38bdf8';
+              statusEl.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.6)';
+              if (iconEl) iconEl.innerText = '🧊';
+              if (textEl) textEl.innerText = 'ICE BALL LOADED (SWISH TO FREEZE)';
+            } else {
+              statusEl.style.background = 'rgba(15, 23, 42, 0.9)';
+              statusEl.style.border = '2px solid #facc15';
+              statusEl.style.color = '#facc15';
+              statusEl.style.boxShadow = '0 0 15px rgba(250, 204, 21, 0.6)';
+              if (iconEl) iconEl.innerText = '🌟';
+              if (textEl) textEl.innerText = 'GOLDEN BALL LOADED (SWISH FOR MAGNET)';
+            }
+
+            if (clockContainer) {
+              clockContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+              clockContainer.style.boxShadow = 'none';
+            }
+            if (clockValEl) clockValEl.style.color = '#ffffff';
+
+            if (progContainer) {
+              progContainer.style.display = 'none';
+            }
+          } else {
+            statusEl.style.display = 'none';
+            if (clockContainer) {
+              clockContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+              clockContainer.style.boxShadow = 'none';
+            }
+            if (clockValEl) clockValEl.style.color = '#ffffff';
+
+            if (progContainer) {
+              progContainer.style.display = 'none';
+            }
+          }
+        }
+
+        updateFloatingPowerUp(dt) {
+          if (this.gameMode !== 'arcade' || this.state !== 'PLAYER_TURN' || this.isPaused || this.isCountingDown) {
+            const el = document.getElementById('floating-powerup-ball');
+            if (el) el.style.display = 'none';
+            return;
+          }
+
+          // Decrement timers
+          if (this.freezeTimer > 0) {
+            this.freezeTimer = Math.max(0, this.freezeTimer - dt);
+            this.updatePowerUpHUD();
+          }
+          if (this.magnetTimer > 0) {
+            this.magnetTimer = Math.max(0, this.magnetTimer - dt);
+            this.setRimMagnet(this.magnetTimer > 0);
+            this.updatePowerUpHUD();
+          }
+
+          // Spawn floating power-ups occasionally
+          if (!this.floatingPowerUp) {
+            this.powerUpSpawnTimer -= dt;
+            if (this.powerUpSpawnTimer <= 0) {
+              this.powerUpSpawnTimer = 18 + Math.random() * 12; // spawn every 18-30s
+              
+              const type = Math.random() < 0.5 ? 'ice' : 'gold';
+              const startFromLeft = Math.random() < 0.5;
+              const screenW = window.innerWidth;
+              const screenH = window.innerHeight;
+
+              const x = startFromLeft ? -220 : screenW + 20;
+              const y = screenH * (0.28 + Math.random() * 0.32);
+              const speed = 75 + Math.random() * 35; // px/sec
+              const vx = startFromLeft ? speed : -speed;
+
+              this.floatingPowerUp = {
+                type,
+                x,
+                y,
+                baseY: y,
+                vx,
+                life: 9.0,
+                maxLife: 9.0
+              };
+            }
+          } else {
+            const p = this.floatingPowerUp;
+            p.life -= dt;
+            p.x += p.vx * dt;
+            p.y = p.baseY + Math.sin((p.maxLife - p.life) * 2.8) * 25;
+
+            const el = document.getElementById('floating-powerup-ball');
+            if (p.life <= 0 || p.x < -300 || p.x > window.innerWidth + 300) {
+              this.floatingPowerUp = null;
+              if (el) el.style.display = 'none';
+            } else if (el) {
+              el.style.display = 'flex';
+              el.style.left = `${p.x}px`;
+              el.style.top = `${p.y}px`;
+
+              const card = document.getElementById('floating-ball-card');
+              const title = document.getElementById('floating-ball-title');
+              const sub = document.getElementById('floating-ball-sub');
+              const emoji = document.getElementById('floating-ball-emoji');
+              const iconWrap = document.getElementById('floating-ball-icon-wrap');
+
+              if (p.type === 'ice') {
+                if (card) {
+                  card.style.borderColor = '#38bdf8';
+                  card.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.8), 0 8px 25px rgba(0,0,0,0.8)';
+                }
+                if (title) { title.innerText = 'ICE BALL POWER-UP'; title.style.color = '#38bdf8'; }
+                if (sub) { sub.innerText = 'TAP TO LOAD • 5s FREEZE CLOCK!'; }
+                if (emoji) { emoji.innerText = '🧊'; }
+                if (iconWrap) {
+                  iconWrap.style.background = 'radial-gradient(circle at 35% 35%, #0284c7, #0f172a)';
+                  iconWrap.style.borderColor = '#fff';
+                }
+              } else {
+                if (card) {
+                  card.style.borderColor = '#facc15';
+                  card.style.boxShadow = '0 0 25px rgba(250, 204, 21, 0.8), 0 8px 25px rgba(0,0,0,0.8)';
+                }
+                if (title) { title.innerText = 'GOLDEN BALL POWER-UP'; title.style.color = '#facc15'; }
+                if (sub) { sub.innerText = 'TAP TO LOAD • 5s MAGNET NET!'; }
+                if (emoji) { emoji.innerText = '🌟'; }
+                if (iconWrap) {
+                  iconWrap.style.background = 'radial-gradient(circle at 35% 35%, #eab308, #451a03)';
+                  iconWrap.style.borderColor = '#fff';
+                }
+              }
+            }
           }
         }
 
@@ -6851,7 +9340,16 @@
           }
         }
 
+        handlePlayerScoreArcade(info) {
+          // Keep stats updated, can trigger custom particle effects or sounds if desired
+        }
+
         handlePlayerMiss(info) {
+          if (this.gameMode === 'arcade') {
+            this.playerStreak = 0;
+            this.setRimFire(false);
+            return;
+          }
           this.playerStreak = Math.min(0, this.playerStreak || 0) - 1;
           this.setRimFire(false);
           this.makesWhileCold = 0;
@@ -7089,6 +9587,17 @@
               flight.lastPos.copy(ball.position);
             }
 
+            // Magnetic Net force field pull when magnet power-up active
+            if (this.magnetTimer && this.magnetTimer > 0 && vel.y < 0 && ball.position.y <= 4.5 && ball.position.y >= 2.8) {
+              const distToCenter = Math.sqrt(ball.position.x * ball.position.x + (ball.position.z - (-12)) * (ball.position.z - (-12)));
+              if (distToCenter < 1.35) {
+                const pullForce = 8.5; // highly responsive force
+                vel.x += (0 - ball.position.x) * pullForce * dt;
+                vel.z += (-12 - ball.position.z) * pullForce * dt;
+                vel.y -= 2.5 * dt; // direct downward secure pull
+              }
+            }
+
             vel.y -= 9.81 * dt;
 
             ball.position.x += vel.x * dt;
@@ -7122,17 +9631,74 @@
                   this.aiScore += info.shot.pts;
                   this.showFeedback(info.shot.pts === 3 ? 'AI STARRY!<br>+3' : (info.shot.pts === 2 ? 'AI MONEY BALL!<br>+2' : 'AI SWISH!<br>+1'), '#f43f5e');
                 } else {
-                  this.playerScore += info.shot.pts;
-                  this.stats.makes++;
-                  if (info.shot.ballType === 'money') this.stats.moneyMakes++;
-                  if (info.shot.ballType === 'starry') this.stats.starryMakes++;
-                  this.showFeedback(info.shot.pts === 3 ? 'STARRY SHOT!<br>+3' : (info.shot.pts === 2 ? 'MONEY BALL!<br>+2' : 'SWISH!<br>+1'), '#38bdf8');
-                  this.handlePlayerScore(info);
+                  if (this.gameMode === 'arcade') {
+                    // Arcade Mode custom streak and scoring logic
+                    this.playerStreak = Math.max(0, this.playerStreak || 0) + 1;
+                    
+                    let ptsEarned = 2;
+                    let feedbackText = '+2';
+                    let feedbackColor = '#38bdf8'; // standard cyan-blue
+
+                    if (this.playerStreak >= 10) {
+                      ptsEarned = 6;
+                      feedbackText = `PURPLE ULTRA STREAK!<br>+6`;
+                      feedbackColor = '#c084fc'; // vibrant purple for 10+ streak
+                      this.setRimFire(true, true);
+                    } else if (this.playerStreak >= 5) {
+                      ptsEarned = 3;
+                      feedbackText = '+3';
+                      feedbackColor = '#f97316'; // vibrant orange fire
+                      this.setRimFire(true, false);
+                    } else {
+                      this.setRimFire(false);
+                    }
+
+                    this.playerScore += ptsEarned;
+                    this.stats.makes++;
+                    
+                    if (info.powerUp === 'ice') {
+                      this.freezeTimer = 5.0;
+                      this.updatePowerUpHUD();
+                      this.showFeedback('ICE FREEZE ACTIVATED! 🧊<br><span style="color:#38bdf8;font-size:1.05em;font-weight:900;">TIME FROZEN FOR 5 SECONDS! ⏱️</span>', '#38bdf8');
+                      if (audio && audio.playGreenLockTone) audio.playGreenLockTone();
+                    } else if (info.powerUp === 'gold') {
+                      this.magnetTimer = 5.0;
+                      this.setRimMagnet(true);
+                      this.updatePowerUpHUD();
+                      this.showFeedback('MAGNET NET ACTIVATED! 🌟<br><span style="color:#facc15;font-size:1.05em;font-weight:900;">MAGNETIC FORCEFIELD ACTIVE (5s)! 🧲</span>', '#facc15');
+                      if (audio && audio.playReleaseSnap) audio.playReleaseSnap('perfect');
+                    } else {
+                      this.showFeedback(feedbackText, feedbackColor);
+                    }
+                    
+                    this.handlePlayerScoreArcade(info);
+                  } else {
+                    this.playerScore += info.shot.pts;
+                    this.stats.makes++;
+                    if (info.shot.ballType === 'money') this.stats.moneyMakes++;
+                    if (info.shot.ballType === 'starry') this.stats.starryMakes++;
+                    this.showFeedback(info.shot.pts === 3 ? 'STARRY SHOT!<br>+3' : (info.shot.pts === 2 ? 'MONEY BALL!<br>+2' : 'SWISH!<br>+1'), '#38bdf8');
+                    this.handlePlayerScore(info);
+                  }
                 }
 
                 audio.playSwish();
                 audio.playCheer();
-                this.triggerCrowdCheer();
+                
+                const isStarry = (info.shot.ballType === 'starry' || (info.shot.spot && info.shot.spot.name && info.shot.spot.name.includes('STARRY')));
+                const isBuzzer = (this.shotClock <= 2 || (this.currentShotIdx !== undefined && this.shots && this.currentShotIdx === this.shots.length - 1));
+                const isStreak = (this.playerStreak >= 5);
+                const isMoney = (info.shot.ballType === 'money');
+
+                if (isBuzzer) {
+                  this.triggerCrowdCheer('buzzer_beater');
+                } else if (isStarry || isStreak) {
+                  this.triggerCrowdCheer('starry');
+                } else if (isMoney) {
+                  this.triggerCrowdCheer('money');
+                } else {
+                  this.triggerCrowdCheer('swish');
+                }
 
                 this.triggerNetSwish(vel);
 
@@ -7243,7 +9809,7 @@
                 this.showBackboardGlow(false);
                 info.shot.result = 'miss';
                 audio.playGroan();
-                this.triggerCrowdGroan();
+                this.triggerCrowdGroan('miss');
                 if (!info.isAI) {
                   this.handlePlayerMiss(info);
                 }
@@ -7268,7 +9834,7 @@
           }
 
           // Check if round finishes after all 27 shots are taken & all in-flight balls landed
-          if (this.currentShotIdx >= this.shots.length && this.inFlightBalls.length === 0 && !this.turnEnding) {
+          if (this.gameMode !== 'arcade' && this.currentShotIdx >= this.shots.length && this.inFlightBalls.length === 0 && !this.turnEnding) {
             this.turnEnding = true;
             if (this.state === 'PLAYER_TURN') {
               this.hasPlayerPlayed = true;
@@ -7300,19 +9866,26 @@
           const prevShot = this.shots[this.currentShotIdx];
           this.currentShotIdx++;
           if (this.currentShotIdx >= this.shots.length) {
-            this.updateHUD();
-            if (this.inFlightBalls.length === 0) {
-              if (this.state === 'PLAYER_TURN') {
-                this.hasPlayerPlayed = true;
-                if (!this.hasAIPlayed) this.endPlayerTurn();
-                else this.showPostGame();
-              } else if (this.state === 'AI_TURN') {
-                this.hasAIPlayed = true;
-                if (this.clockInterval) clearInterval(this.clockInterval);
-                if (this.aiTimeout) clearTimeout(this.aiTimeout);
-                document.getElementById('ai-overlay').style.display = 'none';
-                if (!this.hasPlayerPlayed) this.endPlayerTurn();
-                else this.showPostGame();
+            if (this.gameMode === 'arcade') {
+              this.currentShotIdx = 0;
+              this.build3DRacks();
+              this.updateHUD();
+              this.updateCameraForShot();
+            } else {
+              this.updateHUD();
+              if (this.inFlightBalls.length === 0) {
+                if (this.state === 'PLAYER_TURN') {
+                  this.hasPlayerPlayed = true;
+                  if (!this.hasAIPlayed) this.endPlayerTurn();
+                  else this.showPostGame();
+                } else if (this.state === 'AI_TURN') {
+                  this.hasAIPlayed = true;
+                  if (this.clockInterval) clearInterval(this.clockInterval);
+                  if (this.aiTimeout) clearTimeout(this.aiTimeout);
+                  document.getElementById('ai-overlay').style.display = 'none';
+                  if (!this.hasPlayerPlayed) this.endPlayerTurn();
+                  else this.showPostGame();
+                }
               }
             }
           } else {
@@ -7321,12 +9894,19 @@
             if (prevShot && nextShot && prevShot.spot !== nextShot.spot) {
               this.startRunToSpot(prevShot.spot, nextShot.spot);
             } else {
+              if (this.gameMode === 'arcade' && Math.floor(this.currentShotIdx / 5) !== Math.floor((this.currentShotIdx - 1) / 5)) {
+                this.build3DRacks();
+              }
               this.updateCameraForShot();
             }
           }
         }
 
         endPlayerTurn() {
+          if (this.gameMode === 'arcade') {
+            this.endArcadeRound();
+            return;
+          }
           const isAITurn = (this.state === 'AI_TURN');
           
           const missSec = document.getElementById('miss-analysis-section');
@@ -8902,6 +11482,7 @@
         }
 
         startNextTurnFromSummary() {
+          if (this.gameMode === 'arcade') return;
           document.getElementById('player-summary-screen').style.display = 'none';
           const aModal = document.getElementById('analytics-modal');
           if (aModal) aModal.style.display = 'none';
@@ -8953,19 +11534,74 @@
             this.updateHUD();
 
             if (this.clockInterval) clearInterval(this.clockInterval);
-            this.clockInterval = setInterval(() => {
-              if (this.isPaused) return;
-              if (this.state === 'PLAYER_TURN') {
-                this.shotClock--;
-                document.getElementById('shot-clock-val').innerText = this.shotClock;
-                this.update3DShotClock();
-                if (this.shotClock <= 0) {
-                  clearInterval(this.clockInterval);
-                  audio.playBuzzer();
-                  this.endPlayerTurn();
+            if (this.countInterval) clearInterval(this.countInterval);
+
+            // 3, 2, 1 Countdown Sequence before Round Start!
+            this.isCountingDown = true;
+            const countdownEl = document.getElementById('arcade-countdown-overlay');
+            const textEl = document.getElementById('arcade-countdown-text');
+            const subEl = document.getElementById('arcade-countdown-sub');
+            const tipEl = document.getElementById('arcade-countdown-tip');
+
+            const startTimer = () => {
+              if (this.clockInterval) clearInterval(this.clockInterval);
+              this.clockInterval = setInterval(() => {
+                if (this.isPaused) return;
+                if (this.state === 'PLAYER_TURN') {
+                  this.shotClock--;
+                  document.getElementById('shot-clock-val').innerText = Math.ceil(this.shotClock);
+                  this.update3DShotClock();
+
+                  if (this.shotClock <= 5 && this.shotClock > 0) {
+                    if (audio && audio.playTick) audio.playTick(this.shotClock);
+                  }
+
+                  if (this.shotClock <= 0) {
+                    clearInterval(this.clockInterval);
+                    audio.playBuzzer();
+                    this.endPlayerTurn();
+                  }
                 }
+              }, 1000);
+            };
+
+            if (countdownEl && textEl) {
+              countdownEl.style.display = 'flex';
+              textEl.style.color = '#facc15';
+              textEl.innerText = '3';
+              if (subEl) subEl.innerText = '3-POINT SHOOTOUT STARTING!';
+              if (tipEl) {
+                tipEl.style.display = 'block';
+                const randomTip = SHOOTING_TIPS[Math.floor(Math.random() * SHOOTING_TIPS.length)];
+                tipEl.innerText = randomTip;
               }
-            }, 1000);
+              if (audio && audio.playSwish) audio.playSwish();
+
+              let count = 3;
+              this.countInterval = setInterval(() => {
+                count--;
+                if (count === 2) {
+                  textEl.innerText = '2';
+                  if (audio && audio.playSwish) audio.playSwish();
+                } else if (count === 1) {
+                  textEl.innerText = '1';
+                  if (audio && audio.playSwish) audio.playSwish();
+                } else if (count === 0) {
+                  textEl.innerText = 'GO!';
+                  textEl.style.color = '#4ade80';
+                  if (subEl) subEl.innerText = 'DRAIN ALL 5 RACKS!';
+                  if (audio && audio.playSwish) audio.playSwish();
+                } else {
+                  clearInterval(this.countInterval);
+                  countdownEl.style.display = 'none';
+                  this.isCountingDown = false;
+                  startTimer();
+                }
+              }, 900);
+            } else {
+              this.isCountingDown = false;
+              startTimer();
+            }
           } else {
             // AI's turn
             this.state = 'AI_TURN';
@@ -8988,6 +11624,7 @@
         }
 
         runAITurn() {
+          if (this.gameMode === 'arcade') return;
           if (this.clockInterval) clearInterval(this.clockInterval);
           if (this.aiTimeout) clearTimeout(this.aiTimeout);
 
@@ -9015,8 +11652,13 @@
           this.clockInterval = setInterval(() => {
             if (this.isPaused) return;
             this.shotClock--;
-            document.getElementById('shot-clock-val').innerText = this.shotClock;
+            document.getElementById('shot-clock-val').innerText = Math.ceil(this.shotClock);
             this.update3DShotClock();
+
+            if (this.shotClock <= 5 && this.shotClock > 0) {
+              if (audio && audio.playTick) audio.playTick(this.shotClock);
+            }
+
             if (this.shotClock <= 0) {
               clearInterval(this.clockInterval);
               if (this.aiTimeout) clearTimeout(this.aiTimeout);
@@ -9428,6 +12070,11 @@
 
         startWinnerCelebrationCutscene() {
           const isPlayerWin = this.playerScore > this.aiScore;
+          if (isPlayerWin) {
+            this.triggerCrowdCheer('buzzer_beater');
+          } else {
+            this.triggerCrowdGroan('timeout');
+          }
           const winningMesh = isPlayerWin ? this.playerMesh : this.aiPlayerMesh;
           const losingMesh = isPlayerWin ? this.aiPlayerMesh : this.playerMesh;
 
@@ -9552,6 +12199,10 @@
         }
 
         showPostGame() {
+          if (this.gameMode === 'arcade') {
+            this.endArcadeRound();
+            return;
+          }
           if (this.inFlightBalls && this.scene) {
             this.inFlightBalls.forEach(b => { if (b.mesh) this.scene.remove(b.mesh); });
           }
@@ -9695,39 +12346,74 @@
           this.feedbackTimeout = setTimeout(() => pop.classList.remove('show'), 800);
         }
 
-        updateHUD() {
-          document.getElementById('player-score-val').innerText = this.playerScore;
-          document.getElementById('ai-score-val').innerText = this.aiScore;
-          this.update3DShotClock();
-          this.updateMeterUIForDifficulty();
-          if (!this.isHolding) {
-            this.resetShootButtonSync();
-          }
+         updateHUD() {
+           const playerCard = document.getElementById('player-score-card-container');
+           if (playerCard) {
+             if (this.gameMode === 'arcade') {
+               playerCard.classList.add('arcade-card');
+               document.getElementById('player-score-val').innerText = `${this.playerScore} PTS`;
+               const label = playerCard.querySelector('.player-label');
+               if (label) label.innerText = 'SCORE';
+             } else {
+               playerCard.classList.remove('arcade-card');
+               document.getElementById('player-score-val').innerText = this.playerScore;
+               const label = playerCard.querySelector('.player-label');
+               if (label) label.innerText = 'PLAYER';
+             }
+           } else {
+             document.getElementById('player-score-val').innerText = this.playerScore;
+           }
+           document.getElementById('ai-score-val').innerText = this.aiScore;
+           this.update3DShotClock();
+           this.updateMeterUIForDifficulty();
+           if (!this.isHolding) {
+             this.resetShootButtonSync();
+           }
 
-          if (this.currentShotIdx < this.shots.length) {
-            const currentShot = this.shots[this.currentShotIdx];
-            document.getElementById('rack-title-badge').innerText = currentShot.spot.name;
+           if (this.gameMode === 'arcade') {
+             const currentRound = this.arcadeRounds[this.arcadeRound - 1];
+             const targetPts = currentRound.target;
+             const streakText = this.playerStreak >= 10 ? '<span class="text-purple-300 font-extrabold animate-pulse">ULTRA PURPLE STREAK!</span>' : (this.playerStreak >= 5 ? '<span class="text-yellow-300 font-bold animate-pulse">ON FIRE</span>' : '');
+             document.getElementById('rack-title-badge').innerHTML = `ROUND ${this.arcadeRound} (GOAL: ${targetPts} PTS) <span class="ml-2">${streakText}</span>`;
 
-            // Update rack tracker dots
-            const trackerContainer = document.getElementById('rack-tracker');
-            trackerContainer.innerHTML = '';
+             // Hide rack tracker dots in Arcade Mode
+             const trackerContainer = document.getElementById('rack-tracker');
+             if (trackerContainer) {
+               trackerContainer.style.display = 'none';
+               trackerContainer.innerHTML = '';
+             }
+             return;
+           }
 
-            const spotShots = this.shots.filter(s => s.spot === currentShot.spot);
-            spotShots.forEach((shot, idx) => {
-              const dot = document.createElement('div');
-              dot.className = 'rack-dot';
-              if (shot.ballType === 'money') dot.classList.add('money-ball');
-              if (shot.ballType === 'starry') dot.classList.add('starry-ball');
+           const trackerContainer = document.getElementById('rack-tracker');
+           if (trackerContainer) trackerContainer.style.display = 'flex';
 
-              if (shot.result === 'hit') dot.classList.add('hit');
-              else if (shot.result === 'miss') dot.classList.add('miss');
+           if (this.currentShotIdx < this.shots.length) {
+             const currentShot = this.shots[this.currentShotIdx];
+             document.getElementById('rack-title-badge').innerText = currentShot.spot.name;
 
-              if (shot === currentShot) dot.classList.add('active');
-              dot.innerText = idx + 1;
-              trackerContainer.appendChild(dot);
-            });
-          }
-        }
+             // Update rack tracker dots
+             const trackerContainer = document.getElementById('rack-tracker');
+             if (trackerContainer) {
+               trackerContainer.innerHTML = '';
+
+               const spotShots = this.shots.filter(s => s.spot === currentShot.spot);
+               spotShots.forEach((shot, idx) => {
+                 const dot = document.createElement('div');
+                 dot.className = 'rack-dot';
+                 if (shot.ballType === 'money') dot.classList.add('money-ball');
+                 if (shot.ballType === 'starry') dot.classList.add('starry-ball');
+
+                 if (shot.result === 'hit') dot.classList.add('hit');
+                 else if (shot.result === 'miss') dot.classList.add('miss');
+
+                 if (shot === currentShot) dot.classList.add('active');
+                 dot.innerText = idx + 1;
+                 trackerContainer.appendChild(dot);
+               });
+             }
+           }
+         }
 
         updateMeterPreviewAnim(dt) {
           const needle = document.getElementById('preview-needle');
@@ -9831,6 +12517,14 @@
             }
             if (this.isCold) {
               speedMult *= 1.10; // Cold status makes shooting meter move 10% faster until recovered
+            }
+            if (this.gameMode === 'arcade') {
+              // 10% speed increase starting on the shot where player earns the multiplier (shot 5, playerStreak >= 4)
+              // Shot 5 (+3 multiplier) = 10%, Shot 6 = 20%, ..., capped at 80% max increase
+              if ((this.playerStreak || 0) >= 4) {
+                const streakBoost = Math.min(0.80, ((this.playerStreak || 0) - 3) * 0.10);
+                speedMult *= (1.0 + streakBoost);
+              }
             }
             this.meterVal += this.meterSpeed * speedMult * this.meterDir * 60 * dt;
             if (this.meterVal >= 100) {
@@ -9965,8 +12659,14 @@
               this.celebrationTrophy.rotation.z = Math.sin(this.cutsceneTime * 2.0) * 0.03;
             }
           } else if (this.targetCamPos) {
+            let camPosToUse = this.targetCamPos.clone();
+            if (this.gameMode === 'arcade' && this.animJumpTimer !== undefined && this.animJumpTimer < 0.55) {
+              const progress = this.animJumpTimer / 0.55;
+              const jumpProgress = Math.sin(Math.min(progress * 1.5, 1) * Math.PI);
+              camPosToUse.y += jumpProgress * 0.35;
+            }
             // Standard camera lerp
-            this.camera.position.lerp(this.targetCamPos, 0.06);
+            this.camera.position.lerp(camPosToUse, 0.08);
             this.camera.lookAt(this.targetCamLook);
           }
 
@@ -9981,11 +12681,17 @@
           // Active ball physics
           this.updatePhysics(dt);
 
+          // Update floating power-ups
+          this.updateFloatingPowerUp(dt);
+
           // Dynamic net swish animation
           this.updateNet(dt);
 
           // Animated crowd fans & stadium camera flashes
           this.updateCrowd(dt);
+
+          // Animated outdoor environment (clouds, flying birds, wave ripples, beach spectators & walking pedestrians)
+          this.updateOutdoorEnvironment(dt);
 
           // Update rotating wall digital banner (every 5 seconds) and scroll texture offset
           if (this.digitalBannerTex) {
