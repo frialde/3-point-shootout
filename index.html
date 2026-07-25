@@ -8919,6 +8919,12 @@
             }
           }
 
+          if (this.gameMode === 'arcade' && this.equippedPowerUp === 'gold') {
+            if (timingQuality !== 'very_early' && timingQuality !== 'very_late' && timingQuality !== 'very_very_late') {
+              guaranteedMake = true;
+            }
+          }
+
           if (audio && audio.playReleaseSnap) audio.playReleaseSnap(timingQuality);
 
           // Haptic feedback/vibration on shot release (if enabled in settings)
