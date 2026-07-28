@@ -1114,7 +1114,7 @@
         touch-action: pan-y;
         user-select: none;
       }
-      .ai-opp-card {
+      .ai-opp-card, .venue-card {
         flex: 1;
         background: rgba(30, 41, 59, 0.4);
         backdrop-filter: blur(8px);
@@ -1134,7 +1134,7 @@
         min-width: 0;
         overflow: hidden;
       }
-      .ai-opp-card.selected {
+      .ai-opp-card.selected, .venue-card.selected {
         flex: 2.2;
         opacity: 1;
         transform: scale(1.04);
@@ -1144,25 +1144,25 @@
         padding: 10px 8px;
         z-index: 2;
       }
-      .ai-opp-card:not(.selected) {
+      .ai-opp-card:not(.selected), .venue-card:not(.selected) {
         padding: 4px 2px !important;
       }
-      .ai-opp-card:not(.selected) .ai-opp-header {
+      .ai-opp-card:not(.selected) .ai-opp-header, .venue-card:not(.selected) .ai-opp-header {
         gap: 3px !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
       }
-      .ai-opp-card:not(.selected) .ai-avatar {
+      .ai-opp-card:not(.selected) .ai-avatar, .venue-card:not(.selected) .ai-avatar {
         width: 20px !important;
         height: 20px !important;
         font-size: 11px !important;
         border-width: 1px !important;
       }
-      .ai-opp-card:not(.selected) .ai-opp-info {
+      .ai-opp-card:not(.selected) .ai-opp-info, .venue-card:not(.selected) .ai-opp-info {
         align-items: center !important;
       }
-      .ai-opp-card:not(.selected) .ai-opp-role {
+      .ai-opp-card:not(.selected) .ai-opp-role, .venue-card:not(.selected) .ai-opp-role {
         font-size: 6.5px !important;
         letter-spacing: 0px !important;
         line-height: 1 !important;
@@ -1170,14 +1170,14 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .ai-opp-card:not(.selected) .ai-opp-name {
+      .ai-opp-card:not(.selected) .ai-opp-name, .venue-card:not(.selected) .ai-opp-name {
         font-size: 12px !important;
         line-height: 1 !important;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .ai-opp-card:not(.selected) .ai-opp-stats {
+      .ai-opp-card:not(.selected) .ai-opp-stats, .venue-card:not(.selected) .ai-opp-stats {
         display: none !important;
       }
       .ai-opp-header {
@@ -1216,6 +1216,159 @@
         color: #cbd5e1;
         display: flex;
         justify-content: space-between;
+      }
+
+      /* IMPROVED VENUE SELECTION SCREEN OVERRIDES */
+      #wizard-step-5 .wheel-container {
+        padding: 12px 0 !important;
+        overflow: visible !important;
+      }
+      #venue-select {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 18px !important;
+        width: 100% !important;
+        justify-content: center !important;
+        max-width: 600px !important;
+        margin: 0 auto !important;
+      }
+      #venue-select .venue-card {
+        flex: 1 !important;
+        height: 195px !important;
+        position: relative !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 16px !important;
+        padding: 14px 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        cursor: pointer !important;
+        opacity: 0.6 !important;
+        transform: scale(0.96) !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      #venue-select .venue-card.selected {
+        flex: 1.15 !important;
+        opacity: 1 !important;
+        transform: scale(1.04) !important;
+        border-color: #fbbf24 !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+        box-shadow: 0 12px 32px rgba(251, 191, 36, 0.25), 0 0 15px rgba(251, 191, 36, 0.15) !important;
+        z-index: 10 !important;
+      }
+
+      #venue-select .venue-card:hover {
+        opacity: 0.85 !important;
+        transform: translateY(-2px) scale(0.98) !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
+      }
+
+      #venue-select .venue-card.selected:hover {
+        opacity: 1 !important;
+        transform: translateY(-4px) scale(1.05) !important;
+        border-color: #fbbf24 !important;
+      }
+
+      /* Custom Banner Illustrations */
+      .venue-banner-ill {
+        width: 100%;
+        height: 72px;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.4s ease;
+        background: #000;
+        margin-bottom: 6px;
+      }
+      #venue-select .venue-card.selected .venue-banner-ill {
+        border-color: rgba(251, 191, 36, 0.3);
+        box-shadow: inset 0 0 12px rgba(251, 191, 36, 0.15);
+      }
+
+      /* Custom Info Blocks inside Venue Cards */
+      #venue-select .venue-card .ai-opp-header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      #venue-select .venue-card .ai-opp-info {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1px !important;
+        width: 100% !important;
+      }
+      #venue-select .venue-card .ai-opp-role {
+        font-size: 10px !important;
+        font-weight: 800 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+      }
+      #venue-select .venue-card .ai-opp-name {
+        font-size: 19px !important;
+        font-family: 'Teko', sans-serif !important;
+        font-weight: 700 !important;
+        letter-spacing: 1.5px !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+      }
+      #venue-select .venue-card .ai-opp-stats {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1px !important;
+        font-size: 10.5px !important;
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+        margin-top: auto !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding-top: 6px !important;
+        width: 100% !important;
+      }
+      #venue-select .venue-card.selected .ai-opp-stats {
+        border-top-color: rgba(251, 191, 36, 0.15) !important;
+        color: #fbbf24 !important;
+      }
+
+      /* Active Glow Badge inside Selected Card */
+      .venue-selected-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #fbbf24;
+        color: #020617;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 8px;
+        font-weight: 850;
+        padding: 2px 6px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+        opacity: 0;
+        transform: translateY(-5px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        z-index: 5;
+      }
+      #venue-select .venue-card.selected .venue-selected-badge {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       /* MATCHUP SUMMARY BOX */
@@ -1664,35 +1817,210 @@
           border-color: rgba(255, 255, 255, 0.5);
         }
       }
+
+      /* COACH GEMINI FLOATING WIDGET styles */
+      #coach-gemini-fab {
+        position: fixed;
+        bottom: 85px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px rgba(234, 179, 8, 0.45);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1500;
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+        outline: none;
+        animation: coachFabPulse 2s infinite alternate ease-in-out;
+      }
+      #coach-gemini-fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 25px rgba(234, 179, 8, 0.65);
+      }
+      @keyframes coachFabPulse {
+        0% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 10px rgba(234, 179, 8, 0.4); }
+        100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 22px rgba(234, 179, 8, 0.8); }
+      }
+      
+      #coach-gemini-chat-panel {
+        position: fixed;
+        bottom: 160px;
+        right: 20px;
+        width: 380px;
+        height: 520px;
+        max-width: calc(100vw - 40px);
+        max-height: calc(100vh - 190px);
+        background: rgba(15, 23, 42, 0.98);
+        border: 2px solid rgba(234, 179, 8, 0.6);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.85), 0 0 25px rgba(234, 179, 8, 0.2);
+        border-radius: 16px;
+        display: none;
+        flex-direction: column;
+        z-index: 2500;
+        overflow: hidden;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      #coach-gemini-chat-panel.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (max-width: 480px) {
+        #coach-gemini-chat-panel {
+          bottom: 0 !important;
+          right: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          max-width: 100vw !important;
+          max-height: 100vh !important;
+          border-radius: 0 !important;
+          border: none !important;
+          z-index: 9999 !important;
+        }
+      }
+      
+      .coach-chat-history::-webkit-scrollbar {
+        width: 6px;
+      }
+      .coach-chat-history::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.5);
+      }
+      .coach-chat-history::-webkit-scrollbar-thumb {
+        background: rgba(234, 179, 8, 0.3);
+        border-radius: 3px;
+      }
+      .coach-chat-history::-webkit-scrollbar-thumb:hover {
+        background: rgba(234, 179, 8, 0.6);
+      }
+
+      .coach-chip {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(234, 179, 8, 0.25);
+        border-radius: 20px;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #cbd5e1;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .coach-chip:hover {
+        background: rgba(234, 179, 8, 0.12);
+        border-color: rgba(234, 179, 8, 0.7);
+        color: #facc15;
+        transform: translateY(-1px);
+      }
+      
+      .coach-msg-bubble {
+        max-width: 85%;
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: 13px;
+        line-height: 1.45;
+        margin-bottom: 12px;
+        word-break: break-word;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+      .coach-msg-user {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        color: #ffffff;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      .coach-msg-assistant {
+        background: rgba(30, 41, 59, 0.9);
+        color: #f8fafc;
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+        border-left: 3px solid #facc15;
+      }
+      
+      .coach-typing-dots {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 10px 14px;
+        background: rgba(30, 41, 59, 0.9);
+        border-radius: 12px;
+        border-bottom-left-radius: 2px;
+        align-self: flex-start;
+        border-left: 3px solid #facc15;
+        width: fit-content;
+        margin-bottom: 12px;
+      }
+      .coach-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #94a3b8;
+        border-radius: 50%;
+        animation: coachDotBounce 1.4s infinite ease-in-out;
+      }
+      .coach-dot:nth-child(2) { animation-delay: 0.2s; }
+      .coach-dot:nth-child(3) { animation-delay: 0.4s; }
+      @keyframes coachDotBounce {
+        0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+      }
   </style>
   </head>
   <body>
-    <div id="game-container">
+    <main id="game-container">
       <!-- FULL-SCREEN LAUNCH SPLASH / LOADING SCREEN -->
-      <div id="loading-splash-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; transition: opacity 0.5s ease-in-out; pointer-events: auto;">
-        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-          <!-- Main Title for Loading Splash -->
-          <h1 style="font-family: 'Teko', sans-serif; font-size: 52px; font-weight: 800; color: #fbbf24; letter-spacing: 3px; margin: 0; line-height: 1.1; text-transform: uppercase; opacity: 0; transform: translateY(20px); animation: splashFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s; text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);">
-            AN INDIE GAME BY RALPH FRIALDE
+      <section id="loading-splash-screen" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; transition: opacity 0.5s ease-in-out; pointer-events: auto;">
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0;">
+          <!-- Modern minimalist basketball SVG emblem -->
+          <svg width="68" height="68" viewBox="0 0 100 100" style="opacity: 0; transform: scale(0.85); animation: splashFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.25)); margin-bottom: 24px;">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M 50,4 C 50,4 50,50 50,96" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 4,50 C 4,50 50,50 96,50" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 18,18 C 34,34 34,66 18,82" stroke="#fbbf24" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M 82,18 C 66,34 66,66 82,82" stroke="#fbbf24" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+
+          <!-- Main Eyebrow Label -->
+          <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #94a3b8; letter-spacing: 0.35em; text-transform: uppercase; margin: 0 0 8px 0; opacity: 0; transform: translateY(15px); animation: splashFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;">
+            A BASKETBALL VIDEO GAME BY
+          </div>
+
+          <!-- Main Creator Display Headline -->
+          <h1 style="font-family: 'Teko', sans-serif; font-size: 64px; font-weight: 800; color: #fbbf24; letter-spacing: 4px; margin: 0; line-height: 0.95; text-transform: uppercase; opacity: 0; transform: translateY(20px); animation: splashFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s; text-shadow: 0 0 15px rgba(251, 191, 36, 0.5), 0 4px 20px rgba(0,0,0,0.55);">
+            RALPH FRIALDE
           </h1>
           
+          <!-- Sleek Accent Divider -->
+          <div style="width: 80px; height: 2px; background: #fbbf24; margin: 28px 0 20px 0; border-radius: 2px; opacity: 0; transform: scaleX(0.1); animation: splashScaleX 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s; filter: drop-shadow(0 0 8px #fbbf24);"></div>
+          
           <!-- Loading Bar Container -->
-          <div style="width: 240px; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.05); opacity: 0; animation: splashFadeIn 0.5s ease-out forwards 0.7s;">
-            <div id="splash-loading-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #fbbf24); border-radius: 4px; transition: width 0.1s linear;"></div>
+          <div style="width: 280px; height: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.03); opacity: 0; animation: splashFadeIn 0.6s ease-out forwards 0.8s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);">
+            <div id="splash-loading-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 4px; box-shadow: 0 0 12px #fbbf24; transition: width 0.1s linear;"></div>
           </div>
           
           <!-- Loading Text Status -->
-          <div id="splash-loading-text" style="font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; opacity: 0; animation: splashFadeIn 0.5s ease-out forwards 0.8s;">
+          <div id="splash-loading-text" style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: #475569; letter-spacing: 0.25em; text-transform: uppercase; margin-top: 10px; opacity: 0; animation: splashFadeIn 0.6s ease-out forwards 0.9s;">
             PRE-LOADING ARENA ASSETS...
           </div>
         </div>
-      </div>
+      </section>
 
       <canvas id="canvas3d"></canvas>
       <canvas id="confetti-canvas"></canvas>
 
       <!-- HUD OVERLAY -->
-      <div id="hud-overlay" class="ui-layer" style="display: none;">
+      <section id="hud-overlay" class="ui-layer" style="display: none;">
         <!-- FLOATING POWER-UP BALL OVERLAY -->
         <div id="floating-powerup-ball" class="pointer-enabled" style="display: none; position: fixed; z-index: 2500; cursor: pointer; user-select: none; touch-action: manipulation; width: 66px; height: 66px; border-radius: 50%; align-items: center; justify-content: center; transform: translate(-50%, -50%); transition: transform 0.1s ease-out;">
           <div id="floating-ball-sphere" style="width: 100%; height: 100%; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; overflow: visible; animation: floatPulse 1.5s ease-in-out infinite alternate;">
@@ -1711,7 +2039,7 @@
         </div>
 
         <!-- ARCADE POWER-UP ACTIVE HUD STATUS -->
-        <div id="arcade-powerup-status" style="display: none; position: absolute; top: 72px; left: 50%; transform: translateX(-50%); z-index: 1100; pointer-events: none; padding: 6px 14px; border-radius: 12px; font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); flex-direction: column; align-items: center; gap: 4px; white-space: nowrap; min-width: 180px;">
+        <div id="arcade-powerup-status" style="display: none; position: absolute; top: 130px; left: 50%; transform: translateX(-50%); z-index: 1100; pointer-events: none; padding: 6px 14px; border-radius: 12px; font-family: 'Teko', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); flex-direction: column; align-items: center; gap: 4px; white-space: nowrap; min-width: 180px;">
           <div style="display: flex; align-items: center; gap: 6px; justify-content: center; width: 100%;">
             <span id="powerup-status-icon">🧊</span>
             <span id="powerup-status-text">ICE BALL LOADED (SWISH TO FREEZE)</span>
@@ -1729,13 +2057,14 @@
         </div>
 
         <!-- TOP BAR -->
-        <div id="hud-top">
+        <header id="hud-top">
           <div id="player-score-card-container" class="score-card player pointer-enabled">
             <div id="player-hud-label" class="player-label">PLAYER</div>
             <div id="player-score-val" class="player-val">0</div>
           </div>
 
           <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; justify-self: center; position: relative;">
+            <div id="weather-hud-badge" style="display: none; position: absolute; top: -30px; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px); border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 12px; padding: 2px 10px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; color: #93c5fd; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.6); letter-spacing: 0.5px;">🌧️ WEATHER: TROPICAL RAIN (30% CHANCE)</div>
             <div id="shot-clock-container">
               <div id="shot-clock-label">SHOT CLOCK</div>
               <div id="shot-clock-val">70</div>
@@ -1757,7 +2086,7 @@
               <div id="arcade-goal-val" class="player-val" style="color: #38bdf8; font-size: 20px; font-weight: 900; line-height: 1.1; white-space: nowrap; margin-top: 2px;">50 PTS</div>
             </div>
           </div>
-        </div>
+        </header>
 
         <!-- TIMING METER -->
         <div id="meter-wrapper">
@@ -1778,7 +2107,7 @@
         <div id="feedback-popup">PERFECT RELEASE!</div>
 
         <!-- BOTTOM BAR -->
-        <div id="hud-bottom">
+        <footer id="hud-bottom">
           <!-- AI SHOOTING OVERLAY TEXT -->
           <div id="ai-overlay" style="display: none;">
             <div id="ai-overlay-text">AI SHOOTING</div>
@@ -1803,8 +2132,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </footer>
+      </section>
 
       <!-- PAUSE SCREEN MODAL -->
       <div id="pause-screen" class="modal-screen pointer-enabled" style="display: none;">
@@ -1825,6 +2154,7 @@
           <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
             <button id="resume-btn" class="cta-button" style="min-height: 58px; font-size: 26px; letter-spacing: 1.5px;">RESUME GAME</button>
             <button id="pause-tips-btn" class="cta-button pointer-enabled" style="background: rgba(234, 179, 8, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(234, 179, 8, 0.6); color: #fde047; min-height: 52px; font-size: 24px; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;">💡 PRO SHOOTING TIPS</button>
+            <button id="pause-coach-btn" class="cta-button pointer-enabled" style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(202, 138, 4, 0.3) 100%); border: 1.5px solid rgba(234, 179, 8, 0.6); color: #fde047; min-height: 52px; font-size: 24px; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-sizing: border-box;">🤖 ASK COACH CASH MONEY</button>
             <button id="restart-btn" class="cta-button" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #64748b; min-height: 52px; font-size: 24px; letter-spacing: 1.5px;">RESTART ROUND</button>
             <button id="quit-btn" class="cta-button" style="background: rgba(153, 27, 27, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-color: #f87171; min-height: 52px; font-size: 24px; letter-spacing: 1.5px;">QUIT TO MENU</button>
           </div>
@@ -2048,6 +2378,23 @@
                 </div>
               </div>
               <button id="settings-haptics-toggle" class="nav-primary-btn pointer-enabled" style="width: 120px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; border-radius: 8px; flex-shrink: 0; text-align: center; border: 1.5px solid transparent; box-sizing: border-box; transition: all 0.2s;">ON</button>
+            </div>
+
+            <!-- GRAPHICS QUALITY SETTING -->
+            <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px 14px; border-radius: 12px; box-sizing: border-box;">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                  <span style="font-size: 20px; width: 24px; text-align: center; flex-shrink: 0;">⚡</span>
+                  <div style="min-width: 0;">
+                    <div style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">GRAPHICS QUALITY</div>
+                    <div style="font-size: 10px; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Performance & visual details</div>
+                  </div>
+                </div>
+                <button id="settings-graphics-toggle" class="nav-primary-btn pointer-enabled" style="width: 120px; height: 38px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; border-radius: 8px; flex-shrink: 0; text-align: center; border: 1.5px solid transparent; box-sizing: border-box; transition: all 0.2s;">HIGH</button>
+              </div>
+              <div id="graphics-info-box" style="display: none; background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.35); border-radius: 8px; padding: 6px 10px; font-size: 9px; color: #fde047; line-height: 1.3;">
+                🚀 Low Graphics Mode disables shadows and caps resolution for smooth performance on older devices.
+              </div>
             </div>
 
             <!-- FRAME RATE SETTING -->
@@ -2381,7 +2728,7 @@
         </div>
         <div style="margin-top: 8px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.7</div>
         </div>
       </div>
 
@@ -2439,6 +2786,11 @@
                 </div>
               </button>
             </div>
+
+            <!-- COACH CHAT TRIGGER ON TITLE SCREEN -->
+            <button id="title-coach-btn" class="pointer-enabled" style="width: 100%; padding: 12px 14px; border-radius: 12px; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; background: linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(202, 138, 4, 0.25) 100%); border: 1.5px solid rgba(234, 179, 8, 0.55); box-sizing: border-box; cursor: pointer; transition: all 0.2s; margin-top: 14px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.15);">
+              <span>🤖</span> ASK COACH CASH MONEY
+            </button>
           </div>
 
 
@@ -2446,7 +2798,7 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.7</div>
         </div>
       </div>
 
@@ -2458,7 +2810,7 @@
             <h1>3-POINT SHOOTOUT</h1>
           </div>
 
-          <!-- WIZARD STEP NAVIGATION BAR (4 STEPS) -->
+          <!-- WIZARD STEP NAVIGATION BAR (5 STEPS) -->
           <div class="wizard-steps-bar">
             <div class="wizard-progress-track">
               <div id="wizard-progress-fill" class="wizard-progress-fill"></div>
@@ -2482,6 +2834,11 @@
             <div class="wizard-step-item" data-step="4">
               <div class="wizard-step-badge">4</div>
               <div class="wizard-step-label">AI Rival</div>
+            </div>
+
+            <div class="wizard-step-item" data-step="5">
+              <div class="wizard-step-badge">5</div>
+              <div class="wizard-step-label">Venue</div>
             </div>
           </div>
 
@@ -2771,20 +3128,117 @@
             <div class="matchup-summary-card">
               <div class="summary-col">
                 <div class="summary-col-label">MONEY RACK</div>
-                <div id="summary-money-rack" class="summary-col-val">RACK 1</div>
+                <div id="summary-money-rack" class="summary-col-val summary-money-rack-val">RACK 1</div>
               </div>
               <div class="summary-col">
                 <div class="summary-col-label">METER DIFF</div>
-                <div id="summary-meter-diff" class="summary-col-val">NORMAL</div>
+                <div id="summary-meter-diff" class="summary-col-val summary-meter-diff-val">NORMAL</div>
               </div>
               <div class="summary-col">
                 <div class="summary-col-label">AI RIVAL</div>
-                <div id="summary-ai-rival" class="summary-col-val">PRO DAME</div>
+                <div id="summary-ai-rival" class="summary-col-val summary-ai-rival-val">PRO DAME</div>
               </div>
             </div>
 
             <div class="wizard-footer-nav">
               <button id="step-4-back" class="nav-secondary-btn">BACK</button>
+              <button id="step-4-next" class="nav-primary-btn">
+                NEXT: VENUE
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 5: CHOOSE COURT VENUE -->
+          <div id="wizard-step-5" class="wizard-step-panel" style="display: none;">
+            <div class="step-header-box">
+              <h2 class="step-title">CHOOSE COURT VENUE</h2>
+              <p class="step-desc">Select whether to play in the indoor arena or outdoor beach park.</p>
+            </div>
+
+            <div class="wheel-container">
+              <div id="venue-select" class="ai-opponents-grid">
+                
+                <!-- INDOOR ARENA CARD -->
+                <div class="venue-card selected" data-venue="arena">
+                  <div class="venue-selected-badge">ACTIVE</div>
+                  
+                  <!-- CSS & SVG Graphic Illustration Banner -->
+                  <div class="venue-banner-ill">
+                    <div style="position: absolute; width: 130%; height: 130%; opacity: 0.12; background: radial-gradient(circle at 50% 100%, #fbbf24 0%, transparent 70%);"></div>
+                    <svg width="46" height="46" viewBox="0 0 100 100" style="filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.25));">
+                      <!-- Backboard, Rim, Court line -->
+                      <rect x="25" y="15" width="50" height="35" rx="3" fill="none" stroke="#e2e8f0" stroke-width="2.5" opacity="0.6"/>
+                      <rect x="38" y="24" width="24" height="16" rx="1.5" fill="none" stroke="#e2e8f0" stroke-width="2" opacity="0.5"/>
+                      <line x1="10" y1="75" x2="90" y2="75" stroke="#e2e8f0" stroke-width="2" opacity="0.4"/>
+                      <path d="M 30,75 A 20,20 0 0,1 70,75" fill="none" stroke="#e2e8f0" stroke-width="2" opacity="0.4"/>
+                      <circle cx="50" cy="50" r="11" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+                    </svg>
+                    <span style="position: absolute; bottom: 4px; right: 8px; font-family: 'Montserrat', sans-serif; font-size: 7.5px; font-weight: 850; color: #fbbf24; opacity: 0.85; letter-spacing: 1px;">STADIUM</span>
+                  </div>
+
+                  <div class="ai-opp-header">
+                    <div class="ai-opp-info">
+                      <div class="ai-opp-role" style="color: #38bdf8;">CLASSIC</div>
+                      <div class="ai-opp-name">INDOOR ARENA</div>
+                    </div>
+                  </div>
+                  <div class="ai-opp-stats">
+                    <span>Pro Stadium • Crowd Echo</span>
+                  </div>
+                </div>
+
+                <!-- BEACH PARK CARD -->
+                <div class="venue-card" data-venue="beach">
+                  <div class="venue-selected-badge">ACTIVE</div>
+                  
+                  <!-- CSS & SVG Graphic Illustration Banner -->
+                  <div class="venue-banner-ill">
+                    <div style="position: absolute; width: 130%; height: 130%; opacity: 0.25; background: radial-gradient(circle at 50% 100%, #f59e0b 0%, transparent 75%);"></div>
+                    <svg width="46" height="46" viewBox="0 0 100 100" style="filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.3));">
+                      <!-- Sunset Sun -->
+                      <circle cx="50" cy="62" r="18" fill="#fbbf24" opacity="0.85"/>
+                      <!-- Wave lines -->
+                      <path d="M 10,75 Q 30,70 50,75 T 90,75" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.8"/>
+                      <path d="M 15,82 Q 35,78 55,82 T 95,82" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+                      <!-- Palm silhouette outline -->
+                      <path d="M 25,75 Q 30,50 42,42" fill="none" stroke="#f59e0b" stroke-width="2.5" opacity="0.5"/>
+                      <path d="M 42,42 Q 30,36 18,44 M 42,42 Q 42,30 38,18 M 42,42 Q 54,34 62,42" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.4"/>
+                    </svg>
+                    <span style="position: absolute; bottom: 4px; right: 8px; font-family: 'Montserrat', sans-serif; font-size: 7.5px; font-weight: 850; color: #f59e0b; opacity: 0.85; letter-spacing: 1px;">COASTLINE</span>
+                  </div>
+
+                  <div class="ai-opp-header">
+                    <div class="ai-opp-info">
+                      <div class="ai-opp-role" style="color: #f59e0b;">OUTDOOR</div>
+                      <div class="ai-opp-name">BEACH PARK</div>
+                    </div>
+                  </div>
+                  <div class="ai-opp-stats">
+                    <span>Ocean Waves • 30% Rain Chance 🌧️</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- MATCHUP RECAP SUMMARY -->
+            <div class="matchup-summary-card">
+              <div class="summary-col">
+                <div class="summary-col-label">MONEY RACK</div>
+                <div class="summary-col-val summary-money-rack-val">RACK 1</div>
+              </div>
+              <div class="summary-col">
+                <div class="summary-col-label">METER DIFF</div>
+                <div class="summary-col-val summary-meter-diff-val">NORMAL</div>
+              </div>
+              <div class="summary-col">
+                <div class="summary-col-label">AI RIVAL</div>
+                <div class="summary-col-val summary-ai-rival-val">PRO DAME</div>
+              </div>
+            </div>
+
+            <div class="wizard-footer-nav">
+              <button id="step-5-back" class="nav-secondary-btn">BACK</button>
               <button id="start-game-btn" class="nav-primary-btn">
                 START SHOOTOUT 🏀
               </button>
@@ -2794,7 +3248,7 @@
         </div>
         <div style="margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.45); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 3; text-align: center; pointer-events: none;">
           Made by Ralph Frialde
-          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.6</div>
+          <div style="font-size: 10px; color: rgba(255, 255, 255, 0.3); margin-top: 4px; letter-spacing: 1px;">VERSION 1.7</div>
         </div>
       </div>
 
@@ -3002,7 +3456,7 @@
       </div>
 
       <!-- POST-GAME SCREEN -->
-      <div id="postgame-screen" class="modal-screen pointer-enabled" style="display: none;">
+      <section id="postgame-screen" class="modal-screen pointer-enabled" style="display: none;">
         <div class="modal-card">
           <div class="winner-banner">
             <div id="postgame-trophy" class="trophy-icon">🏆</div>
@@ -3052,9 +3506,67 @@
             Follow <span style="color: #38bdf8;">@ralphfrialde</span> on Instagram!
           </div>
         </div>
+      </section>
+
+      <!-- COACH GEMINI CHATBOT WIDGET -->
+      <div id="coach-gemini-chat-panel" class="pointer-enabled">
+        <!-- Panel Header -->
+        <div style="background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%); border-bottom: 2px solid rgba(234, 179, 8, 0.3); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 36px; height: 36px; background: radial-gradient(circle, #facc15 0%, #ca8a04 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);">
+              <span style="font-size: 20px;">🤖</span>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-family: 'Teko', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 1.5px; color: #facc15; line-height: 1.1; text-transform: uppercase;">COACH CASH MONEY</span>
+              <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="width: 7px; height: 7px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 4px #22c55e;"></span>
+                <span style="font-size: 9px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">PRO COACH AI • ONLINE</span>
+              </div>
+            </div>
+          </div>
+          <button id="coach-chat-close-btn" style="background: none; border: none; font-size: 28px; font-weight: 300; color: #94a3b8; cursor: pointer; transition: color 0.15s; outline: none; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Close Chat">&times;</button>
+        </div>
+
+        <!-- Panel Conversation Area -->
+        <div id="coach-chat-history" class="coach-chat-history" style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);">
+          <!-- Initial greeting -->
+          <div class="coach-msg-bubble coach-msg-assistant">
+            🏀 Hey there! I'm <strong>Coach Cash Money</strong>, your personal AI training assistant. Ask me anything about game mechanics, rules, standard vs. arcade modes, power-ups, customized jersey tips, or developer Ralph Frialde! Ready to improve your shot?
+          </div>
+          <!-- Quick Suggestion Chips inside history as an intro helper -->
+          <div id="coach-chips-container" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding: 4px 0;">
+            <div style="font-size: 10px; font-weight: 800; color: #eab308; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;">RECOMMENDED TOPICS:</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button class="coach-chip" data-question="How do I get a perfect release?">🎯 Perfect Release Tips</button>
+              <button class="coach-chip" data-question="What do the power-ups do in Arcade mode?">🌟 Arcade Power-Ups</button>
+              <button class="coach-chip" data-question="How to configure my customized jersey?">👕 Custom Jersey Guide</button>
+              <button class="coach-chip" data-question="Who is Ralph Frialde?">👑 Meet Developer Ralph</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing Indicator placeholder -->
+        <div id="coach-typing-indicator" style="display: none; padding: 0 16px; flex-shrink: 0;">
+          <div class="coach-typing-dots">
+            <span class="coach-dot"></span>
+            <span class="coach-dot"></span>
+            <span class="coach-dot"></span>
+          </div>
+        </div>
+
+        <!-- Panel Input Form -->
+        <form id="coach-chat-form" style="background: #0f172a; border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 14px; display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
+          <input type="text" id="coach-chat-input" placeholder="Ask Coach Cash Money..." autocomplete="off" style="flex: 1; background: rgba(15, 23, 42, 0.6); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 10px 18px; color: #ffffff; font-size: 13px; font-family: 'Montserrat', sans-serif; outline: none; transition: border-color 0.2s, box-shadow 0.2s;" required>
+          <button type="submit" id="coach-chat-send-btn" style="width: 38px; height: 38px; border-radius: 50%; background: #eab308; border: none; color: #020617; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.15s; outline: none; box-shadow: 0 2px 8px rgba(234, 179, 8, 0.35);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(45deg) translate(-1px, 1px);">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
       </div>
 
-    </div>
+    </main>
 
     <!-- MAIN GAME SCRIPT -->
     <script>
@@ -3065,7 +3577,33 @@
           this.swishBuffer = null;
           this.cheerBuffer = null;
           this.groanBuffer = null;
-          this.muted = false;
+          this.arenaSource = null;
+          this.beachSource = null;
+          this.musicSource = null;
+          this._muted = false;
+        }
+
+        get muted() {
+          return this._muted;
+        }
+
+        set muted(val) {
+          this._muted = !!val;
+          if (this.ctx) {
+            const now = this.ctx.currentTime;
+            if (this.musicSource && this.musicSource.gainNode) {
+              this.musicSource.gainNode.gain.cancelScheduledValues(now);
+              this.musicSource.gainNode.gain.setValueAtTime(this._muted ? 0 : 0.18, now);
+            }
+            if (this.beachSource && this.beachSource.mainGain) {
+              this.beachSource.mainGain.gain.cancelScheduledValues(now);
+              this.beachSource.mainGain.gain.setValueAtTime(this._muted ? 0 : 0.28, now);
+            }
+            if (this.arenaSource && this.arenaSource.mainGain) {
+              this.arenaSource.mainGain.gain.cancelScheduledValues(now);
+              this.arenaSource.mainGain.gain.setValueAtTime(this._muted ? 0 : 0.05, now);
+            }
+          }
         }
 
         init() {
@@ -3131,32 +3669,76 @@
           
           let buffer = this.swishBuffer;
           if (!buffer) {
-            const bufferSize = Math.floor(this.ctx.sampleRate * 0.35);
+            const bufferSize = Math.floor(this.ctx.sampleRate * 0.4);
             buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const data = buffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) {
               data[i] = Math.random() * 2 - 1;
             }
+            this.swishBuffer = buffer;
           }
 
-          const noise = this.ctx.createBufferSource();
-          noise.buffer = buffer;
+          try {
+            // Layer 1: The Crisp Snap (Rope friction/grain)
+            const source1 = this.ctx.createBufferSource();
+            source1.buffer = buffer;
+            const filter1 = this.ctx.createBiquadFilter();
+            filter1.type = 'highpass';
+            filter1.frequency.setValueAtTime(2200, now);
+            filter1.Q.setValueAtTime(1.8, now);
 
-          const filter = this.ctx.createBiquadFilter();
-          filter.type = 'bandpass';
-          filter.frequency.setValueAtTime(1200, now);
-          filter.frequency.exponentialRampToValueAtTime(400, now + 0.35);
-          filter.Q.value = 3.0;
+            const gain1 = this.ctx.createGain();
+            gain1.gain.setValueAtTime(0.001, now);
+            gain1.gain.linearRampToValueAtTime(0.38, now + 0.01); 
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
-          const gain = this.ctx.createGain();
-          gain.gain.setValueAtTime(0.7, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            source1.connect(filter1);
+            filter1.connect(gain1);
+            gain1.connect(this.ctx.destination);
 
-          noise.connect(filter);
-          filter.connect(gain);
-          gain.connect(this.ctx.destination);
+            // Layer 2: The Hollow Net Expansion "Thwap" (Resonant air-thrust frequency sweep)
+            const source2 = this.ctx.createBufferSource();
+            source2.buffer = buffer;
+            const filter2 = this.ctx.createBiquadFilter();
+            filter2.type = 'bandpass';
+            filter2.frequency.setValueAtTime(1600, now);
+            filter2.frequency.exponentialRampToValueAtTime(360, now + 0.25);
+            filter2.Q.setValueAtTime(3.8, now); // High Q makes it sound hollow and organic
 
-          noise.start(now);
+            const gain2 = this.ctx.createGain();
+            gain2.gain.setValueAtTime(0.001, now);
+            gain2.gain.linearRampToValueAtTime(0.48, now + 0.02);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            source2.connect(filter2);
+            filter2.connect(gain2);
+            gain2.connect(this.ctx.destination);
+
+            // Layer 3: Backboard/Spring Tension "Thump" (Adds deep mechanical body and satisfying impact)
+            const osc = this.ctx.createOscillator();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(55, now + 0.12);
+
+            const oscFilter = this.ctx.createBiquadFilter();
+            oscFilter.type = 'lowpass';
+            oscFilter.frequency.setValueAtTime(120, now);
+
+            const oscGain = this.ctx.createGain();
+            oscGain.gain.setValueAtTime(0.001, now);
+            oscGain.gain.linearRampToValueAtTime(0.35, now + 0.015);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+            osc.connect(oscFilter);
+            oscFilter.connect(oscGain);
+            oscGain.connect(this.ctx.destination);
+
+            // Play all layers in perfect unison
+            source1.start(now);
+            source2.start(now);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          } catch (e) {}
         }
 
         playRim(intensity = 1.0) {
@@ -3277,7 +3859,139 @@
           osc.stop(now + 0.08);
         }
 
-        playCheer() {
+        playSneakerSqueak(vol = 0.28) {
+          if (this.muted || !this.ctx) return;
+          const now = this.ctx.currentTime;
+
+          // High-friction rubber shoe on polished hardwood court squeak - Redesigned to sound realistic and avoid "bird chirp"
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+
+          const startFreq = 1200 + Math.random() * 200;
+          const endFreq = 1650 + Math.random() * 150;
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(startFreq, now);
+          osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.04);
+          osc.frequency.exponentialRampToValueAtTime(950, now + 0.08);
+
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1400, now);
+          filter.Q.value = 3.5;
+
+          const v = Math.min(Math.max(vol, 0.05), 0.6);
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(v, now + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.085);
+        }
+
+        playBallGrab(venue = 'arena') {
+          if (this.muted || !this.ctx) return;
+          const now = this.ctx.currentTime;
+
+          // Clean, satisfying leather basketball grab/catch thump sound
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(45, now + 0.06);
+
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.06);
+
+          // Add a soft leather friction puff of noise for physical texture
+          try {
+            const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = (Math.random() * 2 - 1) * 0.035;
+            }
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(450, now);
+            filter.Q.value = 1.8;
+
+            const noiseGain = this.ctx.createGain();
+            noiseGain.gain.setValueAtTime(0.10, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+            noise.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(this.ctx.destination);
+            noise.start(now);
+          } catch (err) {}
+        }
+
+        playSandStep(vol = 0.22) {
+          if (this.muted || !this.ctx) return;
+          const now = this.ctx.currentTime;
+          try {
+            const bufferSize = Math.floor(this.ctx.sampleRate * 0.12);
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = (Math.random() * 2 - 1) * 0.05;
+            }
+            const source = this.ctx.createBufferSource();
+            source.buffer = buffer;
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(250, now);
+            filter.Q.value = 1.0;
+
+            const gain = this.ctx.createGain();
+            const v = Math.min(Math.max(vol, 0.05), 0.55);
+            gain.gain.setValueAtTime(v, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            source.start(now);
+          } catch (e) {}
+        }
+
+        playStadiumOrganChime(vol = 0.22) {
+          if (this.muted || !this.ctx) return;
+          const now = this.ctx.currentTime;
+          // Classic 2-note stadium organ chime: F4 (349Hz) -> C5 (523Hz)
+          const notes = [349.23, 523.25];
+          notes.forEach((freq, idx) => {
+            const startTime = now + idx * 0.16;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, startTime);
+
+            gain.gain.setValueAtTime(0.01, startTime);
+            gain.gain.linearRampToValueAtTime(vol, startTime + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.55);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.55);
+          });
+        }
+
+        playCheer(type = 'swish') {
           if (this.muted) return;
           if (!this.ctx) return;
           const now = this.ctx.currentTime;
@@ -3302,17 +4016,26 @@
           filter.frequency.exponentialRampToValueAtTime(350, now + 1.8);
           filter.Q.value = 1.8;
 
+          let vol = 0.65;
+          if (type === 'money') vol = 0.85;
+          if (type === 'starry' || type === 'streak') vol = 1.0;
+          if (type === 'buzzer_beater') vol = 1.2;
+
           const gain = this.ctx.createGain();
           gain.gain.setValueAtTime(0.01, now);
-          gain.gain.linearRampToValueAtTime(0.65, now + 0.25);
+          gain.gain.linearRampToValueAtTime(vol, now + 0.25);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
 
           noise.connect(filter);
           filter.connect(gain);
           gain.connect(this.ctx.destination);
 
-          // Add harmonized celebratory chord swell
-          [329.63, 392.00, 523.25, 659.25].forEach((freq) => {
+          // Add harmonized celebratory chord swell based on cheer level
+          const chords = (type === 'starry' || type === 'buzzer_beater' || type === 'streak')
+            ? [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]
+            : [329.63, 392.00, 523.25, 659.25];
+
+          chords.forEach((freq) => {
             const osc = this.ctx.createOscillator();
             const oGain = this.ctx.createGain();
             osc.type = 'sine';
@@ -3320,7 +4043,7 @@
             osc.frequency.exponentialRampToValueAtTime(freq * 1.05, now + 0.6);
 
             oGain.gain.setValueAtTime(0.01, now);
-            oGain.gain.linearRampToValueAtTime(0.08, now + 0.2);
+            oGain.gain.linearRampToValueAtTime(vol * 0.12, now + 0.2);
             oGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
             osc.connect(oGain);
@@ -3532,24 +4255,170 @@
           });
         }
 
+        startArcadeMusic() {
+          this.init();
+          this.stopBeachAmbience();
+          this.stopArenaAmbience();
+          if (this.musicSource) return;
+          if (!this.ctx) return;
+          try {
+            const tempo = 120; // 120 BPM 90s basketball arcade rhythm
+            const stepTime = (60 / tempo) / 4; // 125ms per 16th note step
+            let step = 0;
+
+            this.musicGain = this.ctx.createGain();
+            this.musicGain.gain.setValueAtTime(this.muted ? 0 : 0.18, this.ctx.currentTime);
+            this.musicGain.connect(this.ctx.destination);
+
+            const playStep = () => {
+              if (this.muted || !this.ctx || !this.musicSource) return;
+              const now = this.ctx.currentTime;
+
+              // 1. KICK DRUM (steps 0, 6, 8, 12)
+              if (step === 0 || step === 6 || step === 8 || step === 12) {
+                const kOsc = this.ctx.createOscillator();
+                const kGain = this.ctx.createGain();
+                kOsc.type = 'sine';
+                kOsc.frequency.setValueAtTime(140, now);
+                kOsc.frequency.exponentialRampToValueAtTime(32, now + 0.09);
+                kGain.gain.setValueAtTime(0.65, now);
+                kGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                kOsc.connect(kGain);
+                kGain.connect(this.musicGain);
+                kOsc.start(now);
+                kOsc.stop(now + 0.09);
+              }
+
+              // 2. SNARE / CLAP (steps 4, 12)
+              if (step === 4 || step === 12) {
+                const sSize = Math.floor(this.ctx.sampleRate * 0.12);
+                const sBuffer = this.ctx.createBuffer(1, sSize, this.ctx.sampleRate);
+                const sData = sBuffer.getChannelData(0);
+                for (let i = 0; i < sSize; i++) sData[i] = Math.random() * 2 - 1;
+
+                const sSource = this.ctx.createBufferSource();
+                sSource.buffer = sBuffer;
+                const sFilter = this.ctx.createBiquadFilter();
+                sFilter.type = 'highpass';
+                sFilter.frequency.setValueAtTime(1200, now);
+
+                const sGain = this.ctx.createGain();
+                sGain.gain.setValueAtTime(0.35, now);
+                sGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+                sSource.connect(sFilter);
+                sFilter.connect(sGain);
+                sGain.connect(this.musicGain);
+                sSource.start(now);
+              }
+
+              // 3. CLOSED HI-HAT (steps 2, 6, 10, 14)
+              if (step % 2 === 0) {
+                const hSize = Math.floor(this.ctx.sampleRate * 0.04);
+                const hBuffer = this.ctx.createBuffer(1, hSize, this.ctx.sampleRate);
+                const hData = hBuffer.getChannelData(0);
+                for (let i = 0; i < hSize; i++) hData[i] = Math.random() * 2 - 1;
+
+                const hSource = this.ctx.createBufferSource();
+                hSource.buffer = hBuffer;
+                const hFilter = this.ctx.createBiquadFilter();
+                hFilter.type = 'highpass';
+                hFilter.frequency.setValueAtTime(7500, now);
+
+                const hGain = this.ctx.createGain();
+                hGain.gain.setValueAtTime(step % 4 === 2 ? 0.22 : 0.12, now);
+                hGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+                hSource.connect(hFilter);
+                hFilter.connect(hGain);
+                hGain.connect(this.musicGain);
+                hSource.start(now);
+              }
+
+              // 4. GROOVY RETRO FUNK BASSLINE
+              const bassPattern = [77.78, 77.78, 92.50, 103.83, 116.54, 103.83, 92.50, 87.31];
+              if (step % 2 === 0) {
+                const bFreq = bassPattern[Math.floor(step / 2)];
+                const bOsc = this.ctx.createOscillator();
+                const bFilter = this.ctx.createBiquadFilter();
+                const bGain = this.ctx.createGain();
+
+                bOsc.type = 'sawtooth';
+                bOsc.frequency.setValueAtTime(bFreq, now);
+
+                bFilter.type = 'lowpass';
+                bFilter.frequency.setValueAtTime(700, now);
+                bFilter.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+
+                bGain.gain.setValueAtTime(0.3, now);
+                bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+                bOsc.connect(bFilter);
+                bFilter.connect(bGain);
+                bGain.connect(this.musicGain);
+                bOsc.start(now);
+                bOsc.stop(now + 0.18);
+              }
+
+              // 5. CATCHY ARCADE SYNTH LEAD ARPEGGIO
+              const leadPattern = [311.13, 369.99, 415.30, 466.16, 554.37, 622.25, 554.37, 466.16,
+                                   311.13, 415.30, 466.16, 554.37, 622.25, 554.37, 466.16, 369.99];
+              const lFreq = leadPattern[step];
+              if (lFreq) {
+                const lOsc = this.ctx.createOscillator();
+                const lGain = this.ctx.createGain();
+                lOsc.type = 'triangle';
+                lOsc.frequency.setValueAtTime(lFreq, now);
+
+                lGain.gain.setValueAtTime(0.12, now);
+                lGain.gain.exponentialRampToValueAtTime(0.001, now + 0.10);
+
+                lOsc.connect(lGain);
+                lGain.connect(this.musicGain);
+                lOsc.start(now);
+                lOsc.stop(now + 0.10);
+              }
+
+              step = (step + 1) % 16;
+            };
+
+            const intervalId = setInterval(playStep, stepTime * 1000);
+            this.musicSource = { intervalId, gainNode: this.musicGain };
+          } catch(e) {
+            console.warn("Arcade music initialization error:", e);
+          }
+        }
+
+        stopArcadeMusic() {
+          if (this.musicSource) {
+            try {
+              const ms = this.musicSource;
+              this.musicSource = null;
+              if (ms.intervalId) clearInterval(ms.intervalId);
+              if (ms.gainNode && this.ctx) {
+                ms.gainNode.gain.cancelScheduledValues(this.ctx.currentTime);
+                ms.gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
+                ms.gainNode.disconnect();
+              }
+            } catch(e) {}
+            this.musicSource = null;
+          }
+        }
+
         startBeachAmbience() {
           this.init();
-          if (this.beachSource || !this.ctx) return;
+          this.stopArcadeMusic();
+          this.stopArenaAmbience();
+          if (this.beachSource) {
+            this.stopBeachAmbience();
+          }
+          if (!this.ctx) return;
           try {
-            const bufferSize = this.ctx.sampleRate * 3;
+            const bufferSize = this.ctx.sampleRate * 4;
             const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const data = buffer.getChannelData(0);
-            let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
             for (let i = 0; i < bufferSize; i++) {
-              const white = Math.random() * 2 - 1;
-              b0 = 0.99886 * b0 + white * 0.0555179;
-              b1 = 0.99332 * b1 + white * 0.0750759;
-              b2 = 0.96900 * b2 + white * 0.1538520;
-              b3 = 0.86650 * b3 + white * 0.3104856;
-              b4 = 0.55000 * b4 + white * 0.5329522;
-              b5 = -0.7616 * b5 - white * 0.0168980;
-              data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.08;
-              b6 = white * 0.115926;
+              data[i] = (Math.random() * 2 - 1) * 0.08;
             }
 
             // 1. Ocean Wave Surf Noise Source
@@ -3559,14 +4428,14 @@
 
             const filter = this.ctx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.value = 350;
+            filter.frequency.value = 320;
 
             const lfo = this.ctx.createOscillator();
             lfo.type = 'sine';
             lfo.frequency.value = 0.18; // ~5.5s wave rolling cycle
 
             const lfoGain = this.ctx.createGain();
-            lfoGain.gain.value = 280; // Modulates filter between ~100Hz and ~630Hz
+            lfoGain.gain.value = 240;
 
             lfo.connect(lfoGain);
             lfoGain.connect(filter.frequency);
@@ -3578,22 +4447,21 @@
 
             const windFilter = this.ctx.createBiquadFilter();
             windFilter.type = 'bandpass';
-            windFilter.frequency.value = 450;
-            windFilter.Q.value = 2.5;
+            windFilter.frequency.value = 400;
+            windFilter.Q.value = 2.0;
 
             const windLfo = this.ctx.createOscillator();
             windLfo.type = 'sine';
-            windLfo.frequency.value = 0.08; // ~12.5s wind gust cycle
+            windLfo.frequency.value = 0.08;
 
             const windLfoGain = this.ctx.createGain();
-            windLfoGain.gain.value = 300;
+            windLfoGain.gain.value = 200;
 
             windLfo.connect(windLfoGain);
             windLfoGain.connect(windFilter.frequency);
 
-            // Master Ambience Gain
             const mainGain = this.ctx.createGain();
-            mainGain.gain.value = this.muted ? 0 : 0.28;
+            mainGain.gain.value = this.muted ? 0 : 0.22;
 
             noise.connect(filter);
             filter.connect(mainGain);
@@ -3617,19 +4485,149 @@
         stopBeachAmbience() {
           if (this.beachSource && this.ctx) {
             try {
-              const now = this.ctx.currentTime;
-              this.beachSource.mainGain.gain.linearRampToValueAtTime(0.001, now + 0.4);
               const bs = this.beachSource;
-              setTimeout(() => {
-                try {
-                  bs.noise.stop();
-                  bs.lfo.stop();
-                  if (bs.windNoise) bs.windNoise.stop();
-                  if (bs.windLfo) bs.windLfo.stop();
-                } catch(err) {}
-              }, 450);
+              this.beachSource = null;
+              if (bs.mainGain) {
+                bs.mainGain.gain.cancelScheduledValues(this.ctx.currentTime);
+                bs.mainGain.gain.setValueAtTime(0, this.ctx.currentTime);
+                bs.mainGain.disconnect();
+              }
+              if (bs.noise) { try { bs.noise.stop(); bs.noise.disconnect(); } catch(e){} }
+              if (bs.lfo) { try { bs.lfo.stop(); bs.lfo.disconnect(); } catch(e){} }
+              if (bs.windNoise) { try { bs.windNoise.stop(); bs.windNoise.disconnect(); } catch(e){} }
+              if (bs.windLfo) { try { bs.windLfo.stop(); bs.windLfo.disconnect(); } catch(e){} }
             } catch(e) {}
             this.beachSource = null;
+          }
+        }
+
+        stopAllMusicAndAmbience() {
+          this.stopArcadeMusic();
+          this.stopBeachAmbience();
+          this.stopArenaAmbience();
+        }
+
+        startArenaAmbience() {
+          this.init();
+          this.stopArcadeMusic();
+          this.stopBeachAmbience();
+          if (this.arenaSource) {
+            this.stopArenaAmbience();
+          }
+          if (!this.ctx) return;
+          try {
+            const bufferSize = this.ctx.sampleRate * 4;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = (Math.random() * 2 - 1) * 0.08;
+            }
+
+            // 1. Indoor Stadium Sub-bass HVAC Acoustic Rumble (Deeper, warmer rumble)
+            const rumbleSource = this.ctx.createBufferSource();
+            rumbleSource.buffer = buffer;
+            rumbleSource.loop = true;
+
+            const rumbleFilter = this.ctx.createBiquadFilter();
+            rumbleFilter.type = 'lowpass';
+            rumbleFilter.frequency.value = 75;
+
+            const rumbleLfo = this.ctx.createOscillator();
+            rumbleLfo.type = 'sine';
+            rumbleLfo.frequency.value = 0.04;
+
+            const rumbleLfoGain = this.ctx.createGain();
+            rumbleLfoGain.gain.value = 15;
+            rumbleLfo.connect(rumbleLfoGain);
+            rumbleLfoGain.connect(rumbleFilter.frequency);
+
+            // 2. Indoor Spectator Murmur / Crowd Chatter Resonance (Muffled, deep stadium murmur)
+            const chatterSource = this.ctx.createBufferSource();
+            chatterSource.buffer = buffer;
+            chatterSource.loop = true;
+
+            const chatterFilter = this.ctx.createBiquadFilter();
+            chatterFilter.type = 'bandpass';
+            chatterFilter.frequency.value = 320;
+            chatterFilter.Q.value = 2.2;
+
+            const chatterLfo = this.ctx.createOscillator();
+            chatterLfo.type = 'sine';
+            chatterLfo.frequency.value = 0.08;
+
+            const chatterLfoGain = this.ctx.createGain();
+            chatterLfoGain.gain.value = 60;
+            chatterLfo.connect(chatterLfoGain);
+            chatterLfoGain.connect(chatterFilter.frequency);
+
+            // Master Arena Ambience Gain Node (Comfortable, low-noise atmospheric background)
+            const mainGain = this.ctx.createGain();
+            const now = this.ctx.currentTime;
+            const targetGain = this.muted ? 0 : 0.04;
+            mainGain.gain.setValueAtTime(0.001, now);
+            mainGain.gain.linearRampToValueAtTime(targetGain, now + 0.4);
+
+            rumbleSource.connect(rumbleFilter);
+            rumbleFilter.connect(mainGain);
+
+            chatterSource.connect(chatterFilter);
+            chatterFilter.connect(mainGain);
+
+            mainGain.connect(this.ctx.destination);
+
+            rumbleSource.start();
+            rumbleLfo.start();
+            chatterSource.start();
+            chatterLfo.start();
+
+            // 3. Realistic, Procedural Live Arena Soundscape (Soft sneaker squeaks, bounces, and organs in background)
+            const ambientInterval = setInterval(() => {
+              if (this.muted || !this.ctx || !this.arenaSource) return;
+              const rand = Math.random();
+              if (rand < 0.15) {
+                // Occasional quiet sneaker squeaks from distant court activity
+                this.playSneakerSqueak(0.03 + Math.random() * 0.05);
+              } else if (rand < 0.25) {
+                // Occasional quiet, soft distant dribble/bounce
+                this.playBounce(0.02 + Math.random() * 0.04);
+              } else if (rand < 0.28) {
+                // Occasional very quiet, distant stadium organ chime
+                this.playStadiumOrganChime(0.015 + Math.random() * 0.025);
+              }
+            }, 1000);
+
+            this.arenaSource = { 
+              rumbleSource, 
+              rumbleLfo, 
+              chatterSource, 
+              chatterLfo, 
+              mainGain, 
+              ambientInterval 
+            };
+          } catch(e) {
+            console.warn("Indoor arena ambience initialization error:", e);
+          }
+        }
+
+        stopArenaAmbience() {
+          if (this.arenaSource && this.ctx) {
+            try {
+              const as = this.arenaSource;
+              this.arenaSource = null;
+              if (as.ambientInterval) {
+                clearInterval(as.ambientInterval);
+              }
+              if (as.mainGain) {
+                as.mainGain.gain.cancelScheduledValues(this.ctx.currentTime);
+                as.mainGain.gain.setValueAtTime(0, this.ctx.currentTime);
+                as.mainGain.disconnect();
+              }
+              if (as.rumbleSource) { try { as.rumbleSource.stop(); as.rumbleSource.disconnect(); } catch(e){} }
+              if (as.rumbleLfo) { try { as.rumbleLfo.stop(); as.rumbleLfo.disconnect(); } catch(e){} }
+              if (as.chatterSource) { try { as.chatterSource.stop(); as.chatterSource.disconnect(); } catch(e){} }
+              if (as.chatterLfo) { try { as.chatterLfo.stop(); as.chatterLfo.disconnect(); } catch(e){} }
+            } catch(e) {}
+            this.arenaSource = null;
           }
         }
       }
@@ -4135,6 +5133,7 @@
           this.moneyRackIdx = 4;
           this.aiDiff = 'medium';
           this.meterDiff = 'normal'; // 'easy', 'normal', 'hard'
+          this.shootoutVenue = 'arena'; // 'arena' or 'beach'
           this.isPaused = false;
 
           // Scores & Stats
@@ -4221,6 +5220,52 @@
           this.initUI();
         }
 
+        applyGraphicsSettings() {
+          if (!this.renderer) return;
+          const mode = (this.settings && this.settings.graphics) || 'high';
+          
+          // Pixel ratio cap:
+          // HIGH: up to 2.0 (native sharp resolution)
+          // MEDIUM: 1.0 (standard 1x HD)
+          // LOW: 0.75 (sub-native render scaling for maximum performance on older devices)
+          let targetPixelRatio = Math.min(window.devicePixelRatio, 2);
+          if (mode === 'medium') targetPixelRatio = 1.0;
+          if (mode === 'low') targetPixelRatio = 0.75;
+
+          this.renderer.setPixelRatio(targetPixelRatio);
+
+          // Shadows enabled on HIGH mode only
+          const shadowsEnabled = (mode === 'high');
+          this.renderer.shadowMap.enabled = shadowsEnabled;
+
+          if (this.mainLight) {
+            this.mainLight.castShadow = shadowsEnabled;
+          }
+
+          if (this.courtTex) {
+            this.courtTex.anisotropy = shadowsEnabled ? Math.min(16, this.renderer.capabilities.getMaxAnisotropy()) : 1;
+            this.courtTex.needsUpdate = true;
+          }
+
+          if (this.scene) {
+            this.scene.traverse((obj) => {
+              if (obj.isMesh) {
+                if (!shadowsEnabled) {
+                  obj.castShadow = false;
+                  obj.receiveShadow = false;
+                } else {
+                  if (obj === this.playerMesh || obj === this.aiPlayerMesh || (obj.name && obj.name.includes('ball'))) {
+                    obj.castShadow = true;
+                  }
+                  if (obj.name === 'floor' || obj.name === 'backboard') {
+                    obj.receiveShadow = true;
+                  }
+                }
+              }
+            });
+          }
+        }
+
         init3D() {
           this.scene = new THREE.Scene();
           this.scene.background = new THREE.Color(0x080a0f);
@@ -4283,6 +5328,9 @@
           mainLight.shadow.camera.bottom = -16;
           this.scene.add(mainLight);
           this.defaultLights.push(mainLight);
+          this.mainLight = mainLight;
+
+          this.applyGraphicsSettings();
 
           // Ceiling-to-Floor Arena Spotlights Array (Soft overhead lights shining down from high rafters)
           const ceilingSpotConfigs = [
@@ -4629,13 +5677,10 @@
         buildArena() {
           this.clearPreviousArena();
 
-          if (this.gameMode === 'arcade') {
+          if (this.gameMode === 'arcade' || (this.gameMode === 'shootout' && this.shootoutVenue === 'beach')) {
             this.buildOutdoorArena();
-            if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
             return;
           }
-
-          if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
 
           // Restore default lights for Shootout Mode
           this.restoreDefaultLights();
@@ -5806,18 +6851,70 @@
           this.userJerseyNumber = '1';
           this.userJerseyColor = 'black';
 
+          const playCurrentScreenAudio = () => {
+            if (!audio) return;
+            const pregame = document.getElementById('pregame-screen');
+            const arcadePregame = document.getElementById('arcade-pregame-screen');
+            const titleScreen = document.getElementById('title-gamemode-screen');
+            const jerseyScreen = document.getElementById('jersey-creation-screen');
+
+            const isTitleOrJersey = (titleScreen && titleScreen.style.display !== 'none') || 
+                                    (jerseyScreen && jerseyScreen.style.display !== 'none');
+
+            if (isTitleOrJersey) {
+              if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startArcadeMusic) audio.startArcadeMusic();
+            } else if (this.gameMode === 'arcade' || (arcadePregame && arcadePregame.style.display !== 'none')) {
+              if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startBeachAmbience) audio.startBeachAmbience();
+            } else if (this.gameMode === 'shootout' || (pregame && pregame.style.display !== 'none')) {
+              if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+              if (this.shootoutVenue === 'beach') {
+                if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+                if (audio.startBeachAmbience) audio.startBeachAmbience();
+              } else {
+                if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                if (audio.startArenaAmbience) audio.startArenaAmbience();
+              }
+            } else {
+              if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startArcadeMusic) audio.startArcadeMusic();
+            }
+          };
+
+          const initAudioContextOnFirstTouch = () => {
+            if (audio) {
+              audio.init();
+              playCurrentScreenAudio();
+            }
+          };
+          window.addEventListener('pointerdown', initAudioContextOnFirstTouch, { once: true });
+          window.addEventListener('keydown', initAudioContextOnFirstTouch, { once: true });
+          if (audio) {
+            playCurrentScreenAudio();
+          }
+
           const aiNameMap = { easy: 'ROOKIE REX', medium: 'PRO DAME', hard: 'LEGEND STEPH' };
+          const venueNameMap = { arena: 'INDOOR ARENA', beach: 'BEACH PARK' };
           const meterSpeedLabelMap = { easy: 'ROOKIE CASUAL (1.2x)', normal: 'PRO CONTEST (1.5x)', hard: 'ALL-STAR SNIPER (1.85x)' };
           const meterGreenZoneWidthMap = { easy: '16%', normal: '10%', hard: '6%' };
 
           const updateSummary = () => {
-            const summaryRack = document.getElementById('summary-money-rack');
-            const summaryMeter = document.getElementById('summary-meter-diff');
-            const summaryRival = document.getElementById('summary-ai-rival');
+            document.querySelectorAll('.summary-money-rack-val').forEach(el => el.innerText = `RACK ${this.moneyRackIdx + 1}`);
+            document.querySelectorAll('.summary-meter-diff-val').forEach(el => el.innerText = (this.meterDiff || 'normal').toUpperCase());
+            document.querySelectorAll('.summary-ai-rival-val').forEach(el => el.innerText = aiNameMap[this.aiDiff] || 'PRO DAME');
 
-            if (summaryRack) summaryRack.innerText = `RACK ${this.moneyRackIdx + 1}`;
-            if (summaryMeter) summaryMeter.innerText = (this.meterDiff || 'normal').toUpperCase();
-            if (summaryRival) summaryRival.innerText = aiNameMap[this.aiDiff] || 'PRO DAME';
+            const weatherBadge = document.getElementById('weather-hud-badge');
+            if (weatherBadge) {
+              if (this.gameMode === 'shootout' && this.shootoutVenue === 'beach' && this.isRaining) {
+                weatherBadge.style.display = 'block';
+              } else {
+                weatherBadge.style.display = 'none';
+              }
+            }
           };
 
           const updateMeterPreviewDisplay = () => {
@@ -5848,10 +6945,10 @@
               }
             });
 
-            // Update progress bar width for 4 steps (divided by 3 segments)
+            // Update progress bar width for 5 steps (divided by 4 segments)
             const fill = document.getElementById('wizard-progress-fill');
             if (fill) {
-              const pct = Math.min(100, Math.max(0, ((step - 1) / 3) * 100));
+              const pct = Math.min(100, Math.max(0, ((step - 1) / 4) * 100));
               fill.style.width = `${pct}%`;
             }
 
@@ -5877,6 +6974,9 @@
             if (step === 4) {
               updateSummary();
               updateWheelSelection('ai-difficulty-select', '.ai-opp-card');
+            }
+            if (step === 5) {
+              updateSummary();
             }
 
             if (audio && audio.playSwish) {
@@ -6083,7 +7183,11 @@
           if (btnModeShootout) {
             btnModeShootout.addEventListener('click', () => {
               this.gameMode = 'shootout';
-              if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio) {
+                if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+                if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                if (audio.startArenaAmbience) audio.startArenaAmbience();
+              }
               this.buildArena(); // Ensure indoor stadium arena is built
               document.getElementById('title-gamemode-screen').style.display = 'none';
               document.getElementById('pregame-screen').style.display = 'flex';
@@ -6139,8 +7243,14 @@
           const btnArcadeBack = document.getElementById('btn-arcade-back');
           if (btnArcadeBack) {
             btnArcadeBack.addEventListener('click', () => {
+              this.gameMode = 'menu';
               document.getElementById('arcade-pregame-screen').style.display = 'none';
               document.getElementById('title-gamemode-screen').style.display = 'flex';
+              if (audio) {
+                if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+                if (audio.startArcadeMusic) audio.startArcadeMusic();
+              }
             });
           }
 
@@ -6214,8 +7324,14 @@
           const step1Back = document.getElementById('step-1-back');
           if (step1Back) {
             step1Back.addEventListener('click', () => {
+              this.gameMode = 'menu';
               document.getElementById('pregame-screen').style.display = 'none';
               document.getElementById('title-gamemode-screen').style.display = 'flex';
+              if (audio) {
+                if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+                if (audio.startArcadeMusic) audio.startArcadeMusic();
+              }
               if (audio && audio.playSwish) audio.playSwish();
             });
           }
@@ -6242,6 +7358,12 @@
 
           const step4Back = document.getElementById('step-4-back');
           if (step4Back) step4Back.addEventListener('click', () => this.setWizardStep(3));
+
+          const step4Next = document.getElementById('step-4-next');
+          if (step4Next) step4Next.addEventListener('click', () => this.setWizardStep(5));
+
+          const step5Back = document.getElementById('step-5-back');
+          if (step5Back) step5Back.addEventListener('click', () => this.setWizardStep(4));
 
           // Force black jersey selection initially
           const blackBtn = document.querySelector('.color-picker-btn[data-color="black"]');
@@ -6276,7 +7398,8 @@
                 sound: true,
                 meterStyle: 'gradient',
                 haptics: true,
-                fpsTarget: 60
+                fpsTarget: 60,
+                graphics: 'high'
               };
             }
 
@@ -6334,8 +7457,47 @@
               hapticsBtn.style.color = isHapticsOn ? '#4ade80' : '#f87171';
               hapticsBtn.style.boxShadow = isHapticsOn ? '0 0 12px rgba(34, 197, 94, 0.18)' : 'none';
             }
+
+            // 4. Graphics Quality (High vs Medium vs Low / Ultra Turbo) UI
+            const graphicsBtn = document.getElementById('settings-graphics-toggle');
+            const graphicsInfo = document.getElementById('graphics-info-box');
+            if (graphicsBtn) {
+              const mode = (this.settings && this.settings.graphics) || 'high';
+              if (mode === 'high') {
+                graphicsBtn.innerText = 'HIGH';
+                graphicsBtn.style.background = 'rgba(56, 189, 248, 0.15)';
+                graphicsBtn.style.borderColor = 'rgba(56, 189, 248, 0.6)';
+                graphicsBtn.style.color = '#38bdf8';
+                graphicsBtn.style.boxShadow = '0 0 12px rgba(56, 189, 248, 0.18)';
+                if (graphicsInfo) graphicsInfo.style.display = 'none';
+              } else if (mode === 'medium') {
+                graphicsBtn.innerText = 'MEDIUM';
+                graphicsBtn.style.background = 'rgba(234, 179, 8, 0.15)';
+                graphicsBtn.style.borderColor = 'rgba(234, 179, 8, 0.6)';
+                graphicsBtn.style.color = '#fde047';
+                graphicsBtn.style.boxShadow = '0 0 12px rgba(234, 179, 8, 0.18)';
+                if (graphicsInfo) {
+                  graphicsInfo.style.display = 'block';
+                  graphicsInfo.style.borderColor = 'rgba(234, 179, 8, 0.35)';
+                  graphicsInfo.style.color = '#fde047';
+                  graphicsInfo.innerText = '⚡ Medium Graphics Mode disables shadows and caps resolution to 100% for balanced speed.';
+                }
+              } else { // 'low'
+                graphicsBtn.innerText = 'LOW (TURBO)';
+                graphicsBtn.style.background = 'rgba(239, 68, 68, 0.15)';
+                graphicsBtn.style.borderColor = 'rgba(239, 68, 68, 0.6)';
+                graphicsBtn.style.color = '#fca5a5';
+                graphicsBtn.style.boxShadow = '0 0 12px rgba(239, 68, 68, 0.18)';
+                if (graphicsInfo) {
+                  graphicsInfo.style.display = 'block';
+                  graphicsInfo.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+                  graphicsInfo.style.color = '#fca5a5';
+                  graphicsInfo.innerText = '🚀 Low Graphics Mode uses sub-native resolution (75%) and minimal particles for maximum FPS on budget devices.';
+                }
+              }
+            }
             
-            // 4. Frame Rate target (FPS) UI
+            // 5. Frame Rate target (FPS) UI
             const fpsBtn = document.getElementById('settings-fps-toggle');
             const fpsWarning = document.getElementById('fps-warning-box');
             if (fpsBtn) {
@@ -6368,10 +7530,10 @@
             if (saved) {
               this.settings = JSON.parse(saved);
             } else {
-              this.settings = { sound: true, meterStyle: 'gradient', haptics: true, fpsTarget: 60 };
+              this.settings = { sound: true, meterStyle: 'gradient', haptics: true, fpsTarget: 60, graphics: 'high' };
             }
           } catch (e) {
-            this.settings = { sound: true, meterStyle: 'gradient', haptics: true, fpsTarget: 60 };
+            this.settings = { sound: true, meterStyle: 'gradient', haptics: true, fpsTarget: 60, graphics: 'high' };
           }
           syncSettingsUI();
 
@@ -6439,6 +7601,22 @@
               if (this.settings.haptics && navigator.vibrate) {
                 try { navigator.vibrate(30); } catch (e) {}
               }
+            });
+          }
+
+          const graphicsToggle = document.getElementById('settings-graphics-toggle');
+          if (graphicsToggle) {
+            graphicsToggle.addEventListener('click', () => {
+              const currentMode = (this.settings && this.settings.graphics) || 'high';
+              let nextMode = 'medium';
+              if (currentMode === 'high') nextMode = 'medium';
+              else if (currentMode === 'medium') nextMode = 'low';
+              else nextMode = 'high';
+
+              this.settings.graphics = nextMode;
+              this.applyGraphicsSettings();
+              syncSettingsUI();
+              if (typeof audio !== 'undefined' && audio && audio.playSwish) audio.playSwish();
             });
           }
 
@@ -6510,6 +7688,27 @@
               this.aiDiff = card.getAttribute('data-diff');
               updateWheelSelection('ai-difficulty-select', '.ai-opp-card');
               updateSummary();
+              if (audio && audio.playSwish) audio.playSwish();
+            });
+          });
+
+          // Venue selection cards - dynamically sets the selected venue with the outline and active badge
+          document.querySelectorAll('#venue-select .venue-card').forEach((card) => {
+            card.addEventListener('click', () => {
+              document.querySelectorAll('#venue-select .venue-card').forEach(b => b.classList.remove('selected'));
+              card.classList.add('selected');
+              this.shootoutVenue = card.getAttribute('data-venue') || 'arena';
+              this.buildArena(); // Rebuild 3D court environment live in background!
+              if (audio) {
+                if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+                if (this.shootoutVenue === 'beach') {
+                  if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+                  if (audio.startBeachAmbience) audio.startBeachAmbience();
+                } else {
+                  if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                  if (audio.startArenaAmbience) audio.startArenaAmbience();
+                }
+              }
               if (audio && audio.playSwish) audio.playSwish();
             });
           });
@@ -6594,7 +7793,18 @@
             document.getElementById('player-summary-screen').style.display = 'none';
             document.getElementById('pregame-screen').style.display = 'flex';
             this.state = 'PRE_GAME';
-            this.setWizardStep(3); // Go directly to step 3 (money rack selection) instead of jersey design
+            if (audio) {
+              if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+              if (this.shootoutVenue === 'beach') {
+                if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+                if (audio.startBeachAmbience) audio.startBeachAmbience();
+              } else {
+                if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+                if (audio.startArenaAmbience) audio.startArenaAmbience();
+              }
+            }
+            this.buildArena();
+            this.setWizardStep(3); // Go directly to step 3 (money rack selection) instead of tutorial
             if (this.emojiManager) this.emojiManager.init();
           });
 
@@ -6778,8 +7988,11 @@
               this.isHolding = true;
               this.meterVal = 0;
               this.meterDir = 1;
+              this.meterTimeAccumulator = 0;
+              this.lastMeterUpdateTime = performance.now();
               this.animGrabTimer = 0.01;
               this.playedGreenToneThisShot = false;
+              if (audio && audio.playBallGrab) audio.playBallGrab(this.shootoutVenue);
               if (shootBtn) {
                 shootBtn.classList.add('holding');
                 shootBtn.classList.remove('burst-perfect', 'burst-slightly', 'burst-miss');
@@ -6799,7 +8012,7 @@
           const releaseHoldingShot = () => {
             if (this.state === 'PLAYER_TURN' && this.isHolding && !this.isPaused) {
               this.isHolding = false;
-              shootBtn.classList.remove('holding');
+              if (shootBtn) shootBtn.classList.remove('holding');
               this.releaseShot();
             }
           };
@@ -6854,7 +8067,24 @@
           if (pauseTipsBtn) {
             pauseTipsBtn.style.display = (this.gameMode === 'arcade') ? 'none' : 'flex';
           }
-          if (!this.isPaused) document.getElementById('shooting-tips-modal').style.display = 'none';
+          if (this.isPaused) {
+            if (audio) {
+              if (this.gameMode === 'arcade') {
+                if (audio.startBeachAmbience) audio.startBeachAmbience();
+              } else {
+                if (audio.startArenaAmbience) audio.startArenaAmbience();
+              }
+            }
+          } else {
+            document.getElementById('shooting-tips-modal').style.display = 'none';
+            if (audio) {
+              if (this.gameMode === 'arcade') {
+                if (audio.startBeachAmbience) audio.startBeachAmbience();
+              } else {
+                if (audio.startArenaAmbience) audio.startArenaAmbience();
+              }
+            }
+          }
         }
 
         showTipsModal() {
@@ -6890,8 +8120,17 @@
 
         resumeGame() {
           this.isPaused = false;
+          this.lastMeterUpdateTime = performance.now();
+          this.lastPreviewUpdateTime = performance.now();
           document.getElementById('pause-screen').style.display = 'none';
           document.getElementById('shooting-tips-modal').style.display = 'none';
+          if (audio) {
+            if (this.gameMode === 'arcade') {
+              if (audio.startBeachAmbience) audio.startBeachAmbience();
+            } else {
+              if (audio.startArenaAmbience) audio.startArenaAmbience();
+            }
+          }
         }
 
         restartGame() {
@@ -6911,6 +8150,11 @@
           this.isPaused = false;
           if (this.clockInterval) clearInterval(this.clockInterval);
           if (this.aiTimeout) clearTimeout(this.aiTimeout);
+          if (audio) {
+            if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+            if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+            if (audio.startArcadeMusic) audio.startArcadeMusic();
+          }
           document.getElementById('pause-screen').style.display = 'none';
           document.getElementById('shooting-tips-modal').style.display = 'none';
           document.getElementById('hud-overlay').style.display = 'none';
@@ -6928,9 +8172,9 @@
 
           if (this.gameMode === 'arcade') {
             if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
-            this.gameMode = 'shootout';
             this.buildArena(); // restore indoor arena
           }
+          this.gameMode = 'menu';
 
           const aiScoreCard = document.getElementById('ai-score-card-container');
           if (aiScoreCard) aiScoreCard.style.display = 'flex';
@@ -6994,6 +8238,11 @@
 
         showArcadePregameInfo() {
           this.clearAllInFlightBalls();
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+            if (audio.startBeachAmbience) audio.startBeachAmbience();
+          }
           const config = (this.arcadeRounds && this.arcadeRounds[this.arcadeRound - 1])
             ? this.arcadeRounds[this.arcadeRound - 1]
             : { round: this.arcadeRound, desc: 'Survival', limit: 15, target: 300 + (this.arcadeRound - 6) * 50, diff: 'hard' };
@@ -7031,7 +8280,11 @@
           if (!this.outdoorOcean) {
             this.buildOutdoorArena();
           }
-          if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+            if (audio.startBeachAmbience) audio.startBeachAmbience();
+          }
 
           // Reset shot meter and jump shot animation state
           this.isHolding = false;
@@ -7113,7 +8366,11 @@
             this.stats = { makes: 0, attempts: 0, moneyMakes: 0, moneyAtts: 0, starryMakes: 0, starryAtts: 0, perfects: 0 };
           }
 
-          if (audio && audio.startBeachAmbience) audio.startBeachAmbience();
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+            if (audio.startBeachAmbience) audio.startBeachAmbience();
+          }
 
           this.state = 'PLAYER_TURN';
           this.isPaused = false;
@@ -7226,6 +8483,11 @@
           if (fbPop) fbPop.classList.remove('show');
           const tFb = document.getElementById('meter-feedback');
           if (tFb) tFb.classList.remove('show');
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+            if (audio.startBeachAmbience) audio.startBeachAmbience();
+          }
 
           const currentRoundConfig = this.arcadeRounds[this.arcadeRound - 1];
           const target = currentRoundConfig.target;
@@ -7388,6 +8650,22 @@
           return new THREE.CanvasTexture(canvas);
         }
 
+        createRainySkyGradientTexture() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          const grad = ctx.createLinearGradient(0, 0, 0, 512);
+          grad.addColorStop(0.0, '#0d131e'); // Very dark grey-blue at zenith
+          grad.addColorStop(0.35, '#161e2b'); // Heavy dark stormy sky
+          grad.addColorStop(0.65, '#242f40'); // Dark slate overcast grey
+          grad.addColorStop(0.85, '#313e52'); // Lower-hanging dark rain clouds
+          grad.addColorStop(1.0, '#425269'); // Low horizon misty rain-grey
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, 512, 512);
+          return new THREE.CanvasTexture(canvas);
+        }
+
         createChainlinkTexture() {
           const canvas = document.createElement('canvas');
           canvas.width = 128;
@@ -7430,9 +8708,22 @@
             this.camera.updateProjectionMatrix();
           }
 
-          // Set bright realistic sky background and atmospheric haze
-          this.scene.background = new THREE.Color(0x38bdf8);
-          this.scene.fog = new THREE.Fog(0x7dd3fc, 90, 300);
+          // 30% chance of rain cosmetic ONLY in 3-point shootout for beach park venue
+          if (this.gameMode === 'shootout' && this.shootoutVenue === 'beach') {
+            this.isRaining = Math.random() < 0.3;
+          } else {
+            this.isRaining = false;
+          }
+
+          if (this.isRaining) {
+            // Set moody overcast sky and deep realistic rain fog
+            this.scene.background = new THREE.Color(0x111827);
+            this.scene.fog = new THREE.Fog(0x1f2937, 20, 160);
+          } else {
+            // Set bright realistic sky background and atmospheric haze
+            this.scene.background = new THREE.Color(0x38bdf8);
+            this.scene.fog = new THREE.Fog(0x7dd3fc, 90, 300);
+          }
 
           const originalSceneAdd = this.scene.add;
           const addedObjects = [];
@@ -7448,18 +8739,25 @@
           this.outdoorPedestrians = [];
           this.outdoorPalms = [];
 
-          // 1. Warm Sunset Golden Ambiance & Atmospheric Lighting
-          const sunAmbient = new THREE.AmbientLight(0xffedd5, 0.95);
+          // 1. Overcast Stormy or Warm Sunset Golden Ambiance & Atmospheric Lighting
+          const ambientColor = this.isRaining ? 0x64748b : 0xffedd5;
+          const ambientIntensity = this.isRaining ? 0.60 : 0.95;
+          const sunAmbient = new THREE.AmbientLight(ambientColor, ambientIntensity);
           this.scene.add(sunAmbient);
 
           // Hemisphere light for sky and ocean reflections
-          const hemiLight = new THREE.HemisphereLight(0xfdba74, 0x0284c7, 0.75);
+          const hemiSky = this.isRaining ? 0x475569 : 0xfdba74;
+          const hemiGround = this.isRaining ? 0x0f172a : 0x0284c7;
+          const hemiIntensity = this.isRaining ? 0.45 : 0.75;
+          const hemiLight = new THREE.HemisphereLight(hemiSky, hemiGround, hemiIntensity);
           this.scene.add(hemiLight);
 
-          // Key Directional Sun Light
-          const sunLight = new THREE.DirectionalLight(0xffedd5, 2.10);
+          // Key Directional Sun Light (Subdued if raining)
+          const sunIntensity = this.isRaining ? 0.18 : 2.10;
+          const sunColor = this.isRaining ? 0x94a3b8 : 0xffedd5;
+          const sunLight = new THREE.DirectionalLight(sunColor, sunIntensity);
           sunLight.position.set(-25, 22, -35);
-          sunLight.castShadow = true;
+          sunLight.castShadow = !this.isRaining; // Disable heavy sharp shadows in overcast weather
           sunLight.shadow.mapSize.width = 2048;
           sunLight.shadow.mapSize.height = 2048;
           sunLight.shadow.camera.near = 1;
@@ -7472,16 +8770,18 @@
           this.scene.add(sunLight);
           this.outdoorSunLight = sunLight;
 
-          // Golden Rim Light from behind hoop for beautiful rim highlights on palms and backboard
-          const rimLight = new THREE.DirectionalLight(0xf97316, 0.90);
+          // Golden Rim Light (Subdued if raining)
+          const rimIntensity = this.isRaining ? 0.05 : 0.90;
+          const rimColor = this.isRaining ? 0x475569 : 0xf97316;
+          const rimLight = new THREE.DirectionalLight(rimColor, rimIntensity);
           rimLight.position.set(-15, 12, -70);
           this.scene.add(rimLight);
           this.outdoorRimLight = rimLight;
 
-          // 2. Sunset Sky Dome with Sky Gradient
+          // 2. Overcast/Sunset Sky Dome with Sky Gradient
           const skyGeo = new THREE.SphereGeometry(250, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
           const skyMat = new THREE.MeshBasicMaterial({
-            map: this.createSkyGradientTexture(),
+            map: this.isRaining ? this.createRainySkyGradientTexture() : this.createSkyGradientTexture(),
             side: THREE.BackSide,
             fog: false
           });
@@ -7489,19 +8789,19 @@
           sky.position.set(0, -2, 0);
           this.scene.add(sky);
 
-          // Glowing Sunset HALF-SUN Setting Directly on the Ocean Horizon
+          // Glowing Sunset HALF-SUN Setting Directly on the Ocean Horizon (Hidden when raining)
           const sunVisGroup = new THREE.Group();
           sunVisGroup.position.set(-3, 0.2, -140); // Positioned sitting right on top of ocean horizon line (y=0)
 
           // Top Hemisphere for Half-Sun shape
           const sunVisGeo = new THREE.SphereGeometry(14, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-          const sunVisMat = new THREE.MeshBasicMaterial({ color: 0xfff7ed, fog: false });
+          const sunVisMat = new THREE.MeshBasicMaterial({ color: 0xfff7ed, fog: false, visible: !this.isRaining });
           const sunVis = new THREE.Mesh(sunVisGeo, sunVisMat);
           sunVisGroup.add(sunVis);
 
           // Semi-Circle Glow Halo around setting half-sun
           const haloGeo = new THREE.RingGeometry(14, 30, 32, 8, 0, Math.PI);
-          const haloMat = new THREE.MeshBasicMaterial({ color: 0xf97316, side: THREE.DoubleSide, transparent: true, opacity: 0.65, fog: false });
+          const haloMat = new THREE.MeshBasicMaterial({ color: 0xf97316, side: THREE.DoubleSide, transparent: true, opacity: 0.65, fog: false, visible: !this.isRaining });
           const halo = new THREE.Mesh(haloGeo, haloMat);
           halo.position.z = 0.1;
           sunVisGroup.add(halo);
@@ -7510,14 +8810,15 @@
           this.outdoorSunGroup = sunVisGroup;
           this.outdoorSunHaloMat = haloMat;
 
-          // Golden Sunset Reflection Strip on the Ocean Water Surface
+          // Golden Sunset Reflection Strip on the Ocean Water Surface (Hidden when raining)
           const sunReflectGeo = new THREE.PlaneGeometry(20, 95);
           const sunReflectMat = new THREE.MeshBasicMaterial({
             color: 0xfde047,
             transparent: true,
             opacity: 0.50,
             side: THREE.DoubleSide,
-            fog: false
+            fog: false,
+            visible: !this.isRaining
           });
           const sunReflect = new THREE.Mesh(sunReflectGeo, sunReflectMat);
           sunReflect.rotation.x = -Math.PI / 2;
@@ -7585,11 +8886,11 @@
           });
 
           // 5. Sunset Golden Sandy Beach & Sea Background
-          // Golden Sandy Beach Shoreline (z = -25 to z = -55)
+          // Golden Sandy Beach Shoreline (z = -25 to z = -55) (Dark wet sand if raining)
           const sandGeo = new THREE.PlaneGeometry(350, 30);
           const sandMat = new THREE.MeshStandardMaterial({
-            color: 0xeab308, // Golden sunset sand
-            roughness: 0.95,
+            color: this.isRaining ? 0x52483a : 0xeab308, // Dark wet slate-brown sand when raining
+            roughness: this.isRaining ? 0.75 : 0.95, // Slightly reflective/glistening if wet
             metalness: 0.05
           });
           const sand = new THREE.Mesh(sandGeo, sandMat);
@@ -7598,14 +8899,14 @@
           sand.receiveShadow = true;
           this.scene.add(sand);
 
-          // Sparkling Tropical Sea / Ocean Plane (Starts right at shoreline z = -55 and extends to horizon z = -255)
+          // Sparkling Tropical Sea / Ocean Plane (Starts right at shoreline z = -55 and extends to horizon z = -255) (Stormy slate blue if raining)
           const oceanGeo = new THREE.PlaneGeometry(450, 200);
           const oceanMat = new THREE.MeshStandardMaterial({
-            color: 0x0284c7, // Sparkling tropical sea blue
-            roughness: 0.15,
-            metalness: 0.35,
-            emissive: 0x0369a1,
-            emissiveIntensity: 0.35
+            color: this.isRaining ? 0x1e293b : 0x0284c7, // Stormy dark charcoal-blue sea
+            roughness: this.isRaining ? 0.35 : 0.15,
+            metalness: this.isRaining ? 0.50 : 0.35,
+            emissive: this.isRaining ? 0x0f172a : 0x0369a1,
+            emissiveIntensity: this.isRaining ? 0.15 : 0.35
           });
           const ocean = new THREE.Mesh(oceanGeo, oceanMat);
           ocean.rotation.x = -Math.PI / 2;
@@ -7986,12 +9287,92 @@
             if (this.outdoorPalms) this.outdoorPalms.push(palm);
           });
 
+          // Rain Particle System when isRaining is active (Realistic line streaks)
+          if (this.isRaining) {
+            const rainCount = 1800; // Dense and rich realistic rain
+            const rainGeo = new THREE.BufferGeometry();
+            const posArr = new Float32Array(rainCount * 2 * 3); // 2 vertices per line, each x,y,z
+            const vels = new Float32Array(rainCount);
+            const dropData = [];
+
+            for (let i = 0; i < rainCount; i++) {
+              const x = (Math.random() - 0.5) * 90;
+              const y = Math.random() * 40;
+              const z = (Math.random() - 0.5) * 90 - 10;
+              const vel = 38 + Math.random() * 18;
+              const length = 1.3 + Math.random() * 0.7; // Long beautiful water streaks
+
+              vels[i] = vel;
+              dropData.push({ x, y, z, length });
+
+              // Vertex 0 (Top)
+              posArr[i * 6] = x;
+              posArr[i * 6 + 1] = y;
+              posArr[i * 6 + 2] = z;
+
+              // Vertex 1 (Bottom, slightly wind-swept)
+              posArr[i * 6 + 3] = x + 0.12;
+              posArr[i * 6 + 4] = y - length;
+              posArr[i * 6 + 5] = z;
+            }
+
+            rainGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+
+            const rainMat = new THREE.LineBasicMaterial({
+              color: 0x93c5fd,
+              transparent: true,
+              opacity: 0.55,
+              depthWrite: false,
+              blending: THREE.AdditiveBlending
+            });
+
+            const rainLines = new THREE.LineSegments(rainGeo, rainMat);
+            rainLines.frustumCulled = false;
+            this.scene.add(rainLines);
+            this.rainSystem = { points: rainLines, vels, count: rainCount, dropData };
+          } else {
+            this.rainSystem = null;
+          }
+
           this.scene.add = originalSceneAdd;
           this.arenaObjects = addedObjects;
         }
 
         updateOutdoorEnvironment(dt) {
-          if (this.gameMode !== 'arcade') return;
+          if (this.gameMode !== 'arcade' && !(this.gameMode === 'shootout' && this.shootoutVenue === 'beach')) return;
+
+          // 0. Rain Particle Animation (Realistic Line Segments Update)
+          if (this.isRaining && this.rainSystem && this.rainSystem.dropData) {
+            const posAttr = this.rainSystem.points.geometry.attributes.position;
+            const posArr = posAttr.array;
+            const vels = this.rainSystem.vels;
+            const count = this.rainSystem.count;
+            const dropData = this.rainSystem.dropData;
+
+            for (let i = 0; i < count; i++) {
+              const drop = dropData[i];
+              drop.y -= vels[i] * dt; // Fall downward rapidly
+              drop.x += dt * 3.8;    // Wind drift slant
+
+              // Loop boundaries
+              if (drop.y < 0) {
+                drop.y = 35 + Math.random() * 5;
+                drop.x = (Math.random() - 0.5) * 90;
+                drop.z = (Math.random() - 0.5) * 90 - 10;
+              }
+
+              // Update Vertex 0 (Top)
+              posArr[i * 6] = drop.x;
+              posArr[i * 6 + 1] = drop.y;
+              posArr[i * 6 + 2] = drop.z;
+
+              // Update Vertex 1 (Bottom)
+              posArr[i * 6 + 3] = drop.x + 0.12;
+              posArr[i * 6 + 4] = drop.y - drop.length;
+              posArr[i * 6 + 5] = drop.z;
+            }
+            posAttr.needsUpdate = true;
+          }
 
           const time = Date.now() * 0.003;
 
@@ -8000,16 +9381,16 @@
           const shotClockVal = (this.shotClock !== undefined) ? this.shotClock : 25;
           const currentLimit = (this.arcadeRounds && this.arcadeRounds[rIdx]) ? this.arcadeRounds[rIdx].limit : 25;
           const roundFraction = Math.max(0, Math.min(1, 1 - (shotClockVal / currentLimit)));
-          const totalProgress = Math.min(1, (rIdx + roundFraction) / 5.5);
+          const totalProgress = (this.gameMode === 'arcade') ? Math.min(1, (rIdx + roundFraction) / 5.5) : 0.3;
 
-          // 1. Sun dips lower towards horizon as rounds progress
-          if (this.outdoorSunGroup) {
+          // 1. Sun dips lower towards horizon as rounds progress (Hidden if raining)
+          if (this.outdoorSunGroup && !this.isRaining) {
             this.outdoorSunGroup.position.x = -3 - totalProgress * 12 + Math.sin(time * 0.15) * 0.4;
             this.outdoorSunGroup.position.y = 0.2 - totalProgress * 2.8;
           }
 
-          // 2. Glowing Halo shifts from bright golden orange to fiery sunset crimson amber
-          if (this.outdoorSunHaloMat) {
+          // 2. Glowing Halo shifts from bright golden orange to fiery sunset crimson amber (Hidden if raining)
+          if (this.outdoorSunHaloMat && !this.isRaining) {
             this.outdoorSunHaloMat.opacity = 0.60 + Math.sin(time * 1.8) * 0.10 + totalProgress * 0.18;
             const r = 0.98;
             const g = Math.max(0.18, 0.45 - totalProgress * 0.25);
@@ -8017,8 +9398,8 @@
             this.outdoorSunHaloMat.color.setRGB(r, g, b);
           }
 
-          // 3. Water Reflection Strip shifts color & pulsates gently with ocean tide
-          if (this.outdoorSunReflect) {
+          // 3. Water Reflection Strip shifts color & pulsates gently with ocean tide (Hidden if raining)
+          if (this.outdoorSunReflect && !this.isRaining) {
             if (this.outdoorSunGroup) {
               this.outdoorSunReflect.position.x = this.outdoorSunGroup.position.x;
             }
@@ -8030,21 +9411,30 @@
             this.outdoorSunReflect.material.opacity = 0.50 + Math.sin(time * 1.2) * 0.08 + totalProgress * 0.15;
           }
 
-          // 4. Atmospheric Directional & Rim Sunlight Shifts
-          if (this.outdoorSunLight) {
-            this.outdoorSunLight.intensity = Math.max(1.35, 2.10 - totalProgress * 0.70);
-            this.outdoorSunLight.position.y = Math.max(10, 22 - totalProgress * 10);
-          }
-          if (this.outdoorRimLight) {
-            this.outdoorRimLight.intensity = 0.90 + totalProgress * 0.45;
-            const r = 0.98;
-            const g = Math.max(0.22, 0.45 - totalProgress * 0.20);
-            const b = Math.max(0.08, 0.08 + totalProgress * 0.10);
-            this.outdoorRimLight.color.setRGB(r, g, b);
+          // 4. Atmospheric Directional & Rim Sunlight Shifts (Or overcast hold if raining)
+          if (!this.isRaining) {
+            if (this.outdoorSunLight) {
+              this.outdoorSunLight.intensity = Math.max(1.35, 2.10 - totalProgress * 0.70);
+              this.outdoorSunLight.position.y = Math.max(10, 22 - totalProgress * 10);
+            }
+            if (this.outdoorRimLight) {
+              this.outdoorRimLight.intensity = 0.90 + totalProgress * 0.45;
+              const r = 0.98;
+              const g = Math.max(0.22, 0.45 - totalProgress * 0.20);
+              const b = Math.max(0.08, 0.08 + totalProgress * 0.10);
+              this.outdoorRimLight.color.setRGB(r, g, b);
+            }
+          } else {
+            if (this.outdoorSunLight) {
+              this.outdoorSunLight.intensity = 0.18;
+            }
+            if (this.outdoorRimLight) {
+              this.outdoorRimLight.intensity = 0.05;
+            }
           }
 
-          // 5. Horizon Fog color shifts to warm sunset twilight haze
-          if (this.scene && this.scene.fog) {
+          // 5. Horizon Fog color shifts to warm sunset twilight haze (Only when NOT raining)
+          if (this.scene && this.scene.fog && !this.isRaining) {
             const r = 0.49 + totalProgress * 0.20;
             const g = Math.max(0.25, 0.82 - totalProgress * 0.40);
             const b = Math.max(0.50, 0.98 - totalProgress * 0.30);
@@ -8171,11 +9561,18 @@
         create3DCloud(x, y, z, scale = 1.0) {
           const cloudGroup = new THREE.Group();
           cloudGroup.position.set(x, y, z);
-          cloudGroup.scale.set(scale, scale, scale);
+          
+          // Make clouds significantly larger and cloudier during rainy weather
+          const actualScale = this.isRaining ? scale * 1.85 : scale;
+          cloudGroup.scale.set(actualScale, actualScale, actualScale);
 
+          // Dark slate-grey color for stormy overcast clouds
+          const cloudColor = this.isRaining ? 0x242d38 : 0xffedd5;
           const cloudMat = new THREE.MeshBasicMaterial({
-            color: 0xffedd5,
-            fog: false
+            color: cloudColor,
+            transparent: this.isRaining,
+            opacity: this.isRaining ? 0.88 : 1.0,
+            fog: true // Let clouds fade realistically into heavy rain fog
           });
 
           const puffs = [
@@ -8187,6 +9584,15 @@
             { x: 3.2, y: -0.2, z: 0.1, r: 1.4 },
             { x: -3.2, y: -0.3, z: -0.1, r: 1.4 }
           ];
+
+          // Layer additional overlapping puffs for a much more dense, cloudier storm front
+          if (this.isRaining) {
+            puffs.push(
+              { x: 1.0, y: -0.5, z: 1.0, r: 1.8 },
+              { x: -1.0, y: -0.6, z: -1.0, r: 1.8 },
+              { x: 0.0, y: 1.8, z: -0.5, r: 1.5 }
+            );
+          }
 
           puffs.forEach(p => {
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(p.r, 12, 10), cloudMat);
@@ -8316,6 +9722,16 @@
           if (this.emojiManager) this.emojiManager.stop();
           document.getElementById('pregame-screen').style.display = 'none';
           document.getElementById('coin-toss-screen').style.display = 'flex';
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (this.shootoutVenue === 'beach') {
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startBeachAmbience) audio.startBeachAmbience();
+            } else {
+              if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio.startArenaAmbience) audio.startArenaAmbience();
+            }
+          }
           
           const tossChoices = document.getElementById('coin-toss-choices');
           const tossAnim = document.getElementById('coin-toss-animation');
@@ -8527,12 +9943,19 @@
             return;
           }
 
-          // Ensure Shootout Mode is active and indoor stadium arena is built
+          // Ensure Shootout Mode is active and venue arena is built
           this.gameMode = 'shootout';
-          if (audio && audio.stopBeachAmbience) audio.stopBeachAmbience();
-          if (this.outdoorOcean) {
-            this.buildArena(); // Rebuild indoor arena
+          if (audio) {
+            if (audio.stopArcadeMusic) audio.stopArcadeMusic();
+            if (this.shootoutVenue === 'beach') {
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startBeachAmbience) audio.startBeachAmbience();
+            } else {
+              if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio.startArenaAmbience) audio.startArenaAmbience();
+            }
           }
+          this.buildArena(); // Rebuild court arena for selected venue
 
           if (this.backgroundBalls) {
             this.backgroundBalls.forEach(b => this.scene.remove(b.mesh));
@@ -8548,6 +9971,13 @@
           document.getElementById('postgame-screen').style.display = 'none';
           document.getElementById('player-summary-screen').style.display = 'none';
           document.getElementById('pause-screen').style.display = 'none';
+          
+          // Ensure AI score card is shown and Arcade goal card is hidden in shootout mode
+          const aiScoreCard = document.getElementById('ai-score-card-container');
+          if (aiScoreCard) aiScoreCard.style.display = 'flex';
+          const arcadeGoalCard = document.getElementById('arcade-goal-card-container');
+          if (arcadeGoalCard) arcadeGoalCard.style.display = 'none';
+
           document.getElementById('ai-hud-label').innerText = 'AI';
           document.getElementById('ai-score-val').innerText = '0';
 
@@ -8710,6 +10140,11 @@
 
         startRunToSpot(prevSpot, nextSpot) {
           if (!prevSpot || !nextSpot) return;
+          if (this.shootoutVenue === 'beach') {
+            if (audio && audio.playSandStep) audio.playSandStep(0.35);
+          } else {
+            if (audio && audio.playSneakerSqueak) audio.playSneakerSqueak(0.35);
+          }
           const spotX1 = prevSpot.dist * Math.sin(prevSpot.angle);
           const spotZ1 = -12 + prevSpot.dist * Math.cos(prevSpot.angle);
           const spotX2 = nextSpot.dist * Math.sin(nextSpot.angle);
@@ -8920,7 +10355,7 @@
           }
 
           if (this.gameMode === 'arcade' && this.equippedPowerUp === 'gold') {
-            if (timingQuality !== 'very_early' && timingQuality !== 'very_late' && timingQuality !== 'very_very_late') {
+            if (timingQuality === 'perfect' || timingQuality === 'slightly_early' || timingQuality === 'slightly_late') {
               guaranteedMake = true;
             }
           }
@@ -9296,6 +10731,7 @@
               const sub = document.getElementById('floating-ball-sub');
               const emoji = document.getElementById('floating-ball-emoji');
               const iconWrap = document.getElementById('floating-ball-icon-wrap');
+              const ballBg = document.getElementById('floating-ball-bg');
 
               if (p.type === 'ice') {
                 if (card) {
@@ -9309,6 +10745,10 @@
                   iconWrap.style.background = 'radial-gradient(circle at 35% 35%, #0284c7, #0f172a)';
                   iconWrap.style.borderColor = '#fff';
                 }
+                if (ballBg) {
+                  ballBg.style.background = 'radial-gradient(circle at 35% 30%, #7dd3fc 0%, #0284c7 55%, #0c4a6e 85%, #0f172a 100%)';
+                  ballBg.style.boxShadow = '0 0 30px rgba(56, 189, 248, 0.9), inset 0 0 14px rgba(255,255,255,0.8)';
+                }
               } else {
                 if (card) {
                   card.style.borderColor = '#facc15';
@@ -9320,6 +10760,10 @@
                 if (iconWrap) {
                   iconWrap.style.background = 'radial-gradient(circle at 35% 35%, #eab308, #451a03)';
                   iconWrap.style.borderColor = '#fff';
+                }
+                if (ballBg) {
+                  ballBg.style.background = 'radial-gradient(circle at 35% 30%, #fef08a 0%, #facc15 55%, #ca8a04 85%, #422006 100%)';
+                  ballBg.style.boxShadow = '0 0 30px rgba(250, 204, 21, 0.9), inset 0 0 14px rgba(255,255,255,0.8)';
                 }
               }
             }
@@ -9542,10 +10986,19 @@
               if (!flight.lastPos) flight.lastPos = ball.position.clone();
               const prevPos = flight.lastPos.clone();
               const currentPos = ball.position.clone();
-              const steps = 4;
+              const gfxMode = (this.settings && this.settings.graphics) || 'high';
+              let steps = 4;
+              let maxTrailParticles = 3000;
+              if (gfxMode === 'medium') {
+                steps = 2;
+                maxTrailParticles = 1000;
+              } else if (gfxMode === 'low') {
+                steps = 1;
+                maxTrailParticles = 300;
+              }
 
               for (let s = 0; s < steps; s++) {
-                if (this.ballTrailParticles && this.ballTrailParticles.length < 3000) {
+                if (this.ballTrailParticles && this.ballTrailParticles.length < maxTrailParticles) {
                   const frac = s / steps;
                   const interpX = prevPos.x + (currentPos.x - prevPos.x) * frac;
                   const interpY = prevPos.y + (currentPos.y - prevPos.y) * frac;
@@ -11493,6 +12946,12 @@
           const aModal = document.getElementById('analytics-modal');
           if (aModal) aModal.style.display = 'none';
 
+          // Ensure AI score card is shown and Arcade goal card is hidden in shootout mode
+          const aiScoreCard = document.getElementById('ai-score-card-container');
+          if (aiScoreCard) aiScoreCard.style.display = 'flex';
+          const arcadeGoalCard = document.getElementById('arcade-goal-card-container');
+          if (arcadeGoalCard) arcadeGoalCard.style.display = 'none';
+
           this.turnEnding = false;
           this.inFlightBalls = [];
           
@@ -12237,6 +13696,15 @@
 
         showPostGameUI() {
           this.state = 'POST_GAME';
+          if (audio) {
+            if (this.gameMode === 'arcade' || (this.gameMode === 'shootout' && this.shootoutVenue === 'beach')) {
+              if (audio.stopArenaAmbience) audio.stopArenaAmbience();
+              if (audio.startBeachAmbience) audio.startBeachAmbience();
+            } else {
+              if (audio.stopBeachAmbience) audio.stopBeachAmbience();
+              if (audio.startArenaAmbience) audio.startArenaAmbience();
+            }
+          }
           const aiOverlay = document.getElementById('ai-overlay');
           if (aiOverlay) aiOverlay.style.display = 'none';
           const summaryScreen = document.getElementById('player-summary-screen');
@@ -12425,13 +13893,22 @@
           const needle = document.getElementById('preview-needle');
           if (!needle) return;
 
+          const now = performance.now();
+          if (!this.lastPreviewUpdateTime) {
+            this.lastPreviewUpdateTime = now;
+          }
+          const elapsed = (now - this.lastPreviewUpdateTime) / 1000;
+          this.lastPreviewUpdateTime = now;
+
+          const clampedElapsed = Math.min(elapsed, 0.05);
+
           if (this.previewVal === undefined) this.previewVal = 0;
           if (this.previewDir === undefined) this.previewDir = 1;
 
           const spdMap = { easy: 1.2, normal: 1.5, hard: 1.85, hof: 2.2 };
           const spd = spdMap[this.meterDiff] || 1.5;
 
-          this.previewVal += this.previewDir * spd * 60 * dt;
+          this.previewVal += this.previewDir * spd * 60 * clampedElapsed;
           if (this.previewVal >= 100) {
             this.previewVal = 100;
             this.previewDir = -1;
@@ -12516,6 +13993,17 @@
 
         updateMeter(dt) {
           if (this.isHolding) {
+            const now = performance.now();
+            if (!this.lastMeterUpdateTime) {
+              this.lastMeterUpdateTime = now;
+            }
+            const elapsed = (now - this.lastMeterUpdateTime) / 1000;
+            this.lastMeterUpdateTime = now;
+
+            // Prevent extreme speed-up jumps in case of momentary browser micro-stutters
+            const clampedElapsed = Math.min(elapsed, 0.05);
+            this.meterTimeAccumulator = (this.meterTimeAccumulator || 0) + clampedElapsed;
+
             let speedMult = 1.0;
             const currentShot = (this.shots && this.currentShotIdx < this.shots.length) ? this.shots[this.currentShotIdx] : null;
             if (currentShot && (currentShot.ballType === 'starry' || (currentShot.spot && currentShot.spot.name && currentShot.spot.name.includes('STARRY')))) {
@@ -12532,7 +14020,8 @@
                 speedMult *= (1.0 + streakBoost);
               }
             }
-            this.meterVal += this.meterSpeed * speedMult * this.meterDir * 60 * dt;
+
+            this.meterVal = this.meterSpeed * speedMult * 60 * this.meterTimeAccumulator;
             if (this.meterVal >= 100) {
               this.meterVal = 100;
               this.isHolding = false;
@@ -12541,7 +14030,6 @@
               this.releaseShot();
             } else if (this.meterVal <= 0) {
               this.meterVal = 0;
-              this.meterDir = 1;
             }
             this.syncShootButtonAndMeter();
           }
@@ -12764,9 +14252,151 @@
         }, stepTime);
       }
 
+      function initCoachGeminiChatbot() {
+        const titleBtn = document.getElementById('title-coach-btn');
+        const pauseBtn = document.getElementById('pause-coach-btn');
+        const panel = document.getElementById('coach-gemini-chat-panel');
+        const closeBtn = document.getElementById('coach-chat-close-btn');
+        const form = document.getElementById('coach-chat-form');
+        const input = document.getElementById('coach-chat-input');
+        const historyDiv = document.getElementById('coach-chat-history');
+        const indicator = document.getElementById('coach-typing-indicator');
+        const chipsContainer = document.getElementById('coach-chips-container');
+        const chips = document.querySelectorAll('.coach-chip');
+
+        let chatHistory = [];
+
+        if (!panel) return;
+
+        const toggleChat = () => {
+          const isActive = panel.classList.contains('active');
+          if (isActive) {
+            closeChat();
+          } else {
+            openChat();
+          }
+        };
+
+        if (titleBtn) {
+          titleBtn.addEventListener('click', toggleChat);
+        }
+        if (pauseBtn) {
+          pauseBtn.addEventListener('click', toggleChat);
+        }
+
+        closeBtn.addEventListener('click', closeChat);
+
+        function openChat() {
+          panel.style.display = 'flex';
+          setTimeout(() => {
+            panel.classList.add('active');
+          }, 10);
+          
+          if (window.game && !window.game.isPaused) {
+            if (window.game.state === 'PLAYER_TURN' || window.game.state === 'AI_TURN') {
+              window.game.togglePause();
+            }
+          }
+          
+          setTimeout(() => input.focus(), 100);
+        }
+
+        function closeChat() {
+          panel.classList.remove('active');
+          setTimeout(() => {
+            panel.style.display = 'none';
+          }, 300);
+        }
+
+        panel.addEventListener('keydown', (e) => {
+          e.stopPropagation();
+        });
+        panel.addEventListener('keyup', (e) => {
+          e.stopPropagation();
+        });
+        panel.addEventListener('keypress', (e) => {
+          e.stopPropagation();
+        });
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const query = input.value.trim();
+          if (!query) return;
+
+          input.value = '';
+          await sendMessageToCoach(query);
+        });
+
+        chips.forEach(chip => {
+          chip.addEventListener('click', async () => {
+            const question = chip.getAttribute('data-question');
+            if (question) {
+              await sendMessageToCoach(question);
+            }
+          });
+        });
+
+        async function sendMessageToCoach(text) {
+          if (chipsContainer) {
+            chipsContainer.style.display = 'none';
+          }
+
+          appendMessageBubble(text, 'user');
+          historyDiv.scrollTop = historyDiv.scrollHeight;
+
+          indicator.style.display = 'block';
+          historyDiv.scrollTop = historyDiv.scrollHeight;
+
+          try {
+            const response = await fetch('/api/chat', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message: text,
+                history: chatHistory
+              })
+            });
+
+            const data = await response.json();
+            indicator.style.display = 'none';
+
+            if (response.ok && data.reply) {
+              appendMessageBubble(data.reply, 'assistant');
+              chatHistory.push({ role: 'user', text: text });
+              chatHistory.push({ role: 'model', text: data.reply });
+            } else {
+              const errMsg = data.error || 'Connection timed out. Keep shooting!';
+              appendMessageBubble(`❌ Coach Cash Money was blocked by defense: ${errMsg}`, 'assistant');
+            }
+          } catch (err) {
+            indicator.style.display = 'none';
+            appendMessageBubble("❌ turnover! Coach Cash Money couldn't connect. Please check your network and try again.", "assistant");
+            console.error('Coach Cash Money Chat Error:', err);
+          }
+
+          historyDiv.scrollTop = historyDiv.scrollHeight;
+        }
+
+        function appendMessageBubble(text, sender) {
+          const bubble = document.createElement('div');
+          bubble.className = `coach-msg-bubble coach-msg-${sender === 'user' ? 'user' : 'assistant'}`;
+          
+          let formattedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+          
+          bubble.innerHTML = formattedText;
+          historyDiv.appendChild(bubble);
+        }
+      }
+
       window.addEventListener('DOMContentLoaded', () => {
         window.game = new GameEngine();
         startSplashLoader();
+        initCoachGeminiChatbot();
       });
     </script>
   </body>
