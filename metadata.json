@@ -1,6 +1,0 @@
-{
-  "name": "3-Point Shootout",
-  "description": "An immersive 3D NBA 3-Point Shootout basketball game with Three.js physics, money ball racks, starry deep shots, touch controls, and AI competition.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
