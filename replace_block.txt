@@ -1,0 +1,110 @@
+
+          // Populate Advanced Analytics Shot Chart & Miss Breakdown
+          const logs = this.currentShotLog || [];
+          const misses = logs.filter(s => !s.scored);
+          
+          const totalBadge = document.getElementById('player-miss-total-badge');
+          if (totalBadge) totalBadge.innerText = `${misses.length} MISSES (${logs.length - misses.length}/${logs.length} FG)`;
+
+          // Group stats by location spot
+          const spotStats = {};
+          logs.forEach(s => {
+            const name = s.spotName || 'Rack';
+            if (!spotStats[name]) spotStats[name] = { total: 0, makes: 0, misses: 0 };
+            spotStats[name].total++;
+            if (s.scored) spotStats[name].makes++;
+            else spotStats[name].misses++;
+          });
+
+          // Hot and Cold spot calculation
+          let hotSpotName = '-';
+          let hotPct = -1;
+          let coldSpotName = '-';
+          let coldPct = 101;
+
+          Object.keys(spotStats).forEach(name => {
+            const st = spotStats[name];
+            if (st.total > 0) {
+              const pct = Math.round((st.makes / st.total) * 100);
+              if (pct > hotPct) { hotPct = pct; hotSpotName = `${name} (${pct}%)`; }
+              if (pct < coldPct) { coldPct = pct; coldSpotName = `${name} (${pct}%)`; }
+            }
+          });
+
+          const hotBadge = document.getElementById('hot-spot-badge');
+          if (hotBadge) hotBadge.innerText = `🔥 Hottest Spot: ${hotSpotName}`;
+          const coldBadge = document.getElementById('cold-spot-badge');
+          if (coldBadge) coldBadge.innerText = `🧊 Coldest Spot: ${coldSpotName}`;
+
+          // Miss Release Timing Breakdown
+          const timingCounts = { very_early: 0, early: 0, slightly_early: 0, slightly_late: 0, late: 0, very_late: 0 };
+          misses.forEach(m => {
+            if (timingCounts[m.timingQuality] !== undefined) timingCounts[m.timingQuality]++;
+          });
+
+          const timingLabels = {
+            very_early: { label: 'VERY EARLY 🔴', color: '#ef4444' },
+            early: { label: 'EARLY 🟠', color: '#f97316' },
+            slightly_early: { label: 'SLIGHTLY EARLY 🟡', color: '#eab308' },
+            slightly_late: { label: 'SLIGHTLY LATE 🟡', color: '#eab308' },
+            late: { label: 'LATE 🟠', color: '#f97316' },
+            very_late: { label: 'VERY LATE 🔴', color: '#ef4444' }
+          };
+
+          const timingBarsContainer = document.getElementById('miss-timing-bars');
+          if (timingBarsContainer) {
+            timingBarsContainer.innerHTML = '';
+            const totalMisses = Math.max(1, misses.length);
+            Object.keys(timingCounts).forEach(key => {
+              const cnt = timingCounts[key];
+              const cfg = timingLabels[key];
+              const pct = Math.round((cnt / totalMisses) * 100);
+
+              const row = document.createElement('div');
+              row.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 2px 0;';
+              row.innerHTML = `
+                <div style="width: 130px; font-weight: 800; color: ${cfg.color}; letter-spacing: 0.2px;">${cfg.label}</div>
+                <div style="flex: 1; background: rgba(255,255,255,0.12); height: 10px; border-radius: 5px; overflow: hidden;">
+                  <div style="width: ${cnt > 0 ? Math.max(pct, 6) : 0}%; background: ${cfg.color}; height: 100%; transition: width 0.3s; border-radius: 5px;"></div>
+                </div>
+                <div style="width: 65px; text-align: right; font-weight: 800; color: #e2e8f0; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 0.5px;">${cnt} (${pct}%)</div>
+              `;
+              timingBarsContainer.appendChild(row);
+            });
+          }
+
+          // Location cards grid
+          const locationGrid = document.getElementById('shot-location-grid');
+          if (locationGrid) {
+            locationGrid.innerHTML = '';
+            Object.keys(spotStats).forEach(name => {
+              const st = spotStats[name];
+              const pct = st.total > 0 ? Math.round((st.makes / st.total) * 100) : 0;
+              const isPerfectSpot = pct >= 80;
+              const isColdSpot = pct < 40;
+
+              const card = document.createElement('div');
+              card.style.cssText = `background: ${isPerfectSpot ? 'rgba(34, 197, 94, 0.08)' : (isColdSpot ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255,255,255,0.03)')}; border: 1.5px solid ${isPerfectSpot ? 'rgba(34, 197, 94, 0.3)' : (isColdSpot ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255,255,255,0.1)')}; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;`;
+              
+              const shotDots = logs.filter(s => s.spotName === name).map(s => {
+                const color = s.scored ? '#4ade80' : '#f87171';
+                const symbol = s.scored ? '✓' : '✗';
+                return `<span style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; background: ${s.scored ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}; color: ${color}; font-size: 12px; font-weight: 800; margin-right: 4px;">${symbol}</span>`;
+              }).join('');
+
+              card.innerHTML = `
+                <div>
+                  <div style="font-weight: 800; font-size: 15px; color: ${isPerfectSpot ? '#4ade80' : (isColdSpot ? '#f87171' : '#f8fafc')}; letter-spacing: 0.3px;">${name}</div>
+                  <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px;">${shotDots}</div>
+                </div>
+                <div style="text-align: right; flex-shrink: 0; padding-left: 10px;">
+                  <div style="font-family: 'Teko', sans-serif; font-size: 26px; font-weight: 700; line-height: 1; color: ${isPerfectSpot ? '#4ade80' : (isColdSpot ? '#f87171' : '#38bdf8')};">${st.makes}/${st.total}</div>
+                  <div style="font-size: 11.5px; color: #94a3b8; font-weight: 700; margin-top: 2px; text-transform: uppercase;">${pct}% ACCURACY</div>
+                </div>
+              `;
+              locationGrid.appendChild(card);
+            });
+          }
+
+          // Show intermediate player summary screen
+          document.getElementById('player-summary-screen').style.display = 'flex';
