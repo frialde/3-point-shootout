@@ -3524,10 +3524,7 @@
               </div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <button id="coach-apikey-btn" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(234, 179, 8, 0.4); border-radius: 6px; font-size: 10px; font-weight: 700; color: #facc15; cursor: pointer; padding: 4px 8px; display: flex; align-items: center; gap: 4px; transition: background 0.15s;" title="Set Gemini API Key for GitHub Pages / Static Hosting">🔑 API KEY</button>
-            <button id="coach-chat-close-btn" style="background: none; border: none; font-size: 28px; font-weight: 300; color: #94a3b8; cursor: pointer; transition: color 0.15s; outline: none; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Close Chat">&times;</button>
-          </div>
+          <button id="coach-chat-close-btn" style="background: none; border: none; font-size: 28px; font-weight: 300; color: #94a3b8; cursor: pointer; transition: color 0.15s; outline: none; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Close Chat">&times;</button>
         </div>
 
         <!-- Panel Conversation Area -->
@@ -14260,7 +14257,6 @@
         const pauseBtn = document.getElementById('pause-coach-btn');
         const panel = document.getElementById('coach-gemini-chat-panel');
         const closeBtn = document.getElementById('coach-chat-close-btn');
-        const apiKeyBtn = document.getElementById('coach-apikey-btn');
         const form = document.getElementById('coach-chat-form');
         const input = document.getElementById('coach-chat-input');
         const historyDiv = document.getElementById('coach-chat-history');
@@ -14272,116 +14268,62 @@
 
         if (!panel) return;
 
-        const COACH_SYSTEM_PROMPT = `You are Coach Cash Money, the Ultimate Basketball Coach and AI Assistant for this "3-Point Shootout" game.
-Your goal is to answer any game-related questions, explain mechanics, rules, power-ups, customize tips, and keep the player motivated in a fun, sporty, active coaching tone!
-
-Key facts about this game to guide your answers:
-1. Game Overview:
-   - Immersive 3D NBA 3-Point Shootout basketball game built with Three.js, Canvas, HTML5, and spatial audio.
-   - Designed and built by developer Ralph Frialde. Include a sporty shoutout to Ralph if asked about the author or developer!
-2. Two Main Game Modes:
-   - Standard 3-Point Shootout: Shoot 25 balls from 5 racks. Striped "Money Ball" is worth 2 points. Pick your Money Ball Rack position. 70-second clock. Shot meter difficulty (PRO, CHAMP, LEGEND) & AI Rivals (PRO DAME, CHAMP CURRY, LEGEND MJ).
-   - Arcade Mode: Floating power-up balls drift across screen. Click/tap to load as next shot:
-     * 🧊 Ice Ball: Freezes shot clock for 5 seconds.
-     * 🌟 Golden Ball: Activates "Magnet Net" for 5 seconds (100% score rate on Perfect, Slightly Early, and Slightly Late releases!).
-3. Core Shooting Mechanic:
-   - Press and hold "HOLD TO SHOOT" or SPACEBAR. Release when pin hits green zone at top of Shot Meter for PERFECT RELEASE.
-4. Customization:
-   - Customized Jersey Screen: colors, team name, custom number, player display name.
-5. Audio & Ambience:
-   - Music tracks, stadium crowd cheers, net swish SFX, rain sound effects (Beach court).
-
-Keep responses supportive, informative, engaging, and concise.`;
-
         const getLocalCoachResponse = (query) => {
-          const q = query.toLowerCase();
-          if (q.includes('perfect') || q.includes('release') || q.includes('shoot') || q.includes('timing') || q.includes('meter')) {
-            return "🎯 <strong>Perfect Release Coaching Tip:</strong> Press & hold SPACEBAR (or the HOLD TO SHOOT button). Watch the pin rise on the Shot Meter and release right when it hits the bright green top zone! Releasing in the green guarantees a clean swish!";
+          const q = query.toLowerCase().trim();
+
+          // Greetings & Intro
+          if (q === 'hi' || q === 'hello' || q === 'hey' || q === 'sup' || q === 'yo' || q.includes('who are you') || q.includes('what can you do') || q.includes('help') || q.includes('coach')) {
+            return "🏀 <strong>Yo! What's good! I'm Coach Cash Money</strong>, your personal AI basketball trainer! Ask me anything about shot timing, arcade power-ups, custom jerseys, rules, or developer Ralph Frialde. Let's get that jumper wet!";
           }
-          if (q.includes('power') || q.includes('arcade') || q.includes('ice') || q.includes('gold') || q.includes('magnet')) {
-            return "🌟 <strong>Arcade Power-Up Guide:</strong> Tap floating balls as they drift across the screen to load them as your next shot!<br>🧊 <strong>Ice Ball:</strong> Freezes shot clock for 5 seconds.<br>🌟 <strong>Golden Ball:</strong> Activates Magnet Net for 5 seconds (100% score rate on Perfect, Slightly Early, and Slightly Late releases!).";
+
+          // Perfect Release / Meter / Release / Timing / Controls
+          if (q.includes('perfect') || q.includes('release') || q.includes('shoot') || q.includes('timing') || q.includes('meter') || q.includes('green') || q.includes('spacebar') || q.includes('hold') || q.includes('control')) {
+            return "🎯 <strong>Perfect Release Coaching Tip:</strong><br>1. Press & hold SPACEBAR (or tap and hold the HOLD TO SHOOT button).<br>2. Watch the indicator pin rise toward the top green zone.<br>3. Release right when the pin hits the green zone peak for a PERFECT RELEASE swish!";
           }
-          if (q.includes('ralph') || q.includes('frialde') || q.includes('developer') || q.includes('author') || q.includes('maker') || q.includes('who made') || q.includes('who created')) {
+
+          // Arcade Mode & Power Ups
+          if (q.includes('power') || q.includes('arcade') || q.includes('ice') || q.includes('gold') || q.includes('magnet') || q.includes('float')) {
+            return "🌟 <strong>Arcade Mode Power-Up Guide:</strong><br>Tap floating power-up balls as they drift across the screen to load them into your rack!<br>🧊 <strong>Ice Ball:</strong> Freezes the 70-second shot clock for 5 seconds.<br>🌟 <strong>Golden Ball:</strong> Activates Magnet Net for 5 seconds (100% swish rate on Perfect, Early & Late shots!).";
+          }
+
+          // Money Ball / Racks / Scoring
+          if (q.includes('money ball') || q.includes('money rack') || q.includes('rack') || q.includes('point') || q.includes('score') || q.includes('striped')) {
+            return "🏀 <strong>Money Ball Rules:</strong><br>• Regular balls = 1 Point.<br>• Striped Money Balls (the last ball of each rack) = 2 Points!<br>• In pregame, choose your favorite station to place an entire rack of 2-point Money Balls for maximum score!";
+          }
+
+          // Developer / Credits
+          if (q.includes('ralph') || q.includes('frialde') || q.includes('developer') || q.includes('author') || q.includes('maker') || q.includes('who made') || q.includes('who created') || q.includes('built')) {
             return "👑 <strong>Developer Shoutout:</strong> This 3D basketball 3-Point Shootout game was designed and built by <strong>Ralph Frialde</strong>!";
           }
-          if (q.includes('jersey') || q.includes('custom') || q.includes('number') || q.includes('name')) {
-            return "👕 <strong>Custom Jersey Guide:</strong> Open the Customized Jersey screen from the Title Menu to pick your team name, player display name, jersey base color, accent stripes, and custom number!";
-          }
-          if (q.includes('money ball') || q.includes('rack') || q.includes('point')) {
-            return "🏀 <strong>Money Ball Rules:</strong> Standard balls are worth 1 point. Striped Money Balls (the last ball of each rack) are worth 2 points! You can also pick a full Money Ball Rack in Pregame for maximum scoring!";
-          }
-          return null;
-        };
 
-        const callClientGeminiAPI = async (text, apiKey) => {
-          const contents = chatHistory.map(h => ({
-            role: h.role === 'model' ? 'model' : 'user',
-            parts: [{ text: h.text }]
-          }));
-          contents.push({ role: 'user', parts: [{ text: text }] });
-
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: contents,
-              systemInstruction: { parts: [{ text: COACH_SYSTEM_PROMPT }] },
-              generationConfig: { temperature: 0.7 }
-            })
-          });
-
-          if (!response.ok) {
-            const errJson = await response.json().catch(() => ({}));
-            throw new Error(errJson.error?.message || `API HTTP ${response.status}`);
+          // Customized Jersey
+          if (q.includes('jersey') || q.includes('custom') || q.includes('number') || q.includes('colors') || q.includes('team') || q.includes('name') || q.includes('outfit')) {
+            return "👕 <strong>Customized Jersey:</strong><br>Open the Customized Jersey menu from the Title Screen to customize your team name, player display name, jersey base color, accent stripes, and custom number!";
           }
 
-          const resData = await response.json();
-          const replyText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!replyText) throw new Error("Empty response from Gemini API.");
-          return replyText;
+          // Rivals & Difficulty
+          if (q.includes('curry') || q.includes('dame') || q.includes('mj') || q.includes('rival') || q.includes('bot') || q.includes('ai') || q.includes('difficulty') || q.includes('pro') || q.includes('champ') || q.includes('legend')) {
+            return "🔥 <strong>AI Rivals & Difficulty:</strong><br>• <strong>Pro Dame:</strong> Faster pace, steady shooting.<br>• <strong>Champ Curry:</strong> High green zone precision.<br>• <strong>Legend MJ:</strong> Clutchest shooter in the game! Higher difficulties make the shot meter needle move faster!";
+          }
+
+          // Music & Sound
+          if (q.includes('music') || q.includes('sound') || q.includes('audio') || q.includes('volume') || q.includes('song') || q.includes('track') || q.includes('rain')) {
+            return "🎵 <strong>Audio & Music:</strong><br>Tap the gear settings icon on the Title or Pause menu to toggle background music tracks, adjust sound effects, crowd ambient audio, or court weather sounds!";
+          }
+
+          // Strategy & High Score
+          if (q.includes('win') || q.includes('high score') || q.includes('beat') || q.includes('strategy') || q.includes('tips') || q.includes('advice') || q.includes('best')) {
+            return "🏆 <strong>Championship Strategy:</strong><br>1. Master the rhythm of the Shot Meter for consistent Green releases.<br>2. Place your Money Ball Rack at your most comfortable shooting position.<br>3. In Arcade Mode, snag every Golden Ball for automatic bucket streaks!";
+          }
+
+          // Rules & Clock
+          if (q.includes('time') || q.includes('clock') || q.includes('70') || q.includes('25') || q.includes('rule') || q.includes('sec')) {
+            return "⏱️ <strong>Rules of the Game:</strong><br>You have 70 seconds to shoot 25 balls across 5 rack stations surrounding the 3-point line. Max score is 34 points in Standard Mode!";
+          }
+
+          // Catch-all response
+          return `🏀 <strong>Coach Cash Money says:</strong> "Keep your elbow tucked, eyes on the rim, and follow through!" Ask me about shot meter timing, arcade power-ups, money ball racks, custom jerseys, or developer Ralph Frialde!`;
         };
-
-        const promptApiKeyModal = (initialMsg = '') => {
-          const existingKey = localStorage.getItem('COACH_GEMINI_API_KEY') || '';
-          const keyContainer = document.createElement('div');
-          keyContainer.className = 'coach-msg-bubble coach-msg-assistant';
-          keyContainer.style.borderLeft = '3px solid #eab308';
-          keyContainer.style.maxWidth = '92%';
-          keyContainer.innerHTML = `
-            <div style="font-weight: 700; color: #facc15; font-size: 13px; margin-bottom: 4px;">🌐 GitHub Pages / Static Mode</div>
-            <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4; margin-bottom: 8px;">
-              ${initialMsg || "When hosted on GitHub Pages or static web servers without a backend Node server, Coach Cash Money can connect directly via your free Gemini API Key:"}
-              <br><a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #facc15; font-weight: 600; text-decoration: underline;">👉 Get free key at Google AI Studio</a>
-            </div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <input type="password" id="coach-key-input" value="${existingKey}" placeholder="Paste Gemini API Key (AIzaSy...)" style="flex: 1; min-width: 140px; background: #0f172a; border: 1.5px solid rgba(234, 179, 8, 0.4); border-radius: 6px; padding: 6px 10px; color: #fff; font-size: 11px; outline: none;">
-              <button id="coach-key-save-btn" style="background: #eab308; color: #020617; border: none; border-radius: 6px; padding: 6px 12px; font-weight: 800; font-size: 11px; cursor: pointer; transition: background 0.15s;">SAVE KEY</button>
-            </div>
-          `;
-          historyDiv.appendChild(keyContainer);
-          historyDiv.scrollTop = historyDiv.scrollHeight;
-
-          const keyInput = keyContainer.querySelector('#coach-key-input');
-          const saveBtn = keyContainer.querySelector('#coach-key-save-btn');
-          
-          saveBtn.addEventListener('click', () => {
-            const val = keyInput.value.trim();
-            if (val) {
-              localStorage.setItem('COACH_GEMINI_API_KEY', val);
-              appendMessageBubble("✅ <strong>Gemini API Key saved!</strong> You're all set to chat with Coach Cash Money on GitHub Pages!", 'assistant');
-            } else {
-              localStorage.removeItem('COACH_GEMINI_API_KEY');
-              appendMessageBubble("ℹ️ API Key cleared.", 'assistant');
-            }
-          });
-        };
-
-        if (apiKeyBtn) {
-          apiKeyBtn.addEventListener('click', () => {
-            promptApiKeyModal("Configure your Gemini API Key for direct browser access on GitHub Pages:");
-          });
-        }
 
         const toggleChat = () => {
           const isActive = panel.classList.contains('active');
@@ -14459,21 +14401,12 @@ Keep responses supportive, informative, engaging, and concise.`;
           appendMessageBubble(text, 'user');
           historyDiv.scrollTop = historyDiv.scrollHeight;
 
-          // Check if local offline knowledge base answers it immediately
-          const localReply = getLocalCoachResponse(text);
-          if (localReply) {
-            appendMessageBubble(localReply, 'assistant');
-            chatHistory.push({ role: 'user', text: text });
-            chatHistory.push({ role: 'model', text: localReply });
-            historyDiv.scrollTop = historyDiv.scrollHeight;
-            return;
-          }
-
           indicator.style.display = 'block';
           historyDiv.scrollTop = historyDiv.scrollHeight;
 
-          let serverWorked = false;
+          let replyText = null;
 
+          // Try server endpoint first (if running on Node backend)
           try {
             const response = await fetch('/api/chat', {
               method: 'POST',
@@ -14487,39 +14420,23 @@ Keep responses supportive, informative, engaging, and concise.`;
             if (response.ok) {
               const data = await response.json();
               if (data.reply) {
-                indicator.style.display = 'none';
-                appendMessageBubble(data.reply, 'assistant');
-                chatHistory.push({ role: 'user', text: text });
-                chatHistory.push({ role: 'model', text: data.reply });
-                serverWorked = true;
+                replyText = data.reply;
               }
             }
-          } catch (serverErr) {
-            console.warn('/api/chat endpoint unreachable, using client-side fallback:', serverErr);
+          } catch (err) {
+            // Static hosting (GitHub Pages) or backend endpoint offline
           }
 
-          if (!serverWorked) {
-            // Client-side fallback for GitHub Pages / Static Hosting
-            const storedKey = localStorage.getItem('COACH_GEMINI_API_KEY');
-            if (storedKey) {
-              try {
-                const clientReply = await callClientGeminiAPI(text, storedKey);
-                indicator.style.display = 'none';
-                appendMessageBubble(clientReply, 'assistant');
-                chatHistory.push({ role: 'user', text: text });
-                chatHistory.push({ role: 'model', text: clientReply });
-              } catch (clientErr) {
-                indicator.style.display = 'none';
-                console.error("Client Gemini API Error:", clientErr);
-                appendMessageBubble(`⚠️ <strong>GitHub Pages Mode Error:</strong> Unable to fetch AI response (${clientErr.message}). Check your API Key.`, 'assistant');
-                promptApiKeyModal("Please verify or update your Gemini API key below:");
-              }
-            } else {
-              indicator.style.display = 'none';
-              promptApiKeyModal();
-            }
+          // Plug-and-play client fallback for static hosting / GitHub Pages
+          if (!replyText) {
+            await new Promise(r => setTimeout(r, 350)); // simulate brief natural AI response delay
+            replyText = getLocalCoachResponse(text);
           }
 
+          indicator.style.display = 'none';
+          appendMessageBubble(replyText, 'assistant');
+          chatHistory.push({ role: 'user', text: text });
+          chatHistory.push({ role: 'model', text: replyText });
           historyDiv.scrollTop = historyDiv.scrollHeight;
         }
 
